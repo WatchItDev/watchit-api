@@ -1,0 +1,24 @@
+type Query
+type Mutation
+
+enum CacheControlScope {
+    PUBLIC
+    PRIVATE
+}
+
+directive @cacheControl(
+    maxAge: Int
+    scope: CacheControlScope
+    inheritMaxAge: Boolean
+) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+scalar DateTime
+scalar Date
+scalar JSON
+scalar Upload
+scalar ID
+
+input FilterInput {
+    limit: Int
+    offset: Int
+}

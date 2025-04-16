@@ -1,0 +1,16 @@
+type Message {
+  id: ID!
+  sender: User!
+  recipient: User!
+  content: String!
+  media: [MediaAttachment]
+  createdAt: DateTime!
+  read: Boolean!
+}
+
+type Conversation {
+  id: ID!
+  participants: [User!]!
+  messages: [Message!]!
+  updatedAt: DateTime!
+}

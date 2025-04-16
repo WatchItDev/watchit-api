@@ -1,0 +1,7 @@
+extend type Mutation {
+  """
+  Creates a new user profile based on the input data.
+  Returns the recent created user.
+  """
+  CreateProfile(input: UserInput!): User!
+}
