@@ -1,11 +1,23 @@
+scalar Timestamp
+
+type SocialLink {
+  platform: String
+  url: String
+}
+
 type User {
-  id: ID!
-  username: String!
+  address: String!
+  username: String
   displayName: String
   bio: String
-  avatarUrl: String
-  bannerUrl: String
-  verified: Boolean
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  profilePicture: String
+  coverPicture: String
+  socialLinks: [SocialLink]
+
+  followersCount: Int!
+  followingCount: Int!
+  publicationsCount: Int!
+
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
 }

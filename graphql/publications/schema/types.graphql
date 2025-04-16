@@ -1,0 +1,11 @@
+type Publication {
+  id: String!
+  authorAddress: String!
+  content: String!
+  media: [String!]
+  likeCount: Int!
+  commentCount: Int!
+  bookmarkCount: Int!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+}

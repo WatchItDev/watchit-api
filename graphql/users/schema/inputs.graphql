@@ -6,3 +6,21 @@ input UserInput {
 input UserByInput {
     address: String
 }
+
+"Input for updating a user."
+input UpdateUserInput {
+    username: String
+    displayName: String
+    bio: String
+    profilePicture: String
+    coverPicture: String
+
+    # Example approach: we'd store an array of platform+url pairs
+    socialLinks: [SocialLinkInput!]
+}
+
+"Simple key-value for social links (e.g. Twitter, GitHub)."
+input SocialLinkInput {
+    platform: String
+    url: String
+}

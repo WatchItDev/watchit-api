@@ -1,0 +1,6 @@
+extend type Mutation {
+  createComment(input: CreateCommentInput!): Comment
+
+  likeComment(publicationId: String!, commentId: String!): Boolean
+  unlikeComment(publicationId: String!, commentId: String!): Boolean
+}
