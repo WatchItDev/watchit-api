@@ -4,6 +4,7 @@
     "@apollo/server": "^4.12.0",
     "apollo-datasource": "^3.3.2",
     "dotenv": "^16.5.0",
+    "firebase": "^11.6.0",
     "firebase-admin": "^13.2.0",
     "graphql": "^16.10.0",
     "graphql-constraint-directive": "^6.0.0",
