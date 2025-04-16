@@ -91,7 +91,10 @@ type Post {
   visibility: VisibilitySetting!
 }
 
-type Query
+type Query {
+  """"""
+  Profile(input: UserByInput!): User!
+}
 
 type Reaction {
   createdAt: DateTime!

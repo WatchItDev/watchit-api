@@ -1,8 +1,0 @@
-input UserInput {
-   username: String!
-   address: String!
-}
-
-input UserByInput {
-    address: String
-}

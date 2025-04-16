@@ -1,0 +1,35 @@
+type User {
+  id: ID!
+  username: String!
+  displayName: String
+  bio: String
+  avatarUrl: String
+  bannerUrl: String
+  verified: Boolean
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+
+input UserInput {
+   username: String!
+   address: String!
+}
+
+input UserByInput {
+    address: String
+}
+
+
+extend type Query {
+  """"""
+  Profile(input: UserByInput!): User!
+}
+
+extend type Mutation {
+  """
+  Creates a new user profile based on the input data.
+  Returns the recent created user.
+  """
+  CreateProfile(input: UserInput!): User!
+}
