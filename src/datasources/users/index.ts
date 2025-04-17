@@ -1,6 +1,5 @@
-import { Mixin } from 'ts-mixer'
-import { QueryManager } from './query'
+import { Mixin } from 'ts-mixer';
+import { UsersQuery } from './query';
+import { UsersCommand } from './command';
 
-export default class UsersRoot extends Mixin(
-  QueryManager
-) { }
+export default class UsersDS extends Mixin(UsersQuery, UsersCommand) {}

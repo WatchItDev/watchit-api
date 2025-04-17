@@ -1,0 +1,13 @@
+extend type Mutation {
+  """
+  Creates a new user profile based on the input data.
+  Returns the recent created user.
+  """
+  createProfile(input: UserInput!): User!
+
+  "Update the current user with new metadata."
+  updateUser(input: UpdateUserInput!): User!
+
+  followUser(followee: String!): Boolean
+  unfollowUser(followee: String!): Boolean
+}

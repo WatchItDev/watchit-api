@@ -1,7 +1,7 @@
+import { fs } from '@/externals/firebase/firestore';
 
+export class DataSourceManager {
+  constructor(protected store: any) {} // "store" kept for compatibility
 
-export class DataSourceManager  {
-  constructor (store: FireStore) {
-    this.store = store
-  }
+  protected fs = fs; // <— re‑export generic factory
 }

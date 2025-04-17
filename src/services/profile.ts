@@ -1,11 +1,12 @@
-import { ServiceManager } from "./manager";
-import { User, UserInput } from "@/schema/types";
+import { ServiceManager } from './manager';
+import { User, UserInput } from '@/schema/types';
 
 export class ProfileService extends ServiceManager {
-    async createProfile(user: UserInput): Promise<User> {
-        // const createdUser = await this.ds.Users.createProfile(user)
-        // const balacne = this.ds.getBalanceXP(user)
-        // const cotnract: Contract = this.ext.Blockchain.getContract('MMC')
-        // cotnract.transfer(balance / 2, address)
-    }
+    createProfile = (input: UserInput): Promise<User> =>
+        this.ds.Users.createProfile(input);
+
+    getProfile = (address: string) => this.ds.Users.getUser(address);
+
+    updateProfile = (address: string, p) =>
+        this.ds.Users.updateProfile(address, p);
 }

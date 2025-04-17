@@ -1,0 +1,4 @@
+type Query {
+    "Retrieve all comments by publication id."
+    comments(publicationId: String!): [Comment!]!
+}

@@ -1,0 +1,10 @@
+extend type Query {
+    "Retrieve a single publication by ID."
+    publication(id: String!): Publication
+
+    "Get a feed of newest publications."
+    feedNewest(limit: Int = 20, after: String): [Publication!]!
+
+    "Get a feed of the most popular publications."
+    feedPopular(limit: Int = 20): [Publication!]!
+}

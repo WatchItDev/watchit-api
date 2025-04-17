@@ -1,9 +1,11 @@
-// https://www.apollographql.com/docs/apollo-server/data/fetching-data
+import Users from './users';
+import Posts from './posts';
+import Comments from './comments';
+import Interactions from './interactions';
 
-import UsersDataSource from './users'
-
-export const DataSources = (store) => {
-    return {
-        Users: new UsersDataSource(store)
-    }
-}
+export const DataSources = (store) => ({
+    Users: new Users(store),
+    Posts: new Posts(store),
+    Comments: new Comments(store),
+    Interactions: new Interactions(store),
+});
