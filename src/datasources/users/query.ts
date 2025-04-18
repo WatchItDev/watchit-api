@@ -2,7 +2,13 @@ import { DataSourceManager } from '@/datasources/manager';
 import { User } from '@/schema/types';
 
 export class UsersQuery extends DataSourceManager {
-    getUser = (addr: string) => this.fs<User>('users').get(addr);
+    getUser = (addr: string) => {
+        console.log('hello get user: ', addr);
+        console.log(this);
+        console.log(this.fs('users'));
+        console.log(this.fs('users').get(addr));
+        return this.fs<User>('users').get(addr)
+    };
 
     searchUsers = async (q: string, limit = 20): Promise<User[]> => {
         const col = this.fs<User>('users'); // we need raw ref:

@@ -1,12 +1,20 @@
 import { ServiceManager } from './manager';
 import { User, UserInput } from '@/schema/types';
 
+/**
+ * All mutations go through Cloud Functions.
+ * Reads come from the datasource (Admin SDK – read‑only).
+ */
 export class ProfileService extends ServiceManager {
-    createProfile = (input: UserInput): Promise<User> =>
-        this.ds.Users.createProfile(input);
+    async createProfile(input: UserInput): Promise<User> {
+        const res = await this.ext.Functions.users.create(input);
+        return res.data.user;
+    }
 
-    getProfile = (address: string) => this.ds.Users.getUser(address);
+    async updateProfile(address: string, patch): Promise<User> {
+        const res = await this.ext.Functions.users.update({ address, patch });
+        return res.data.user;
+    }
 
-    updateProfile = (address: string, p) =>
-        this.ds.Users.updateProfile(address, p);
+    getProfile = (addr: string) => this.ds.Users.getUser(addr);
 }

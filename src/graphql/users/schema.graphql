@@ -1,35 +1,120 @@
+###########################
+#      USERS SCHEMA       #
+###########################
+
+####################
+#      TYPES       #
+####################
+
+"""Represents a social link (e.g. Twitter, GitHub)."""
+type SocialLink {
+  """Name of the platform, e.g. "twitter"."""
+  platform: String
+  """URL of the profile on that platform."""
+  url: String
+}
+
+"""A user’s profile data."""
 type User {
-  id: ID!
-  username: String!
+  """Unique wallet address (non-null)."""
+  address: String!
+  """User’s handle."""
+  username: String
+  """Name displayed on profile."""
   displayName: String
+  """Short biography."""
   bio: String
-  avatarUrl: String
-  bannerUrl: String
+  """URL to the profile picture."""
+  profilePicture: String
+  """URL to the cover photo."""
+  coverPicture: String
+  """List of social links."""
+  socialLinks: [SocialLink]
+
+  """Total number of followers."""
+  followersCount: Int!
+  """Total number of accounts this user is following."""
+  followingCount: Int!
+  """Total number of publications."""
+  publicationsCount: Int!
+
+  """Whether the user is verified."""
   verified: Boolean
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  """Timestamp when the user was created (seconds since Epoch)."""
+  createdAt: Int!
+  """Timestamp when the user was last updated (seconds since Epoch)."""
+  updatedAt: Int!
 }
 
 
+####################
+#     INPUTS       #
+####################
+
+"""Required data to create a new user."""
 input UserInput {
-   username: String!
-   address: String!
+  """Wallet address (required)."""
+  address: String!
 }
 
+"""Filter for fetching a user by wallet address."""
 input UserByInput {
-    address: String
+  """Wallet address."""
+  address: String
 }
 
+"""Data for updating an existing user profile."""
+input UpdateUserInput {
+  """Wallet address (required)."""
+  address: String!
+  """New handle."""
+  username: String
+  """New display name."""
+  displayName: String
+  """New biography."""
+  bio: String
+  """New profile picture URL."""
+  profilePicture: String
+  """New cover photo URL."""
+  coverPicture: String
+
+  """
+  Array of social links,
+  each with a platform name and URL.
+  """
+  socialLinks: [SocialLinkInput!]
+}
+
+"""Key-value pair for a social link (e.g. Twitter, GitHub)."""
+input SocialLinkInput {
+  """Name of the platform."""
+  platform: String
+  """URL of the profile."""
+  url: String
+}
+
+
+####################
+#      QUERIES     #
+####################
 
 extend type Query {
-  """"""
-  Profile(input: UserByInput!): User!
+  """Retrieve a single user by their wallet address."""
+  user(address: String!): User
 }
+
+
+####################
+#     MUTATIONS    #
+####################
 
 extend type Mutation {
   """
-  Creates a new user profile based on the input data.
-  Returns the recent created user.
+  Create a new user profile with the provided address.
+  Returns the newly created User.
   """
-  CreateProfile(input: UserInput!): User!
+  createUser(input: UserInput!): User!
+
+  """Update the current user's profile with new metadata."""
+  updateUser(input: UpdateUserInput!): User!
 }

@@ -46,3 +46,11 @@ export class CollectionDAO<T extends BaseDoc> {
 /** Factory so datasources can do:  this.fs<User>('users')  */
 export const fs = <T extends BaseDoc>(path: string) =>
     new CollectionDAO<T>(admin.collection(path));
+
+export function FireStore() {
+  return {
+    getCollection: admin.collection.bind(admin),
+    adminInstance: admin,
+    fs,
+  };
+}

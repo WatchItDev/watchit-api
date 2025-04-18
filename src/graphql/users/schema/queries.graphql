@@ -1,4 +1,0 @@
-extend type Query {
-    "Retrieve a single user by wallet address."
-    user(address: String!): User
-}

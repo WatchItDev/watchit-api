@@ -1,0 +1,16 @@
+{
+  "name": "watchit-cloud-functions",
+  "private": true,
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^12.0.3",
+    "firebase-functions": "^5.1.0"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.4.1"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "emulate": "npm run build && npx firebase emulators:start --only functions,firestore"
+  }
+}

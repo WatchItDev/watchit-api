@@ -1,5 +1,0 @@
-input CreateCommentInput {
-    publicationId: String!
-    content: String!
-    parentCommentId: String
-}

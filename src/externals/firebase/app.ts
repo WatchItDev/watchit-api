@@ -1,4 +1,3 @@
-
 import { initializeApp, cert, getApps, getApp } from 'firebase-admin/app'
 import {
   initializeApp as clientInitialize,
@@ -9,11 +8,15 @@ import {
 import adminKey from './credentials/admin.json'
 import clientKey from './credentials/client.json'
 
-
 const {
   FIREBASE_PROJECT_ID,
   FIREBASE_DATABASE
 } = process.env
+
+// This is for the Firebase Emulator Suite
+if (process.env.NODE_ENV !== 'production') {
+    process.env.FIRESTORE_EMULATOR_HOST ??= '127.0.0.1:8080';
+}
 
 export const App = () => {
   const client = !clientApps().length

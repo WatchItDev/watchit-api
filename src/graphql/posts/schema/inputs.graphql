@@ -1,5 +1,0 @@
-input CreatePublicationInput {
-    authorAddress: String!
-    content: String!
-    media: [String!]
-}

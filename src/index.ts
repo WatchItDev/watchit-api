@@ -31,7 +31,11 @@ const startServer = async () => {
 
     const fireStore = FireStore();
     const dataSources = DataSources(fireStore);
-    const services = Services({ds: dataSources, ext: externals })
+    const externalsBundle = {
+        ...externals,
+        Functions: externals.Functions(),
+    };
+    const services = Services({ds: dataSources, ext: externalsBundle })
 
     return await startStandaloneServer(server, {
         context: async ({ req }) => {
