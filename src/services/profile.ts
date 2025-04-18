@@ -7,12 +7,12 @@ import { User, UserInput } from '@/schema/types';
  */
 export class ProfileService extends ServiceManager {
     async createProfile(input: UserInput): Promise<User> {
-        const res = await this.ext.Functions.users.create(input);
+        const res = await this.ext.Functions().users.create(input);
         return res.data.user;
     }
 
     async updateProfile(address: string, patch): Promise<User> {
-        const res = await this.ext.Functions.users.update({ address, patch });
+        const res = await this.ext.Functions().users.update({ address, patch });
         return res.data.user;
     }
 

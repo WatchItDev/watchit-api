@@ -1,19 +1,23 @@
 import { getFirestore as getAdminFS } from 'firebase-admin/firestore';
-import type {
+import {
   Firestore as AdminFS,
   CollectionReference,
   DocumentData,
 } from 'firebase-admin/firestore';
 import { App } from './app';
 
-const admin: AdminFS = getAdminFS(App().getAdmin());
-
 export interface BaseDoc {
   id?: string; // added on reads
 }
 
 export class CollectionDAO<T extends BaseDoc> {
-  constructor(private ref: CollectionReference<DocumentData>) {}
+  protected admin: AdminFS
+  protected ref: CollectionReference<DocumentData>
+
+  constructor(path: string) {
+    this.admin = getAdminFS(App().getAdmin());
+    this.ref = this.admin.collection(path)
+  }
 
   async get(id: string): Promise<T | null> {
     const snap = await this.ref.doc(id).get();
@@ -43,14 +47,10 @@ export class CollectionDAO<T extends BaseDoc> {
   }
 }
 
-/** Factory so datasources can do:  this.fs<User>('users')  */
-export const fs = <T extends BaseDoc>(path: string) =>
-    new CollectionDAO<T>(admin.collection(path));
-
 export function FireStore() {
-  return {
-    getCollection: admin.collection.bind(admin),
-    adminInstance: admin,
-    fs,
-  };
+  /** Factory so datasources can do:  this.fs<User>('users')  */
+  const fs = <T extends BaseDoc>(path: string) =>
+    new CollectionDAO<T>(path);
+
+  return { fs };
 }

@@ -8,6 +8,7 @@ import { App } from './app';
 
 export const Functions = () => {
     const fn = getFunctions(App().getClient(), 'auto');
+    // TODO move to env and add condition
     connectFunctionsEmulator(fn, '127.0.0.1', 5001);
 
     return {
