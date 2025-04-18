@@ -1,6 +1,8 @@
 import Users from './users';
+import { FirestoreStore } from "./types";
 
-// TODO create a type for firestore store: Firestore
-export const DataSources = (store) => ({
+export const DataSources = (store: FirestoreStore) => ({
     Users: new Users(store),
 });
+
+export type DataSourcesType = ReturnType<typeof DataSources>;

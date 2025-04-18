@@ -55,6 +55,22 @@ type User {
 input UserInput {
   """Wallet address (required)."""
   address: String!
+  """New handle."""
+  username: String
+  """New display name."""
+  displayName: String
+  """New biography."""
+  bio: String
+  """New profile picture URL."""
+  profilePicture: String
+  """New cover photo URL."""
+  coverPicture: String
+
+  """
+  Array of social links,
+  each with a platform name and URL.
+  """
+  socialLinks: [SocialLinkInput!]
 }
 
 """Filter for fetching a user by wallet address."""

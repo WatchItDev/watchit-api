@@ -1,4 +1,8 @@
 import { Mixin } from 'ts-mixer';
 import { UsersQuery } from './query';
+import { UsersCommands } from './commands';
 
-export default class UsersDS extends Mixin(UsersQuery) {}
+/**
+ * Combine query + commands in a single DataSource
+ */
+export default class UsersDS extends Mixin(UsersQuery, UsersCommands) {}

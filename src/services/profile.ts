@@ -1,5 +1,5 @@
 import { ServiceManager } from './manager';
-import { User, UserInput } from '@/schema/types';
+import { UpdateUserInput, User, UserInput } from '@/schema/types';
 
 /**
  * All mutations go through Cloud Functions.
@@ -11,8 +11,8 @@ export class ProfileService extends ServiceManager {
         return res.data.user;
     }
 
-    async updateProfile(address: string, patch): Promise<User> {
-        const res = await this.ext.Functions().users.update({ address, patch });
+    async updateProfile(address: string, patch: UpdateUserInput): Promise<User> {
+        const res = await this.ext.Functions().users.update({ ...patch });
         return res.data.user;
     }
 

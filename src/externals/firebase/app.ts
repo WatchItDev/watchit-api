@@ -1,3 +1,4 @@
+import type { ServiceAccount } from 'firebase-admin';
 import { initializeApp, cert, getApps, getApp } from 'firebase-admin/app'
 import {
   initializeApp as clientInitialize,
@@ -25,7 +26,7 @@ export const App = () => {
 
   const admin = !getApps().length
     ? initializeApp({
-        credential: cert(adminKey),
+        credential: cert(adminKey as ServiceAccount),
         projectId: FIREBASE_PROJECT_ID,
         databaseURL: FIREBASE_DATABASE
       })

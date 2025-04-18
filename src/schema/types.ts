@@ -36,11 +36,11 @@ export type FilterInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   /**
-   * Creates a new user profile based on the input data.
-   * Returns the recent created user.
+   * Create a new user profile with the provided address.
+   * Returns the newly created User.
    */
   createUser: User;
-  /** Update the current user with new metadata. */
+  /** Update the current user's profile with new metadata. */
   updateUser: User;
 };
 
@@ -56,7 +56,7 @@ export type MutationupdateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  /** Retrieve a single user by wallet address. */
+  /** Retrieve a single user by their wallet address. */
   user?: Maybe<User>;
 };
 
@@ -65,53 +65,100 @@ export type QueryuserArgs = {
   address: Scalars['String']['input'];
 };
 
+/** Represents a social link (e.g. Twitter, GitHub). */
 export type SocialLink = {
   __typename?: 'SocialLink';
+  /** Name of the platform, e.g. "twitter". */
   platform?: Maybe<Scalars['String']['output']>;
+  /** URL of the profile on that platform. */
   url?: Maybe<Scalars['String']['output']>;
 };
 
-/** Simple key-value for social links (e.g. Twitter, GitHub). */
+/** Key-value pair for a social link (e.g. Twitter, GitHub). */
 export type SocialLinkInput = {
+  /** Name of the platform. */
   platform?: InputMaybe<Scalars['String']['input']>;
+  /** URL of the profile. */
   url?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Input for updating a user. */
+/** Data for updating an existing user profile. */
 export type UpdateUserInput = {
+  /** Wallet address (required). */
   address: Scalars['String']['input'];
+  /** New biography. */
   bio?: InputMaybe<Scalars['String']['input']>;
+  /** New cover photo URL. */
   coverPicture?: InputMaybe<Scalars['String']['input']>;
+  /** New display name. */
   displayName?: InputMaybe<Scalars['String']['input']>;
+  /** New profile picture URL. */
   profilePicture?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Array of social links,
+   * each with a platform name and URL.
+   */
   socialLinks?: InputMaybe<Array<SocialLinkInput>>;
+  /** New handle. */
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** A user’s profile data. */
 export type User = {
   __typename?: 'User';
+  /** Unique wallet address (non-null). */
   address: Scalars['String']['output'];
+  /** Short biography. */
   bio?: Maybe<Scalars['String']['output']>;
+  /** URL to the cover photo. */
   coverPicture?: Maybe<Scalars['String']['output']>;
+  /** Timestamp when the user was created (seconds since Epoch). */
   createdAt: Scalars['Int']['output'];
+  /** Name displayed on profile. */
   displayName?: Maybe<Scalars['String']['output']>;
+  /** Total number of followers. */
   followersCount: Scalars['Int']['output'];
+  /** Total number of accounts this user is following. */
   followingCount: Scalars['Int']['output'];
+  /** URL to the profile picture. */
   profilePicture?: Maybe<Scalars['String']['output']>;
+  /** Total number of publications. */
   publicationsCount: Scalars['Int']['output'];
+  /** List of social links. */
   socialLinks?: Maybe<Array<Maybe<SocialLink>>>;
+  /** Timestamp when the user was last updated (seconds since Epoch). */
   updatedAt: Scalars['Int']['output'];
+  /** User’s handle. */
   username?: Maybe<Scalars['String']['output']>;
+  /** Whether the user is verified. */
   verified?: Maybe<Scalars['Boolean']['output']>;
 };
 
+/** Filter for fetching a user by wallet address. */
 export type UserByInput = {
+  /** Wallet address. */
   address?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Required data to create a new user. */
 export type UserInput = {
+  /** Wallet address (required). */
   address: Scalars['String']['input'];
-  username: Scalars['String']['input'];
+  /** New biography. */
+  bio?: InputMaybe<Scalars['String']['input']>;
+  /** New cover photo URL. */
+  coverPicture?: InputMaybe<Scalars['String']['input']>;
+  /** New display name. */
+  displayName?: InputMaybe<Scalars['String']['input']>;
+  /** New profile picture URL. */
+  profilePicture?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Array of social links,
+   * each with a platform name and URL.
+   */
+  socialLinks?: InputMaybe<Array<SocialLinkInput>>;
+  /** New handle. */
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 

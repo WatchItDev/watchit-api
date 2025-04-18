@@ -1,5 +1,6 @@
 import { getFunctions, httpsCallable, connectFunctionsEmulator } from 'firebase/functions';
 import { App } from './app';
+import { UpdateUserInput, User, UserInput } from "@/schema/types";
 
 /**
  * Thin wrapper around Firebase callable Cloud Functions.
@@ -8,13 +9,15 @@ import { App } from './app';
 
 export const Functions = () => {
     const fn = getFunctions(App().getClient(), 'auto');
-    // TODO move to env and add condition
-    connectFunctionsEmulator(fn, '127.0.0.1', 5001);
+
+    if (process.env.NODE_ENV !== 'production') {
+        connectFunctionsEmulator(fn, '127.0.0.1', 5001);
+    }
 
     return {
         users: {
-            create: httpsCallable(fn, 'usersCallable-usersCreate'),
-            update: httpsCallable(fn, 'usersCallable-usersUpdate'),
+            create: httpsCallable<UserInput, { user: User }>(fn, 'usersCallable-usersCreate'),
+            update: httpsCallable<UpdateUserInput & { address: string }, { user: User }>(fn, 'usersCallable-usersUpdate'),
         },
     };
 };

@@ -1,56 +1,84 @@
-import { getFirestore as getAdminFS } from 'firebase-admin/firestore';
-import {
+import { getFirestore as getAdminFS }    from 'firebase-admin/firestore';
+import type {
   Firestore as AdminFS,
   CollectionReference,
   DocumentData,
+  WithFieldValue,
+  Query as FSQuery,
+  QuerySnapshot,
 } from 'firebase-admin/firestore';
 import { App } from './app';
 
-export interface BaseDoc {
-  id?: string; // added on reads
-}
-
-export class CollectionDAO<T extends BaseDoc> {
-  protected admin: AdminFS
-  protected ref: CollectionReference<DocumentData>
+/**
+ * A generic Firestore DAO.
+ * T can be any shape (your GraphQL types, etc.).
+ */
+export class CollectionDAO<T> {
+  protected admin: AdminFS;
+  protected ref: CollectionReference<DocumentData>;
 
   constructor(path: string) {
     this.admin = getAdminFS(App().getAdmin());
-    this.ref = this.admin.collection(path)
+    this.ref   = this.admin.collection(path);
   }
 
   async get(id: string): Promise<T | null> {
     const snap = await this.ref.doc(id).get();
-    return snap.exists ? ({ id, ...(snap.data() as T) } as T) : null;
+    return snap.exists ? (snap.data() as T) : null;
   }
 
   async list(limit = 20): Promise<T[]> {
-    const qSnap = await this.ref.limit(limit).get();
-    return qSnap.docs.map((d) => ({ id: d.id, ...(d.data() as T) }));
+    const snap = await this.ref.limit(limit).get();
+    return snap.docs.map((d) => d.data() as T);
   }
 
-  async create(id: string, data: Omit<T, 'id'>) {
-    await this.ref.doc(id).set(data);
+  async create(id: string, data: Partial<WithFieldValue<T>>): Promise<void> {
+    await this.ref.doc(id).set(data)
   }
 
-  async update(id: string, data: Partial<Omit<T, 'id'>>) {
-    await this.ref.doc(id).update(data);
+  async update(id: string, data: Partial<WithFieldValue<T>>): Promise<void> {
+    await this.ref.doc(id).update(data)
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     await this.ref.doc(id).delete();
   }
 
-  /** Helper for sub‑collections: posts/{id}/likes/{user} */
+  /** run an arbitrary query + optional limit */
+  async query(
+    clauses: Array<{ field: string; op: FirebaseFirestore.WhereFilterOp; value: unknown }>,
+    limit?: number
+  ): Promise<T[]> {
+    let q: FSQuery<DocumentData> = this.ref;
+    for (const c of clauses) q = q.where(c.field, c.op, c.value);
+    if (limit) q = q.limit(limit);
+    const snap: QuerySnapshot = await q.get();
+    return snap.docs.map((d) => d.data() as T);
+  }
+
+  /** common “prefix search” pattern */
+  async prefixSearch(
+    field: string,
+    prefix: string,
+    limit = 20
+  ): Promise<T[]> {
+    return this.query(
+      [
+        { field, op: '>=', value: prefix },
+        { field, op: '<=', value: prefix + '\uf8ff' },
+      ],
+      limit
+    );
+  }
+
+  /** sub‑collection helper */
   sub(id: string, sub: string) {
     return this.ref.doc(id).collection(sub);
   }
 }
 
+/** factory for your datasources */
 export function FireStore() {
-  /** Factory so datasources can do:  this.fs<User>('users')  */
-  const fs = <T extends BaseDoc>(path: string) =>
-    new CollectionDAO<T>(path);
-
+  const fs = <U>(path: string): CollectionDAO<U> => new CollectionDAO<U>(path);
   return { fs };
 }

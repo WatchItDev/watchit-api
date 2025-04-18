@@ -14,6 +14,7 @@ import { Services } from './services'
 import { FireStore } from './externals';
 import { DataSources } from './datasources';
 import * as externals from './externals'
+import {GQL} from "@/types";
 
 
 // const {
