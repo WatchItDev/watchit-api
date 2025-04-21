@@ -1,0 +1,13 @@
+###########################
+#        FEEDS            #
+###########################
+
+extend type Query {
+  popularUsers(limit: Int): [User!]!
+  recentUsers(limit: Int):  [User!]!
+  activeUsers(limit: Int):  [User!]!  # by posts+comments count
+
+  popularPosts(limit: Int): [Post!]!
+  recentPosts(limit: Int):  [Post!]!
+  allPosts:                [Post!]!
+}

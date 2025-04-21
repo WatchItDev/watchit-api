@@ -1,0 +1,80 @@
+###########################
+#        POSTS            #
+###########################
+
+enum VisibilitySetting {
+  PUBLIC
+  FOLLOWERS_ONLY
+  PRIVATE
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+"""An attachment in a post."""
+type MediaAttachment {
+  id:   ID!
+  url:  String!
+  type: MediaType!
+}
+
+"""A user’s post/publication."""
+type Post {
+  id:            ID!
+  author:        User!
+  content:       String!
+  media:         [MediaAttachment!]
+  visibility:    VisibilitySetting!
+  replyTo:       Post
+  quoteOf:       Post
+  createdAt:     Int!
+  updatedAt:     Int
+
+  #–– raw counts ––
+  commentCount:  Int!
+  likeCount:     Int!
+  bookmarkCount: Int!
+  viewCount:     Int!
+
+  #–– edges (fetched on demand) ––
+  comments:      [Comment!]!
+  likes:         [User!]!
+  bookmarks:     [User!]!
+}
+
+input CreatePostInput {
+  content:    String!
+  media:      [MediaAttachmentInput!]
+  visibility: VisibilitySetting!
+  replyTo:    ID
+  quoteOf:    ID
+}
+
+input UpdatePostInput {
+  postId:     ID!
+  content:    String
+  visibility: VisibilitySetting
+}
+
+input MediaAttachmentInput {
+  url:  String!
+  type: MediaType!
+}
+
+extend type Query {
+  post(id: ID!):                 Post
+  postsByAuthor(author: String!, limit: Int): [Post!]!
+  recentPosts(limit: Int):       [Post!]!
+  popularPosts(limit: Int):      [Post!]!
+  allPosts:                      [Post!]!
+}
+
+extend type Mutation {
+  createPost(input: CreatePostInput!): Post!
+  updatePost(input: UpdatePostInput!): Post!
+  deletePost(postId: ID!): Boolean!
+  incrementPostView(postId: ID!): Post!
+}

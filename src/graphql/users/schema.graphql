@@ -31,12 +31,21 @@ type User {
   """List of social links."""
   socialLinks: [SocialLink]
 
+  #–– raw counts ––
+
   """Total number of followers."""
   followersCount: Int!
   """Total number of accounts this user is following."""
   followingCount: Int!
   """Total number of publications."""
   publicationsCount: Int!
+  bookmarksCount:    Int!
+
+  #–– edges (resolve only when needed) ––
+  followers:    [User!]!
+  following:    [User!]!
+  publications: [Post!]!
+  bookmarks:    [Post!]!
 
   """Whether the user is verified."""
   verified: Boolean
@@ -117,6 +126,9 @@ input SocialLinkInput {
 extend type Query {
   """Retrieve a single user by their wallet address."""
   user(address: String!): User
+
+  """Search users by username prefix."""
+  getUsers(prefix: String!, limit: Int): [User!]!
 }
 
 

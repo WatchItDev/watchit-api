@@ -1,0 +1,37 @@
+###########################
+#    SOCIAL ACTIONS       #
+###########################
+
+"""Follow / unfollow someone."""
+input FollowInput {
+  targetAddress: String!
+}
+
+"""Like / unlike a post."""
+input LikePostInput {
+  postId: ID!
+}
+
+"""Bookmark / unbookmark a post."""
+input BookmarkPostInput {
+  postId: ID!
+}
+
+"""Like / unlike a comment."""
+input LikeCommentInput {
+  commentId: ID!
+}
+
+extend type Mutation {
+  followUser(input: FollowInput!):  User!
+  unfollowUser(input: FollowInput!): User!
+
+  likePost(input: LikePostInput!):          Post!
+  unlikePost(input: LikePostInput!):        Post!
+
+  bookmarkPost(input: BookmarkPostInput!):  Post!
+  unbookmarkPost(input: BookmarkPostInput!): Post!
+
+  likeComment(input: LikeCommentInput!):    Comment!
+  unlikeComment(input: LikeCommentInput!):  Comment!
+}

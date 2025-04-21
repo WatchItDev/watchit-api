@@ -1,8 +1,41 @@
 directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
+"""Bookmark / unbookmark a post."""
+input BookmarkPostInput {
+  postId: ID!
+}
+
 enum CacheControlScope {
   PRIVATE
   PUBLIC
+}
+
+"""A comment on a post, or a reply to another comment."""
+type Comment {
+  author: User!
+  content: String!
+  createdAt: Int!
+  id: ID!
+  likeCount: Int!
+  likes: [User!]!
+  parentComment: Comment
+  post: Post!
+  replies: [Comment!]!
+  updatedAt: Int
+}
+
+input CreateCommentInput {
+  content: String!
+  parentComment: ID
+  postId: ID!
+}
+
+input CreatePostInput {
+  content: String!
+  media: [MediaAttachmentInput!]
+  quoteOf: ID
+  replyTo: ID
+  visibility: VisibilitySetting!
 }
 
 scalar Date
@@ -15,20 +48,103 @@ input FilterInput {
   offset: Int
 }
 
+"""Follow / unfollow someone."""
+input FollowInput {
+  targetAddress: String!
+}
+
 scalar JSON
 
+"""Like / unlike a comment."""
+input LikeCommentInput {
+  commentId: ID!
+}
+
+"""Like / unlike a post."""
+input LikePostInput {
+  postId: ID!
+}
+
+"""An attachment in a post."""
+type MediaAttachment {
+  id: ID!
+  type: MediaType!
+  url: String!
+}
+
+input MediaAttachmentInput {
+  type: MediaType!
+  url: String!
+}
+
+enum MediaType {
+  AUDIO
+  IMAGE
+  VIDEO
+}
+
 type Mutation {
+  bookmarkPost(input: BookmarkPostInput!): Post!
+  createComment(input: CreateCommentInput!): Comment!
+  createPost(input: CreatePostInput!): Post!
+
   """
   Create a new user profile with the provided address.
   Returns the newly created User.
   """
   createUser(input: UserInput!): User!
+  deleteComment(commentId: ID!): Boolean!
+  deletePost(postId: ID!): Boolean!
+  followUser(input: FollowInput!): User!
+  incrementPostView(postId: ID!): Post!
+  likeComment(input: LikeCommentInput!): Comment!
+  likePost(input: LikePostInput!): Post!
+  unbookmarkPost(input: BookmarkPostInput!): Post!
+  unfollowUser(input: FollowInput!): User!
+  unlikeComment(input: LikeCommentInput!): Comment!
+  unlikePost(input: LikePostInput!): Post!
+  updateComment(input: UpdateCommentInput!): Comment!
+  updatePost(input: UpdatePostInput!): Post!
 
   """Update the current user's profile with new metadata."""
   updateUser(input: UpdateUserInput!): User!
 }
 
+"""A user’s post/publication."""
+type Post {
+  author: User!
+  bookmarkCount: Int!
+  bookmarks: [User!]!
+  commentCount: Int!
+  comments: [Comment!]!
+  content: String!
+  createdAt: Int!
+  id: ID!
+  likeCount: Int!
+  likes: [User!]!
+  media: [MediaAttachment!]
+  quoteOf: Post
+  replyTo: Post
+  updatedAt: Int
+  viewCount: Int!
+  visibility: VisibilitySetting!
+}
+
 type Query {
+  activeUsers(limit: Int): [User!]!
+  allPosts: [Post!]!
+  commentsByPost(limit: Int, postId: ID!): [Comment!]!
+
+  """Search users by username prefix."""
+  getUsers(limit: Int, prefix: String!): [User!]!
+  popularPosts(limit: Int): [Post!]!
+  popularUsers(limit: Int): [User!]!
+  post(id: ID!): Post
+  postsByAuthor(author: String!, limit: Int): [Post!]!
+  recentPosts(limit: Int): [Post!]!
+  recentUsers(limit: Int): [User!]!
+  repliesByComment(commentId: ID!, limit: Int): [Comment!]!
+
   """Retrieve a single user by their wallet address."""
   user(address: String!): User
 }
@@ -53,6 +169,17 @@ input SocialLinkInput {
 
 """Unix epoch in milliseconds (number)."""
 scalar Timestamp
+
+input UpdateCommentInput {
+  commentId: ID!
+  content: String!
+}
+
+input UpdatePostInput {
+  content: String
+  postId: ID!
+  visibility: VisibilitySetting
+}
 
 """Data for updating an existing user profile."""
 input UpdateUserInput {
@@ -90,6 +217,8 @@ type User {
 
   """Short biography."""
   bio: String
+  bookmarks: [Post!]!
+  bookmarksCount: Int!
 
   """URL to the cover photo."""
   coverPicture: String
@@ -99,15 +228,18 @@ type User {
 
   """Name displayed on profile."""
   displayName: String
+  followers: [User!]!
 
   """Total number of followers."""
   followersCount: Int!
+  following: [User!]!
 
   """Total number of accounts this user is following."""
   followingCount: Int!
 
   """URL to the profile picture."""
   profilePicture: String
+  publications: [Post!]!
 
   """Total number of publications."""
   publicationsCount: Int!
@@ -156,4 +288,10 @@ input UserInput {
 
   """New handle."""
   username: String
+}
+
+enum VisibilitySetting {
+  FOLLOWERS_ONLY
+  PRIVATE
+  PUBLIC
 }

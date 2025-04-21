@@ -1,0 +1,44 @@
+###########################
+#       COMMENTS          #
+###########################
+
+"""A comment on a post, or a reply to another comment."""
+type Comment {
+  id:             ID!
+  author:         User!
+  post:           Post!
+  parentComment:  Comment
+  createdAt:      Int!
+  updatedAt:      Int
+
+  #–– raw count ––
+  likeCount:      Int!
+
+  #–– edges ––
+  replies:        [Comment!]!
+  likes:          [User!]!
+
+  content:        String!
+}
+
+input CreateCommentInput {
+  postId:        ID!
+  parentComment: ID
+  content:       String!
+}
+
+input UpdateCommentInput {
+  commentId: ID!
+  content:   String!
+}
+
+extend type Query {
+  commentsByPost(postId: ID!, limit: Int):    [Comment!]!
+  repliesByComment(commentId: ID!, limit: Int): [Comment!]!
+}
+
+extend type Mutation {
+  createComment(input: CreateCommentInput!): Comment!
+  updateComment(input: UpdateCommentInput!): Comment!
+  deleteComment(commentId: ID!): Boolean!
+}
