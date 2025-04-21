@@ -1,7 +1,7 @@
 import Users from './users';
-import { FirestoreStore } from "./types";
+import { FireStore } from "./types";
 
-export const DataSources = (store: FirestoreStore) => ({
+export const DataSources = (store: FireStore) => ({
     Users: new Users(store),
 });
 

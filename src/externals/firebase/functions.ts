@@ -9,9 +9,10 @@ import { UpdateUserInput, User, UserInput } from "@/schema/types";
 
 export const Functions = () => {
     const fn = getFunctions(App().getClient(), 'auto');
+    const { EMULATOR_HOST } = process.env
 
     if (process.env.NODE_ENV !== 'production') {
-        connectFunctionsEmulator(fn, '127.0.0.1', 5001);
+        connectFunctionsEmulator(fn, `${EMULATOR_HOST}`, 5001);
     }
 
     return {

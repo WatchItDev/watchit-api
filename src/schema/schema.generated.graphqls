@@ -149,21 +149,13 @@ type Query {
   user(address: String!): User
 }
 
-"""Represents a social link (e.g. Twitter, GitHub)."""
 type SocialLink {
-  """Name of the platform, e.g. "twitter"."""
   platform: String
-
-  """URL of the profile on that platform."""
   url: String
 }
 
-"""Key-value pair for a social link (e.g. Twitter, GitHub)."""
 input SocialLinkInput {
-  """Name of the platform."""
   platform: String
-
-  """URL of the profile."""
   url: String
 }
 
@@ -183,50 +175,26 @@ input UpdatePostInput {
 
 """Data for updating an existing user profile."""
 input UpdateUserInput {
-  """Wallet address (required)."""
   address: String!
-
-  """New biography."""
   bio: String
-
-  """New cover photo URL."""
   coverPicture: String
-
-  """New display name."""
   displayName: String
-
-  """New profile picture URL."""
   profilePicture: String
-
-  """
-  Array of social links,
-  each with a platform name and URL.
-  """
   socialLinks: [SocialLinkInput!]
-
-  """New handle."""
   username: String
 }
 
 scalar Upload
 
-"""A user’s profile data."""
 type User {
-  """Unique wallet address (non-null)."""
   address: String!
-
-  """Short biography."""
   bio: String
   bookmarks: [Post!]!
   bookmarksCount: Int!
 
   """URL to the cover photo."""
   coverPicture: String
-
-  """Timestamp when the user was created (seconds since Epoch)."""
   createdAt: Int!
-
-  """Name displayed on profile."""
   displayName: String
   followers: [User!]!
 
@@ -236,57 +204,28 @@ type User {
 
   """Total number of accounts this user is following."""
   followingCount: Int!
-
-  """URL to the profile picture."""
   profilePicture: String
   publications: [Post!]!
 
   """Total number of publications."""
   publicationsCount: Int!
-
-  """List of social links."""
   socialLinks: [SocialLink]
-
-  """Timestamp when the user was last updated (seconds since Epoch)."""
   updatedAt: Int!
-
-  """User’s handle."""
   username: String
-
-  """Whether the user is verified."""
   verified: Boolean
 }
 
-"""Filter for fetching a user by wallet address."""
 input UserByInput {
-  """Wallet address."""
   address: String
 }
 
-"""Required data to create a new user."""
 input UserInput {
-  """Wallet address (required)."""
   address: String!
-
-  """New biography."""
   bio: String
-
-  """New cover photo URL."""
   coverPicture: String
-
-  """New display name."""
   displayName: String
-
-  """New profile picture URL."""
   profilePicture: String
-
-  """
-  Array of social links,
-  each with a platform name and URL.
-  """
   socialLinks: [SocialLinkInput!]
-
-  """New handle."""
   username: String
 }
 

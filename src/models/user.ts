@@ -18,10 +18,7 @@ export function makeNewUser(input: UserInput): User {
     const now = Date.now();
     return {
         ...defaultUserData(),
-        address:        input.address,
-        username:       input.username,
-        displayName:    input.displayName,
-        bio:            input.bio,
+        ...input,
         profilePicture: input.profilePicture ?? '',
         coverPicture:   input.coverPicture ?? '',
         socialLinks:    input.socialLinks ?? [],
