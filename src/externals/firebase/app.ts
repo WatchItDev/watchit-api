@@ -11,12 +11,14 @@ import clientKey from './credentials/client.json'
 
 const {
   FIREBASE_PROJECT_ID,
-  FIREBASE_DATABASE
+  FIREBASE_DATABASE,
+  EMULATOR_HOST,
+  EMULATOR_PORT,
 } = process.env
 
 // This is for the Firebase Emulator Suite
 if (process.env.NODE_ENV !== 'production') {
-    process.env.FIRESTORE_EMULATOR_HOST ??= '127.0.0.1:8080';
+    process.env.FIRESTORE_EMULATOR_HOST ??= `${EMULATOR_HOST}:${EMULATOR_PORT}`;
 }
 
 export const App = () => {

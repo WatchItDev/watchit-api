@@ -1,5 +1,5 @@
 import type { CollectionDAO } from '../externals/firebase/firestore';
 
-export interface FirestoreStore {
+export interface FireStore {
     fs: <T>(collection: string) => CollectionDAO<T>;
 }
