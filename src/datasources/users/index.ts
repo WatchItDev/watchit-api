@@ -1,6 +1,8 @@
-import { Mixin } from 'ts-mixer'
-import { QueryManager } from './query'
+import { Mixin } from 'ts-mixer';
+import { UsersQuery } from './query';
+import { UsersCommands } from './commands';
 
-export default class UsersRoot extends Mixin(
-  QueryManager
-) { }
+/**
+ * Combine query + commands in a single DataSource
+ */
+export default class UsersDS extends Mixin(UsersQuery, UsersCommands) {}

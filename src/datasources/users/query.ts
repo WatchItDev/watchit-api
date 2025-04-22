@@ -1,8 +1,13 @@
-import { DataSourceManager } from '@/datasources/manager'
+import { DataSourceManager } from '../manager'
+import type { User } from '../../schema/types'
 
-export class QueryManager extends DataSourceManager {
+export class UsersQuery extends DataSourceManager {
+    getUser = (addr: string): Promise<User | null> =>
+        this.fs<User>('users').get(addr)
 
-    getUser(id: number) {
-        // this.store.getCollection("users")
-    }
+    /** uses the new prefixSearch on CollectionDAO */
+    getUsers = (q: string, limit = 20): Promise<User[]> =>
+        q.trim()
+            ? this.fs<User>('users').prefixSearch('username', q, limit)
+            : Promise.resolve([])
 }

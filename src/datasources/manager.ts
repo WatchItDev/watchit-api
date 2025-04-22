@@ -1,7 +1,10 @@
+import type { FireStore } from './types';
 
+export class DataSourceManager {
+  protected fs: FireStore['fs'];
 
-export class DataSourceManager  {
-  constructor (store: FireStore) {
-    this.store = store
+  constructor(protected store: FireStore) {
+    this.fs = store.fs;
   }
+
 }

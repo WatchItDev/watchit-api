@@ -1,2 +1,3 @@
-export { App } from './firebase'
-export { FireStore } from './firebase'
+export { App, FireStore } from './firebase';
+export { Functions } from './firebase/functions';
+

@@ -1,33 +1,13 @@
 directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
-type Block {
-  blocked: User!
-  blockedAt: DateTime!
-  blocker: User!
-}
-
 enum CacheControlScope {
   PRIVATE
   PUBLIC
 }
 
-type Comment {
-  content: String!
-  createdAt: DateTime!
-  id: ID!
-  post: Post!
-  user: User!
-}
-
-type Conversation {
-  id: ID!
-  messages: [Message!]!
-  participants: [User!]!
-  updatedAt: DateTime!
-}
-
 scalar Date
 
+"""ISO‑8601 Date‑Time string (e.g. 2024‑04‑17T15:22:00.000Z)"""
 scalar DateTime
 
 input FilterInput {
@@ -35,92 +15,55 @@ input FilterInput {
   offset: Int
 }
 
-type Follow {
-  followed: User!
-  followedAt: DateTime!
-  follower: User!
-}
-
 scalar JSON
 
-type MediaAttachment {
-  id: ID!
-  type: MediaType!
-  url: String!
-}
-
-enum MediaType {
-  AUDIO
-  IMAGE
-  VIDEO
-}
-
-type Message {
-  content: String!
-  createdAt: DateTime!
-  id: ID!
-  media: [MediaAttachment]
-  read: Boolean!
-  recipient: User!
-  sender: User!
-}
-
 type Mutation {
-  """
-  Creates a new user profile based on the input data.
-  Returns the recent created user.
-  """
-  CreateProfile(input: UserInput!): User!
-}
-
-type Mute {
-  muted: User!
-  mutedAt: DateTime!
-  muter: User!
-}
-
-type Post {
-  author: User!
-  content: String!
-  createdAt: DateTime!
-  id: ID!
-  media: [MediaAttachment!]
-  quoteOf: Post
-  replyTo: Post
-  updatedAt: DateTime
-  visibility: VisibilitySetting!
+  createUser(input: UserInput!): User!
+  updateUser(input: UpdateUserInput!): User!
 }
 
 type Query {
-  """"""
-  Profile(input: UserByInput!): User!
+  user(address: String!): User
 }
 
-type Reaction {
-  createdAt: DateTime!
-  id: ID!
-  post: Post!
-  type: ReactionType!
-  user: User!
+type SocialLink {
+  platform: String
+  url: String
 }
 
-enum ReactionType {
-  BOOKMARK
-  LIKE
-  REPOST
+input SocialLinkInput {
+  platform: String
+  url: String
+}
+
+"""Unix epoch in milliseconds (number)."""
+scalar Timestamp
+
+input UpdateUserInput {
+  address: String!
+  bio: String
+  coverPicture: String
+  displayName: String
+  profilePicture: String
+  socialLinks: [SocialLinkInput!]
+  username: String
 }
 
 scalar Upload
 
 type User {
-  avatarUrl: String
-  bannerUrl: String
+  address: String!
   bio: String
-  createdAt: DateTime!
+  coverPicture: String
+  createdAt: Int!
   displayName: String
-  id: ID!
-  updatedAt: DateTime!
-  username: String!
+  followersCount: Int!
+  followingCount: Int!
+  profilePicture: String
+  publicationsCount: Int!
+  socialLinks: [SocialLink]
+  updatedAt: Int!
+  username: String
   verified: Boolean
 }
 
@@ -130,11 +73,10 @@ input UserByInput {
 
 input UserInput {
   address: String!
-  username: String!
-}
-
-enum VisibilitySetting {
-  FOLLOWERS_ONLY
-  PRIVATE
-  PUBLIC
+  bio: String
+  coverPicture: String
+  displayName: String
+  profilePicture: String
+  socialLinks: [SocialLinkInput!]
+  username: String
 }

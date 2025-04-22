@@ -12,7 +12,15 @@ directive @cacheControl(
     inheritMaxAge: Boolean
 ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
+"""
+ISO‑8601 Date‑Time string (e.g. 2024‑04‑17T15:22:00.000Z)
+"""
 scalar DateTime
+
+"""
+Unix epoch in milliseconds (number).
+"""
+scalar Timestamp
 scalar Date
 scalar JSON
 scalar Upload

@@ -1,4 +1,4 @@
-
+import type { ServiceAccount } from 'firebase-admin';
 import { initializeApp, cert, getApps, getApp } from 'firebase-admin/app'
 import {
   initializeApp as clientInitialize,
@@ -9,11 +9,17 @@ import {
 import adminKey from './credentials/admin.json'
 import clientKey from './credentials/client.json'
 
-
 const {
   FIREBASE_PROJECT_ID,
-  FIREBASE_DATABASE
+  FIREBASE_DATABASE,
+  EMULATOR_HOST,
+  EMULATOR_PORT,
 } = process.env
+
+// This is for the Firebase Emulator Suite
+if (process.env.NODE_ENV !== 'production') {
+    process.env.FIRESTORE_EMULATOR_HOST ??= `${EMULATOR_HOST}:${EMULATOR_PORT}`;
+}
 
 export const App = () => {
   const client = !clientApps().length
@@ -22,7 +28,7 @@ export const App = () => {
 
   const admin = !getApps().length
     ? initializeApp({
-        credential: cert(adminKey),
+        credential: cert(adminKey as ServiceAccount),
         projectId: FIREBASE_PROJECT_ID,
         databaseURL: FIREBASE_DATABASE
       })

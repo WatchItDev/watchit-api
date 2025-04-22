@@ -1,35 +1,84 @@
+###########################
+#      USERS SCHEMA       #
+###########################
+
+####################
+#      TYPES       #
+####################
+
+type SocialLink {
+  platform: String
+  url: String
+}
+
 type User {
-  id: ID!
-  username: String!
+  address: String!
+  username: String
   displayName: String
   bio: String
-  avatarUrl: String
-  bannerUrl: String
+  profilePicture: String
+  coverPicture: String
+  socialLinks: [SocialLink]
+
+  followersCount: Int!
+  followingCount: Int!
+  publicationsCount: Int!
+
   verified: Boolean
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: Int!
+  updatedAt: Int!
 }
 
 
+####################
+#     INPUTS       #
+####################
+
 input UserInput {
-   username: String!
-   address: String!
+  address: String!
+  username: String
+  displayName: String
+  bio: String
+  profilePicture: String
+  coverPicture: String
+
+  socialLinks: [SocialLinkInput!]
 }
 
 input UserByInput {
-    address: String
+  address: String
 }
 
+input UpdateUserInput {
+  address: String!
+  username: String
+  displayName: String
+  bio: String
+  profilePicture: String
+  coverPicture: String
+  socialLinks: [SocialLinkInput!]
+}
+
+input SocialLinkInput {
+  platform: String
+  url: String
+}
+
+
+####################
+#      QUERIES     #
+####################
 
 extend type Query {
-  """"""
-  Profile(input: UserByInput!): User!
+  user(address: String!): User
 }
 
+
+####################
+#     MUTATIONS    #
+####################
+
 extend type Mutation {
-  """
-  Creates a new user profile based on the input data.
-  Returns the recent created user.
-  """
-  CreateProfile(input: UserInput!): User!
+  createUser(input: UserInput!): User!
+  updateUser(input: UpdateUserInput!): User!
 }

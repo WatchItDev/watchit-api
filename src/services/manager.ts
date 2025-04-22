@@ -1,13 +1,17 @@
+import type { DataSourcesType } from '@/datasources';
+import type * as Externals      from '@/externals';
+
+export interface ServiceParams {
+  ds:  DataSourcesType;
+  ext: typeof Externals;
+}
 
 export class ServiceManager {
-  constructor (params) {
-    const {
-      ds,
-      ctx,
-      ext
-    } = params
+  protected ds:  DataSourcesType;
+  protected ext: typeof Externals;
 
-    this.ds = ds
-    this.ext = ext
+  constructor(params: ServiceParams) {
+    this.ds  = params.ds;
+    this.ext = params.ext;
   }
 }

@@ -14,6 +14,7 @@ import { Services } from './services'
 import { FireStore } from './externals';
 import { DataSources } from './datasources';
 import * as externals from './externals'
+import {GQL} from "@/types";
 
 
 // const {
@@ -31,7 +32,7 @@ const startServer = async () => {
 
     const fireStore = FireStore();
     const dataSources = DataSources(fireStore);
-    const services = Services({ds: dataSources, ext: externals })
+    const services = Services({ ds: dataSources, ext: externals })
 
     return await startStandaloneServer(server, {
         context: async ({ req }) => {
@@ -39,7 +40,7 @@ const startServer = async () => {
                 // // idToken passed from the frontend in the Authorization header
                 // const idToken = req.headers.authorization?.split(' ')[1] as string;
                 // if (!idToken) throw new Error("Invalid token");
-                
+
                 // // TODO pending to check the address from public key
                 // const jwks = jose.createRemoteJWKSet(new URL(WEB3_AUTH_SOCIAL_JWKS)); // for social logins
                 // const jwtDecoded = await jose.jwtVerify(idToken, jwks, { algorithms: ["ES256"] });

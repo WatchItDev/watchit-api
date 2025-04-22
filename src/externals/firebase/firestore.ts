@@ -1,51 +1,84 @@
+import { getFirestore as getAdminFS }    from 'firebase-admin/firestore';
+import type {
+  Firestore as AdminFS,
+  CollectionReference,
+  DocumentData,
+  WithFieldValue,
+  Query as FSQuery,
+  QuerySnapshot,
+} from 'firebase-admin/firestore';
+import { App } from './app';
+
 /**
- * Code Convention:
- *
- * - Usage of JSDoc for comprehensive documentation of each method, including parameters and potential exceptions.
- * - Descriptive method names following a verb-based approach to clearly indicate specific actions
- *   (e.g., getCardData, getCardBalance, triggerCardRequest).
- * - Utilization of decorators to enhance code readability and modularity.
- * - Implementation of proper error handling, with detailed exceptions for possible issues.
- * - Well-organized import statements and comments to effectively divide and describe key sections.
- * - Consistent indentation for improved readability.
- * - Maintaining a clean and consistent coding style throughout.
- *
- * Verbs Convention:
- *
- * 1. **add:**
- *    - Used for methods that add new data or elements (e.g., addCard, addCustomer).
- * 2. **set:**
- *    - Used for methods that set or update data (e.g., setPin).
- * 3. **get:**
- *    - Employed for methods that retrieve or fetch data (e.g., getCardData, getCardBalance).
- * 4. **trigger:**
- *    - Indicates methods that initiate a specific process or action (e.g., triggerCardRequest, triggerCardActivation).
- * 5. **toggle:**
- *    - Applied to methods that switch between two states (e.g., toggleCardLockStatus).
- * 6. **upsert:**
- *    - Used for methods that insert a new document into a collection if it does not exist or update an existing document if it does (e.g., upsertCustomer).
- *
- * However, if necessary, other verbs may be used to better describe the function's purpose.
- * This convention promotes code understanding, maintenance, and collaboration,
- * adhering to best practices in JavaScript development.
- *
- * @memberof module:Firebase
- * @description Firebase module to handle messaging services.
+ * A generic Firestore DAO.
+ * T can be any shape (your GraphQL types, etc.).
  */
+export class CollectionDAO<T> {
+  protected admin: AdminFS;
+  protected ref: CollectionReference<DocumentData>;
 
-import { getFirestore as adminFirestore } from 'firebase-admin/firestore'
-import { App } from './app'
-
-export const FireStore = () => {
-  const admin = App().getAdmin()
-  const db = adminFirestore(admin)
-
-  function getCollection (collectionName: string) {
-    
+  constructor(path: string) {
+    this.admin = getAdminFS(App().getAdmin());
+    this.ref   = this.admin.collection(path);
   }
-  
 
-  return {
-   getCollection
+  async get(id: string): Promise<T | null> {
+    const snap = await this.ref.doc(id).get();
+    return snap.exists ? (snap.data() as T) : null;
   }
+
+  async list(limit = 20): Promise<T[]> {
+    const snap = await this.ref.limit(limit).get();
+    return snap.docs.map((d) => d.data() as T);
+  }
+
+  async create(id: string, data: Partial<WithFieldValue<T>>): Promise<void> {
+    await this.ref.doc(id).set(data)
+  }
+
+  async update(id: string, data: Partial<WithFieldValue<T>>): Promise<void> {
+    await this.ref.doc(id).update(data)
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.ref.doc(id).delete();
+  }
+
+  /** run an arbitrary query + optional limit */
+  async query(
+    clauses: Array<{ field: string; op: FirebaseFirestore.WhereFilterOp; value: unknown }>,
+    limit?: number
+  ): Promise<T[]> {
+    let q: FSQuery<DocumentData> = this.ref;
+    for (const c of clauses) q = q.where(c.field, c.op, c.value);
+    if (limit) q = q.limit(limit);
+    const snap: QuerySnapshot = await q.get();
+    return snap.docs.map((d) => d.data() as T);
+  }
+
+  /** common “prefix search” pattern */
+  async prefixSearch(
+    field: string,
+    prefix: string,
+    limit = 20
+  ): Promise<T[]> {
+    return this.query(
+      [
+        { field, op: '>=', value: prefix },
+        { field, op: '<=', value: prefix + '\uf8ff' },
+      ],
+      limit
+    );
+  }
+
+  /** sub‑collection helper */
+  sub(id: string, sub: string) {
+    return this.ref.doc(id).collection(sub);
+  }
+}
+
+/** factory for your datasources */
+export function FireStore() {
+  const fs = <U>(path: string): CollectionDAO<U> => new CollectionDAO<U>(path);
+  return { fs };
 }

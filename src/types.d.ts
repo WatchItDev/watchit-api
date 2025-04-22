@@ -1,3 +1,6 @@
+import type { DataSourcesType } from '@/datasources';
+import type { ServicesType }    from '@/services';
+
 declare namespace NodeJS {
   interface ProcessEnv {
     WEB3_AUTH_SOCIAL_JWKS: string;
@@ -6,7 +9,7 @@ declare namespace NodeJS {
 
 declare namespace GQL {
   interface ContextType {
-    dataSources: any, 
-    services: any
+    dataSources: DataSourcesType;
+    services:    ServicesType;
   }
 }
