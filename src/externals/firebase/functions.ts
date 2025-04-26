@@ -7,9 +7,6 @@ import type {
     Post,
     CreatePostInput,
     UpdatePostInput,
-    Comment,
-    CreateCommentInput,
-    UpdateCommentInput,
 } from '@/schema/types';
 
 export const Functions = () => {
@@ -48,56 +45,6 @@ export const Functions = () => {
             incrementView: httpsCallable<{ postId: string }, { post: Post }>(
                 fn,
                 'postsCallable-postsIncrementView'
-            ),
-        },
-
-        comments: {
-            create: httpsCallable<CreateCommentInput & { authorAddress: string }, { comment: Comment }>(
-                fn,
-                'commentsCallable-commentsCreate'
-            ),
-            update: httpsCallable<UpdateCommentInput, { comment: Comment }>(
-                fn,
-                'commentsCallable-commentsUpdate'
-            ),
-            delete: httpsCallable<{ commentId: string }, { success: boolean }>(
-                fn,
-                'commentsCallable-commentsDelete'
-            ),
-        },
-
-        social: {
-            follow: httpsCallable<{ me: string; target: string }, { user: User }>(
-                fn,
-                'socialCallable-follow'
-            ),
-            unfollow: httpsCallable<{ me: string; target: string }, { user: User }>(
-                fn,
-                'socialCallable-unfollow'
-            ),
-            likePost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
-                fn,
-                'socialCallable-likePost'
-            ),
-            unlikePost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
-                fn,
-                'socialCallable-unlikePost'
-            ),
-            bookmarkPost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
-                fn,
-                'socialCallable-bookmarkPost'
-            ),
-            unbookmarkPost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
-                fn,
-                'socialCallable-unbookmarkPost'
-            ),
-            likeComment: httpsCallable<{ me: string; commentId: string }, { comment: Comment }>(
-                fn,
-                'socialCallable-likeComment'
-            ),
-            unlikeComment: httpsCallable<{ me: string; commentId: string }, { comment: Comment }>(
-                fn,
-                'socialCallable-unlikeComment'
             ),
         },
     };
