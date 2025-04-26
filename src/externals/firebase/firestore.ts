@@ -1,4 +1,4 @@
-import { getFirestore as getAdminFS }    from 'firebase-admin/firestore';
+import { getFirestore as getAdminFS } from 'firebase-admin/firestore';
 import type {
   Firestore as AdminFS,
   CollectionReference,
@@ -33,7 +33,7 @@ export class CollectionDAO<T> {
   }
 
   async create(id: string, data: Partial<WithFieldValue<T>>): Promise<void> {
-    await this.ref.doc(id).set(data)
+    await this.ref.doc(id).set(JSON.parse(JSON.stringify(data)))
   }
 
   async update(id: string, data: Partial<WithFieldValue<T>>): Promise<void> {
@@ -44,7 +44,11 @@ export class CollectionDAO<T> {
     await this.ref.doc(id).delete();
   }
 
-  /** run an arbitrary query + optional limit */
+  async ids(limit = 50): Promise<string[]> {
+    const snap = await this.ref.limit(limit).get();
+    return snap.docs.map(d => d.id);
+  }
+
   async query(
     clauses: Array<{ field: string; op: FirebaseFirestore.WhereFilterOp; value: unknown }>,
     limit?: number
@@ -56,12 +60,7 @@ export class CollectionDAO<T> {
     return snap.docs.map((d) => d.data() as T);
   }
 
-  /** common “prefix search” pattern */
-  async prefixSearch(
-    field: string,
-    prefix: string,
-    limit = 20
-  ): Promise<T[]> {
+  async prefixSearch(field: string, prefix: string, limit = 20): Promise<T[]> {
     return this.query(
       [
         { field, op: '>=', value: prefix },
@@ -71,9 +70,14 @@ export class CollectionDAO<T> {
     );
   }
 
-  /** sub‑collection helper */
-  sub(id: string, sub: string) {
-    return this.ref.doc(id).collection(sub);
+  sub(id: string, sub: string): CollectionDAO<T> {
+    const subPath = `${this.ref.path}/${id}/${sub}`
+    return new CollectionDAO<T>(subPath)
+  }
+
+  async exists(id: string): Promise<boolean> {
+    const snap = await this.ref.doc(id).get();
+    return snap.exists;
   }
 }
 

@@ -1,3 +1,7 @@
+import type { MutationResolvers } from './../../../../schema/types'
 
-        import type   { MutationResolvers } from './../../../../schema/types';
-        export const deletePost: NonNullable<MutationResolvers['deletePost']> = async (_parent, _arg, _ctx) => { /* Implement Mutation.deletePost resolver logic here */ };
+export const deletePost: NonNullable<MutationResolvers['deletePost']> =
+    async (_parent, { postId }, { services }) => {
+            await services.Posts.deletePost(postId)
+            return true
+    }

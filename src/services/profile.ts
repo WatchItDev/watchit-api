@@ -1,20 +1,46 @@
 import { ServiceManager } from './manager';
-import { UpdateUserInput, User, UserInput } from '@/schema/types';
+import type {
+    User,
+    UserInput,
+    UpdateUserInput,
+    Post
+} from '@/schema/types';
 
-/**
- * All mutations go through Cloud Functions.
- * Reads come from the datasource (Admin SDK – read‑only).
- */
 export class ProfileService extends ServiceManager {
+    /** Create a new user via Cloud Function */
     async createProfile(input: UserInput): Promise<User> {
         const res = await this.ext.Functions().users.create(input);
         return res.data.user;
     }
 
-    async updateProfile(address: string, patch: UpdateUserInput): Promise<User> {
-        const res = await this.ext.Functions().users.update({ ...patch });
+    /** Update current user via Cloud Function */
+    async updateProfile(input: UpdateUserInput): Promise<User> {
+        const res = await this.ext.Functions().users.update(input);
         return res.data.user;
     }
 
-    getProfile = (addr: string) => this.ds.Users.getUser(addr);
+    /** Read operations directly against the datasource */
+    getProfile(address: string): Promise<User | null> {
+        return this.ds.Users.getUser(address);
+    }
+
+    getUsers(prefix: string, limit?: number): Promise<User[]> {
+        return this.ds.Users.getUsers(prefix, limit);
+    }
+
+    getFollowers(address: string): Promise<User[]> {
+        return this.ds.Users.getFollowers(address);
+    }
+
+    getFollowing(address: string): Promise<User[]> {
+        return this.ds.Users.getFollowing(address);
+    }
+
+    getPublications(address: string, limit?: number): Promise<Post[]> {
+        return this.ds.Users.getPublications(address, limit);
+    }
+
+    getBookmarks(address: string): Promise<Post[]> {
+        return this.ds.Users.getBookmarks(address);
+    }
 }

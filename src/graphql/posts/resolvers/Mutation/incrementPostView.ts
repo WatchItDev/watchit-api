@@ -1,3 +1,6 @@
+import type { MutationResolvers } from './../../../../schema/types'
 
-        import type   { MutationResolvers } from './../../../../schema/types';
-        export const incrementPostView: NonNullable<MutationResolvers['incrementPostView']> = async (_parent, _arg, _ctx) => { /* Implement Mutation.incrementPostView resolver logic here */ };
+export const incrementPostView: NonNullable<MutationResolvers['incrementPostView']> =
+    async (_parent, { postId }, { services }) => {
+            return services.Posts.incrementView(postId)
+    }

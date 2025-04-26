@@ -3,11 +3,10 @@
 ###########################
 
 extend type Query {
-  popularUsers(limit: Int): [User!]!
-  recentUsers(limit: Int):  [User!]!
-  activeUsers(limit: Int):  [User!]!  # by posts+comments count
-
-  popularPosts(limit: Int): [Post!]!
-  recentPosts(limit: Int):  [Post!]!
-  allPosts:                [Post!]!
+  getPopularUsers(limit: Int): [User!]!
+  getRecentUsers(limit: Int): [User!]!
+  getActiveUsers(limit: Int): [User!]!
+  getPopularPosts(limit: Int): [Post!]!
+  getRecentPosts(limit: Int): [Post!]!
+  getAllPosts(limit: Int): [Post!]!
 }

@@ -20,22 +20,14 @@ type User {
   coverPicture: String
   socialLinks: [SocialLink]
 
-  #–– raw counts ––
-
   followersCount: Int!
   followingCount: Int!
   publicationsCount: Int!
   bookmarksCount:    Int!
 
-  #–– edges (resolve only when needed) ––
-  followers:    [User!]!
-  following:    [User!]!
-  publications: [Post!]!
-  bookmarks:    [Post!]!
-
   verified: Boolean
-  createdAt: Int!
-  updatedAt: Int!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
 }
 
 
@@ -73,17 +65,17 @@ input SocialLinkInput {
   url: String
 }
 
-
 ####################
 #      QUERIES     #
 ####################
 
 extend type Query {
-  user(address: String!): User
-
+  getUser(address: String!): User
   getUsers(prefix: String!, limit: Int): [User!]!
+  getUserFollowers(address: String!, limit: Int): [User!]!
+  getUserFollowing(address: String!, limit: Int): [User!]!
+  getUserBookmarks(address: String!, limit: Int): [Post!]!
 }
-
 
 ####################
 #     MUTATIONS    #

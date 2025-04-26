@@ -14,3 +14,14 @@ export function enhanceFunction<
         return fn({ ds, ext: externals }, ...params);
     };
 }
+
+export function enhanceTrigger<
+    E extends any,
+    R = void
+>(handler: (ctx: ServiceParams, event: E) => Promise<R> | R) {
+    return async (event: E): Promise<R> => {
+        const store: FireStore = externals.FireStore()
+        const ds = DataSources(store)
+        return handler({ ds, ext: externals }, event)
+    }
+}

@@ -4,41 +4,38 @@
 
 """A comment on a post, or a reply to another comment."""
 type Comment {
-  id:             ID!
+  id:             String!
   author:         User!
   post:           Post!
   parentComment:  Comment
-  createdAt:      Int!
-  updatedAt:      Int
+  createdAt:      Timestamp!
+  updatedAt:      Timestamp
 
   #–– raw count ––
   likeCount:      Int!
-
-  #–– edges ––
-  replies:        [Comment!]!
-  likes:          [User!]!
 
   content:        String!
 }
 
 input CreateCommentInput {
-  postId:        ID!
-  parentComment: ID
+  authorAddress: String!
+  postId:        String!
+  parentComment: String
   content:       String!
 }
 
 input UpdateCommentInput {
-  commentId: ID!
+  commentId: String!
   content:   String!
 }
 
 extend type Query {
-  commentsByPost(postId: ID!, limit: Int):    [Comment!]!
-  repliesByComment(commentId: ID!, limit: Int): [Comment!]!
+  getCommentsByPost(postId: String!, limit: Int):    [Comment!]!
+  getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
 }
 
 extend type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   updateComment(input: UpdateCommentInput!): Comment!
-  deleteComment(commentId: ID!): Boolean!
+  deleteComment(commentId: String!): Boolean!
 }

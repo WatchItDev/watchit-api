@@ -1,24 +1,104 @@
 import { getFunctions, httpsCallable, connectFunctionsEmulator } from 'firebase/functions';
 import { App } from './app';
-import { UpdateUserInput, User, UserInput } from "@/schema/types";
-
-/**
- * Thin wrapper around Firebase callable Cloud Functions.
- * Every service writes through this – never directly to Firestore.
- */
+import type {
+    User,
+    UserInput,
+    UpdateUserInput,
+    Post,
+    CreatePostInput,
+    UpdatePostInput,
+    Comment,
+    CreateCommentInput,
+    UpdateCommentInput,
+} from '@/schema/types';
 
 export const Functions = () => {
     const fn = getFunctions(App().getClient(), 'auto');
-    const { EMULATOR_HOST } = process.env
 
     if (process.env.NODE_ENV !== 'production') {
-        connectFunctionsEmulator(fn, `${EMULATOR_HOST}`, 5001);
+        const host = process.env.EMULATOR_HOST ?? '127.0.0.1';
+        connectFunctionsEmulator(fn, host, 5001);
     }
 
     return {
         users: {
-            create: httpsCallable<UserInput, { user: User }>(fn, 'usersCallable-usersCreate'),
-            update: httpsCallable<UpdateUserInput & { address: string }, { user: User }>(fn, 'usersCallable-usersUpdate'),
+            create: httpsCallable<UserInput, { user: User }>(
+                fn,
+                'usersCallable-usersCreate'
+            ),
+            update: httpsCallable<UpdateUserInput & { address: string }, { user: User }>(
+                fn,
+                'usersCallable-usersUpdate'
+            ),
+        },
+
+        posts: {
+            create: httpsCallable<CreatePostInput & { authorAddress: string }, { post: Post }>(
+                fn,
+                'postsCallable-postsCreate'
+            ),
+            update: httpsCallable<UpdatePostInput, { post: Post }>(
+                fn,
+                'postsCallable-postsUpdate'
+            ),
+            delete: httpsCallable<{ postId: string }, { success: boolean }>(
+                fn,
+                'postsCallable-postsDelete'
+            ),
+            incrementView: httpsCallable<{ postId: string }, { post: Post }>(
+                fn,
+                'postsCallable-postsIncrementView'
+            ),
+        },
+
+        comments: {
+            create: httpsCallable<CreateCommentInput & { authorAddress: string }, { comment: Comment }>(
+                fn,
+                'commentsCallable-commentsCreate'
+            ),
+            update: httpsCallable<UpdateCommentInput, { comment: Comment }>(
+                fn,
+                'commentsCallable-commentsUpdate'
+            ),
+            delete: httpsCallable<{ commentId: string }, { success: boolean }>(
+                fn,
+                'commentsCallable-commentsDelete'
+            ),
+        },
+
+        social: {
+            follow: httpsCallable<{ me: string; target: string }, { user: User }>(
+                fn,
+                'socialCallable-follow'
+            ),
+            unfollow: httpsCallable<{ me: string; target: string }, { user: User }>(
+                fn,
+                'socialCallable-unfollow'
+            ),
+            likePost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+                fn,
+                'socialCallable-likePost'
+            ),
+            unlikePost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+                fn,
+                'socialCallable-unlikePost'
+            ),
+            bookmarkPost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+                fn,
+                'socialCallable-bookmarkPost'
+            ),
+            unbookmarkPost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+                fn,
+                'socialCallable-unbookmarkPost'
+            ),
+            likeComment: httpsCallable<{ me: string; commentId: string }, { comment: Comment }>(
+                fn,
+                'socialCallable-likeComment'
+            ),
+            unlikeComment: httpsCallable<{ me: string; commentId: string }, { comment: Comment }>(
+                fn,
+                'socialCallable-unlikeComment'
+            ),
         },
     };
 };

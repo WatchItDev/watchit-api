@@ -2,7 +2,7 @@ directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControl
 
 """Bookmark / unbookmark a post."""
 input BookmarkPostInput {
-  postId: ID!
+  postId: String!
 }
 
 enum CacheControlScope {
@@ -14,27 +14,30 @@ enum CacheControlScope {
 type Comment {
   author: User!
   content: String!
-  createdAt: Int!
-  id: ID!
+  createdAt: Timestamp!
+  id: String!
   likeCount: Int!
-  likes: [User!]!
   parentComment: Comment
   post: Post!
-  replies: [Comment!]!
-  updatedAt: Int
+  updatedAt: Timestamp
 }
 
 input CreateCommentInput {
+  authorAddress: String!
   content: String!
-  parentComment: ID
-  postId: ID!
+  parentComment: String
+  postId: String!
 }
 
 input CreatePostInput {
-  content: String!
+  authorAddress: String!
+  cid: String!
+  content: String
+  description: String!
   media: [MediaAttachmentInput!]
-  quoteOf: ID
-  replyTo: ID
+  quoteOf: String
+  replyTo: String
+  title: String!
   visibility: VisibilitySetting!
 }
 
@@ -57,24 +60,28 @@ scalar JSON
 
 """Like / unlike a comment."""
 input LikeCommentInput {
-  commentId: ID!
+  commentId: String!
 }
 
 """Like / unlike a post."""
 input LikePostInput {
-  postId: ID!
+  postId: String!
 }
 
 """An attachment in a post."""
 type MediaAttachment {
-  id: ID!
+  cid: String
+  id: String
+  title: String
   type: MediaType!
-  url: String!
+  url: String
 }
 
 input MediaAttachmentInput {
+  cid: String
+  title: String
   type: MediaType!
-  url: String!
+  url: String
 }
 
 enum MediaType {
@@ -84,29 +91,22 @@ enum MediaType {
 }
 
 type Mutation {
-  bookmarkPost(input: BookmarkPostInput!): Post!
+  bookmarkPost(input: BookmarkPostInput!): Boolean!
   createComment(input: CreateCommentInput!): Comment!
   createPost(input: CreatePostInput!): Post!
-
-  """
-  Create a new user profile with the provided address.
-  Returns the newly created User.
-  """
   createUser(input: UserInput!): User!
-  deleteComment(commentId: ID!): Boolean!
-  deletePost(postId: ID!): Boolean!
-  followUser(input: FollowInput!): User!
-  incrementPostView(postId: ID!): Post!
-  likeComment(input: LikeCommentInput!): Comment!
-  likePost(input: LikePostInput!): Post!
-  unbookmarkPost(input: BookmarkPostInput!): Post!
-  unfollowUser(input: FollowInput!): User!
-  unlikeComment(input: LikeCommentInput!): Comment!
-  unlikePost(input: LikePostInput!): Post!
+  deleteComment(commentId: String!): Boolean!
+  deletePost(postId: String!): Boolean!
+  followUser(input: FollowInput!): Boolean!
+  incrementPostView(postId: String!): Post!
+  likeComment(input: LikeCommentInput!): Boolean!
+  likePost(input: LikePostInput!): Boolean!
+  unbookmarkPost(input: BookmarkPostInput!): Boolean!
+  unfollowUser(input: FollowInput!): Boolean!
+  unlikeComment(input: LikeCommentInput!): Boolean!
+  unlikePost(input: LikePostInput!): Boolean!
   updateComment(input: UpdateCommentInput!): Comment!
   updatePost(input: UpdatePostInput!): Post!
-
-  """Update the current user's profile with new metadata."""
   updateUser(input: UpdateUserInput!): User!
 }
 
@@ -114,39 +114,39 @@ type Mutation {
 type Post {
   author: User!
   bookmarkCount: Int!
-  bookmarks: [User!]!
+  cid: String!
   commentCount: Int!
-  comments: [Comment!]!
   content: String!
-  createdAt: Int!
-  id: ID!
+  createdAt: Timestamp!
+  description: String!
+  id: String!
   likeCount: Int!
-  likes: [User!]!
   media: [MediaAttachment!]
   quoteOf: Post
   replyTo: Post
-  updatedAt: Int
+  title: String!
+  updatedAt: Timestamp
   viewCount: Int!
   visibility: VisibilitySetting!
 }
 
 type Query {
-  activeUsers(limit: Int): [User!]!
-  allPosts: [Post!]!
-  commentsByPost(limit: Int, postId: ID!): [Comment!]!
-
-  """Search users by username prefix."""
+  getActiveUsers(limit: Int): [User!]!
+  getAllPosts(limit: Int): [Post!]!
+  getCommentsByPost(limit: Int, postId: String!): [Comment!]!
+  getIsFollowing(followerAddress: String!, targetAddress: String!): Boolean!
+  getPopularPosts(limit: Int): [Post!]!
+  getPopularUsers(limit: Int): [User!]!
+  getPost(id: String!): Post
+  getPostsByAuthor(author: String!, limit: Int): [Post!]!
+  getRecentPosts(limit: Int): [Post!]!
+  getRecentUsers(limit: Int): [User!]!
+  getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
+  getUser(address: String!): User
+  getUserBookmarks(address: String!, limit: Int): [Post!]!
+  getUserFollowers(address: String!, limit: Int): [User!]!
+  getUserFollowing(address: String!, limit: Int): [User!]!
   getUsers(limit: Int, prefix: String!): [User!]!
-  popularPosts(limit: Int): [Post!]!
-  popularUsers(limit: Int): [User!]!
-  post(id: ID!): Post
-  postsByAuthor(author: String!, limit: Int): [Post!]!
-  recentPosts(limit: Int): [Post!]!
-  recentUsers(limit: Int): [User!]!
-  repliesByComment(commentId: ID!, limit: Int): [Comment!]!
-
-  """Retrieve a single user by their wallet address."""
-  user(address: String!): User
 }
 
 type SocialLink {
@@ -163,17 +163,19 @@ input SocialLinkInput {
 scalar Timestamp
 
 input UpdateCommentInput {
-  commentId: ID!
+  commentId: String!
   content: String!
 }
 
 input UpdatePostInput {
+  cid: String
   content: String
-  postId: ID!
+  description: String
+  postId: String!
+  title: String
   visibility: VisibilitySetting
 }
 
-"""Data for updating an existing user profile."""
 input UpdateUserInput {
   address: String!
   bio: String
@@ -189,28 +191,16 @@ scalar Upload
 type User {
   address: String!
   bio: String
-  bookmarks: [Post!]!
   bookmarksCount: Int!
-
-  """URL to the cover photo."""
   coverPicture: String
-  createdAt: Int!
+  createdAt: Timestamp!
   displayName: String
-  followers: [User!]!
-
-  """Total number of followers."""
   followersCount: Int!
-  following: [User!]!
-
-  """Total number of accounts this user is following."""
   followingCount: Int!
   profilePicture: String
-  publications: [Post!]!
-
-  """Total number of publications."""
   publicationsCount: Int!
   socialLinks: [SocialLink]
-  updatedAt: Int!
+  updatedAt: Timestamp!
   username: String
   verified: Boolean
 }

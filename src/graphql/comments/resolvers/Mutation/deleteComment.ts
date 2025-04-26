@@ -1,3 +1,7 @@
+import type { MutationResolvers } from './../../../../schema/types'
 
-        import type   { MutationResolvers } from './../../../../schema/types';
-        export const deleteComment: NonNullable<MutationResolvers['deleteComment']> = async (_parent, _arg, _ctx) => { /* Implement Mutation.deleteComment resolver logic here */ };
+export const deleteComment: NonNullable<MutationResolvers['deleteComment']> =
+    async (_parent, { commentId }, { services }) => {
+            await services.Comments.deleteComment(commentId)
+            return true
+    }

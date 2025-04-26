@@ -38,6 +38,7 @@ const startServer = async () => {
         context: async ({ req }) => {
             try {
                 // // idToken passed from the frontend in the Authorization header
+                const address = req.headers.authorization as string;
                 // const idToken = req.headers.authorization?.split(' ')[1] as string;
                 // if (!idToken) throw new Error("Invalid token");
 
@@ -48,9 +49,11 @@ const startServer = async () => {
                 return {
                     services,
                     dataSources,
+                    reqUser: {
+                        address
+                    }
                     // ...jwtDecoded
                 }
-
             } catch (err) {
                 console.error(`Error attempting to access ${err}`)
                 throw new GraphQLError('Authentication token is invalid')
