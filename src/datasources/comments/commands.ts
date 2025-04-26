@@ -11,14 +11,12 @@ export class CommentsCommands extends DataSourceManager {
         const dao    = this.fs<Comment>('comments') as any
         const ref    = dao.ref.doc()
         const id     = ref.id
-
         const comment = makeNewComment(id, authorAddress, input)
 
         await ref.set({
             authorAddress,
             postId:          input.postId,
             parentCommentId: input.parentComment ?? null,
-
             ...comment,
         })
 
