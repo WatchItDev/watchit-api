@@ -7,6 +7,9 @@ import type {
     Post,
     CreatePostInput,
     UpdatePostInput,
+    Comment,
+    CreateCommentInput,
+    UpdateCommentInput,
 } from '@/schema/types';
 
 export const Functions = () => {
@@ -45,6 +48,21 @@ export const Functions = () => {
             incrementView: httpsCallable<{ postId: string }, { post: Post }>(
                 fn,
                 'postsCallable-postsIncrementView'
+            ),
+        },
+
+        comments: {
+            create: httpsCallable<CreateCommentInput & { authorAddress: string }, { comment: Comment }>(
+                fn,
+                'commentsCallable-commentsCreate'
+            ),
+            update: httpsCallable<UpdateCommentInput, { comment: Comment }>(
+                fn,
+                'commentsCallable-commentsUpdate'
+            ),
+            delete: httpsCallable<{ commentId: string }, { success: boolean }>(
+                fn,
+                'commentsCallable-commentsDelete'
             ),
         },
     };
