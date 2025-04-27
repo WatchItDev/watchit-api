@@ -21,7 +21,7 @@ import { GQL } from "@/types";
 //     WEB3_AUTH_SOCIAL_JWKS
 // }: NodeJS.Process["env"] = process.env
 
-const host = process.env.PORT || '0.0.0.0';
+const host = process.env.HOST || '0.0.0.0';
 const port = (process.env.PORT || 4000) as number
 
 const server = new ApolloServer<GQL.ContextType>({
