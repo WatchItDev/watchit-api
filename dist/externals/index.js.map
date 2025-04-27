@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/externals/index.ts"],"sourcesContent":["export { App, FireStore } from './firebase';\nexport { Functions } from './firebase/functions';\n\n"],"mappings":"AAAA,SAAS,KAAK,iBAAiB;AAC/B,SAAS,iBAAiB;","names":[]}
