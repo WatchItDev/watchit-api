@@ -29,7 +29,8 @@
   },
   "scripts": {
     "build": "tsup --env.NODE_ENV production",
-    "start": "npx tsx watch src/index.ts",
+    "dev": "npx tsx watch src/index.ts",
+    "start": "npx tsx --no-warnings src/index.ts",
     "generate": "graphql-codegen --config codegen.ts"
   }
 }
