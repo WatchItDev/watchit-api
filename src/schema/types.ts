@@ -29,6 +29,26 @@ export type CacheControlScope =
   | 'PRIVATE'
   | 'PUBLIC';
 
+/** A comment on a post, or a reply to another comment. */
+export type Comment = {
+  __typename?: 'Comment';
+  author: User;
+  content: Scalars['String']['output'];
+  createdAt: Scalars['Timestamp']['output'];
+  id: Scalars['String']['output'];
+  likeCount: Scalars['Int']['output'];
+  parentComment?: Maybe<Comment>;
+  post: Post;
+  updatedAt?: Maybe<Scalars['Timestamp']['output']>;
+};
+
+export type CreateCommentInput = {
+  authorAddress: Scalars['String']['input'];
+  content: Scalars['String']['input'];
+  parentComment?: InputMaybe<Scalars['String']['input']>;
+  postId: Scalars['String']['input'];
+};
+
 export type CreatePostInput = {
   authorAddress: Scalars['String']['input'];
   cid: Scalars['String']['input'];
@@ -61,12 +81,20 @@ export type MediaAttachmentInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createComment: Comment;
   createPost: Post;
   createUser: User;
+  deleteComment: Scalars['Boolean']['output'];
   deletePost: Scalars['Boolean']['output'];
   incrementPostView: Post;
+  updateComment: Comment;
   updatePost: Post;
   updateUser: User;
+};
+
+
+export type MutationcreateCommentArgs = {
+  input: CreateCommentInput;
 };
 
 
@@ -80,6 +108,11 @@ export type MutationcreateUserArgs = {
 };
 
 
+export type MutationdeleteCommentArgs = {
+  commentId: Scalars['String']['input'];
+};
+
+
 export type MutationdeletePostArgs = {
   postId: Scalars['String']['input'];
 };
@@ -87,6 +120,11 @@ export type MutationdeletePostArgs = {
 
 export type MutationincrementPostViewArgs = {
   postId: Scalars['String']['input'];
+};
+
+
+export type MutationupdateCommentArgs = {
+  input: UpdateCommentInput;
 };
 
 
@@ -118,13 +156,21 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query';
+  getCommentsByPost: Array<Comment>;
   getPost?: Maybe<Post>;
   getPostsByAuthor: Array<Post>;
+  getRepliesByComment: Array<Comment>;
   getUser?: Maybe<User>;
   getUserBookmarks: Array<Post>;
   getUserFollowers: Array<User>;
   getUserFollowing: Array<User>;
   getUsers: Array<User>;
+};
+
+
+export type QuerygetCommentsByPostArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  postId: Scalars['String']['input'];
 };
 
 
@@ -135,6 +181,12 @@ export type QuerygetPostArgs = {
 
 export type QuerygetPostsByAuthorArgs = {
   author: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QuerygetRepliesByCommentArgs = {
+  commentId: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -176,6 +228,11 @@ export type SocialLink = {
 export type SocialLinkInput = {
   platform: Scalars['String']['input'];
   url: Scalars['String']['input'];
+};
+
+export type UpdateCommentInput = {
+  commentId: Scalars['String']['input'];
+  content: Scalars['String']['input'];
 };
 
 export type UpdatePostInput = {
@@ -306,12 +363,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   CacheControlScope: ResolverTypeWrapper<'PUBLIC' | 'PRIVATE'>;
-  CreatePostInput: CreatePostInput;
+  Comment: ResolverTypeWrapper<Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversTypes['Comment']>, post: ResolversTypes['Post'] }>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  CreateCommentInput: CreateCommentInput;
+  CreatePostInput: CreatePostInput;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   FilterInput: FilterInput;
-  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   MediaAttachment: ResolverTypeWrapper<MediaAttachment>;
   MediaAttachmentInput: MediaAttachmentInput;
@@ -322,6 +381,7 @@ export type ResolversTypes = {
   SocialLink: ResolverTypeWrapper<SocialLink>;
   SocialLinkInput: SocialLinkInput;
   Timestamp: ResolverTypeWrapper<Scalars['Timestamp']['output']>;
+  UpdateCommentInput: UpdateCommentInput;
   UpdatePostInput: UpdatePostInput;
   UpdateUserInput: UpdateUserInput;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
@@ -333,12 +393,14 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  CreatePostInput: CreatePostInput;
+  Comment: Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversParentTypes['Comment']>, post: ResolversParentTypes['Post'] };
   String: Scalars['String']['output'];
+  Int: Scalars['Int']['output'];
+  CreateCommentInput: CreateCommentInput;
+  CreatePostInput: CreatePostInput;
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
   FilterInput: FilterInput;
-  Int: Scalars['Int']['output'];
   JSON: Scalars['JSON']['output'];
   MediaAttachment: MediaAttachment;
   MediaAttachmentInput: MediaAttachmentInput;
@@ -349,6 +411,7 @@ export type ResolversParentTypes = {
   SocialLink: SocialLink;
   SocialLinkInput: SocialLinkInput;
   Timestamp: Scalars['Timestamp']['output'];
+  UpdateCommentInput: UpdateCommentInput;
   UpdatePostInput: UpdatePostInput;
   UpdateUserInput: UpdateUserInput;
   Upload: Scalars['Upload']['output'];
@@ -366,6 +429,18 @@ export type cacheControlDirectiveArgs = {
 export type cacheControlDirectiveResolver<Result, Parent, ContextType = any, Args = cacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type CacheControlScopeResolvers = EnumResolverSignature<{ PRIVATE?: any, PUBLIC?: any }, ResolversTypes['CacheControlScope']>;
+
+export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
+  author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  likeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  parentComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType>;
+  post?: Resolver<ResolversTypes['Post'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['Timestamp']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
@@ -389,10 +464,13 @@ export type MediaAttachmentResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationcreateCommentArgs, 'input'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationcreatePostArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationcreateUserArgs, 'input'>>;
+  deleteComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeleteCommentArgs, 'commentId'>>;
   deletePost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeletePostArgs, 'postId'>>;
   incrementPostView?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationincrementPostViewArgs, 'postId'>>;
+  updateComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationupdateCommentArgs, 'input'>>;
   updatePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationupdatePostArgs, 'input'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationupdateUserArgs, 'input'>>;
 };
@@ -415,8 +493,10 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getCommentsByPost?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetCommentsByPostArgs, 'postId'>>;
   getPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostArgs, 'id'>>;
   getPostsByAuthor?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostsByAuthorArgs, 'author'>>;
+  getRepliesByComment?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetRepliesByCommentArgs, 'commentId'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserArgs, 'address'>>;
   getUserBookmarks?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetUserBookmarksArgs, 'address'>>;
   getUserFollowers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserFollowersArgs, 'address'>>;
@@ -460,6 +540,7 @@ export type VisibilitySettingResolvers = EnumResolverSignature<{ FOLLOWERS_ONLY?
 
 export type Resolvers<ContextType = any> = {
   CacheControlScope?: CacheControlScopeResolvers;
+  Comment?: CommentResolvers<ContextType>;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   JSON?: GraphQLScalarType;

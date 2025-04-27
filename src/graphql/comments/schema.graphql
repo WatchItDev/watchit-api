@@ -1,0 +1,60 @@
+###########################
+#       COMMENTS          #
+###########################
+
+"""A comment on a post, or a reply to another comment."""
+type Comment {
+  id:             String!
+  author:         User!
+  post:           Post!
+  parentComment:  Comment
+  createdAt:      Timestamp!
+  updatedAt:      Timestamp
+
+  #–– raw count ––
+  likeCount:      Int!
+
+  content:        String!
+}
+
+####################
+#     INPUTS       #
+####################
+
+input CreateCommentInput {
+  authorAddress: String!   @constraint(minLength: 1)
+  postId:        String!   @constraint(minLength: 1)
+  parentComment: String    @constraint(minLength: 1)
+  content:       String!   @constraint(minLength: 1, maxLength: 500)
+}
+
+input UpdateCommentInput {
+  commentId: String!      @constraint(minLength: 1)
+  content:   String!      @constraint(minLength: 1, maxLength: 500)
+}
+
+####################
+#      QUERIES     #
+####################
+
+extend type Query {
+  getCommentsByPost(
+    postId: String!       @constraint(minLength: 1)
+    limit:  Int           @constraint(min: 1, max: 100)
+  ): [Comment!]!
+
+  getRepliesByComment(
+    commentId: String!    @constraint(minLength: 1)
+    limit:     Int        @constraint(min: 1, max: 100)
+  ): [Comment!]!
+}
+
+####################
+#     MUTATIONS    #
+####################
+
+extend type Mutation {
+  createComment(input: CreateCommentInput!): Comment!
+  updateComment(input: UpdateCommentInput!): Comment!
+  deleteComment(commentId: String! @constraint(minLength: 1)): Boolean!
+}
