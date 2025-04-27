@@ -1,5 +1,5 @@
 import { DataSourceManager } from '../manager';
-import type { Post, CreatePostInput } from '../../schema/types';
+import type {Post, CreatePostInput, UpdatePostInput} from '../../schema/types';
 import { FieldValue } from 'firebase-admin/firestore';
 import {makeNewPost} from '../../models/post';
 
@@ -20,9 +20,9 @@ export class PostsCommands extends DataSourceManager {
 
     async updatePost(
         postId: string,
-        patch: Partial<Omit<Post, 'id' | 'authorAddress' | 'createdAt'>>
+        patch: Partial<Omit<UpdatePostInput, 'postId'>>
     ): Promise<Post | null> {
-        await this.fs<Post>('posts').update(postId, {
+        await this.fs<UpdatePostInput & { updatedAt: number }>('posts').update(postId, {
             ...patch,
             updatedAt: Date.now(),
         });
@@ -33,7 +33,7 @@ export class PostsCommands extends DataSourceManager {
         await this.fs<Post>('posts').delete(postId);
     }
 
-    async bumpField(
+    async updateCounterField(
         postId: string,
         field: keyof Pick<Post,'commentCount'|'likeCount'|'bookmarkCount'|'viewCount'>,
         delta: number

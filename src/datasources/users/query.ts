@@ -2,11 +2,11 @@ import { DataSourceManager } from '../manager'
 import type {Post, User} from '../../schema/types'
 
 export class UsersQuery extends DataSourceManager {
-    getUser = (addr: string): Promise<User | null> =>
+    getUser = async (addr: string): Promise<User | null> =>
         this.fs<User>('users').get(addr)
 
     // TODO instead of prefixSearch, use only search and it searches for the username, visibleName, address and bio
-    getUsers = (q: string, limit = 50): Promise<User[]> =>
+    getUsers = async (q: string, limit = 50): Promise<User[]> =>
         q.trim()
             ? this.fs<User>('users').prefixSearch('username', q, limit)
             : Promise.resolve([])
@@ -21,7 +21,7 @@ export class UsersQuery extends DataSourceManager {
         return Promise.all(ids.map(id => this.getUser(id))).then(u => u.filter(Boolean) as User[]);
     }
 
-    getPublications(address: string, limit = 20): Promise<Post[]> {
+    async getPublications(address: string, limit = 20): Promise<Post[]> {
         return this.fs<Post>('publications')
             .query([{ field: 'authorAddress', op: '==', value: address }], limit);
     }

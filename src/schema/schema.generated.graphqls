@@ -8,18 +8,15 @@ enum CacheControlScope {
 input CreatePostInput {
   authorAddress: String!
   cid: String!
-  content: String
   description: String!
-  media: [MediaAttachmentInput!]
-  quoteOf: String
-  replyTo: String
+  media: [MediaAttachmentInput!]!
   title: String!
   visibility: VisibilitySetting!
 }
 
 scalar Date
 
-"""ISO‑8601 Date‑Time string (e.g. 2024‑04‑17T15:22:00.000Z)"""
+"""ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
 scalar DateTime
 
 input FilterInput {
@@ -29,26 +26,19 @@ input FilterInput {
 
 scalar JSON
 
-"""An attachment in a post."""
 type MediaAttachment {
-  cid: String
-  id: String
+  cid: String!
+  id: String!
   title: String
-  type: MediaType!
+  type: String!
   url: String
 }
 
 input MediaAttachmentInput {
-  cid: String
+  cid: String!
   title: String
-  type: MediaType!
+  type: String!
   url: String
-}
-
-enum MediaType {
-  AUDIO
-  IMAGE
-  VIDEO
 }
 
 type Mutation {
@@ -60,22 +50,18 @@ type Mutation {
   updateUser(input: UpdateUserInput!): User!
 }
 
-"""A user’s post/publication."""
 type Post {
   author: User!
   bookmarkCount: Int!
   cid: String!
   commentCount: Int!
-  content: String!
   createdAt: Timestamp!
   description: String!
   id: String!
   likeCount: Int!
-  media: [MediaAttachment!]
-  quoteOf: Post
-  replyTo: Post
+  media: [MediaAttachment!]!
   title: String!
-  updatedAt: Timestamp
+  updatedAt: Timestamp!
   viewCount: Int!
   visibility: VisibilitySetting!
 }
@@ -91,13 +77,13 @@ type Query {
 }
 
 type SocialLink {
-  platform: String
-  url: String
+  platform: String!
+  url: String!
 }
 
 input SocialLinkInput {
-  platform: String
-  url: String
+  platform: String!
+  url: String!
 }
 
 """Unix epoch in milliseconds (number)."""
@@ -105,8 +91,8 @@ scalar Timestamp
 
 input UpdatePostInput {
   cid: String
-  content: String
   description: String
+  media: [MediaAttachmentInput!]
   postId: String!
   title: String
   visibility: VisibilitySetting
@@ -126,33 +112,33 @@ scalar Upload
 
 type User {
   address: String!
-  bio: String
+  bio: String!
   bookmarksCount: Int!
   coverPicture: String
   createdAt: Timestamp!
-  displayName: String
+  displayName: String!
   followersCount: Int!
   followingCount: Int!
   profilePicture: String
   publicationsCount: Int!
-  socialLinks: [SocialLink]
+  socialLinks: [SocialLink!]
   updatedAt: Timestamp!
-  username: String
+  username: String!
   verified: Boolean
 }
 
 input UserByInput {
-  address: String
+  address: String!
 }
 
 input UserInput {
   address: String!
-  bio: String
+  bio: String!
   coverPicture: String
-  displayName: String
+  displayName: String!
   profilePicture: String
-  socialLinks: [SocialLinkInput!]
-  username: String
+  socialLinks: [SocialLinkInput!]!
+  username: String!
 }
 
 enum VisibilitySetting {

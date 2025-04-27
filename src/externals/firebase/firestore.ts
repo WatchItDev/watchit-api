@@ -33,7 +33,8 @@ export class CollectionDAO<T> {
   }
 
   async create(id: string, data: Partial<WithFieldValue<T>>): Promise<void> {
-    await this.ref.doc(id).set(JSON.parse(JSON.stringify(data)))
+    const parsedData = JSON.parse(JSON.stringify(data));
+    await this.ref.doc(id).set(parsedData);
   }
 
   async update(id: string, data: Partial<WithFieldValue<T>>): Promise<void> {

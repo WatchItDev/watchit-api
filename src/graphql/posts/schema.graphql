@@ -2,41 +2,38 @@
 #        POSTS            #
 ###########################
 
+####################
+#     ENUMS        #
+####################
+
 enum VisibilitySetting {
   PUBLIC
   FOLLOWERS_ONLY
   PRIVATE
 }
 
-enum MediaType {
-  IMAGE
-  VIDEO
-  AUDIO
-}
+####################
+#     TYPES        #
+####################
 
-"""An attachment in a post."""
 type MediaAttachment {
-  id:   String
-  url:  String
-  cid:  String
-  title:  String
-  type: MediaType!
+  id:         String!
+  url:        String
+  cid:        String!
+  title:      String
+  type:       String!
 }
 
-"""A user’s post/publication."""
 type Post {
   id:            String!
   author:        User!
   title:         String!
   description:   String!
-  content:       String!
   cid:           String!
-  media:         [MediaAttachment!]
+  media:         [MediaAttachment!]!
   visibility:    VisibilitySetting!
-  replyTo:       Post
-  quoteOf:       Post
   createdAt:     Timestamp!
-  updatedAt:     Timestamp
+  updatedAt:     Timestamp!
 
   #–– raw counts ––
   commentCount:  Int!
@@ -45,42 +42,60 @@ type Post {
   viewCount:     Int!
 }
 
+####################
+#     INPUTS       #
+####################
+
+input MediaAttachmentInput {
+  url:   String          @constraint(format: "uri")
+  cid:   String!         @constraint(minLength: 1)
+  title: String          @constraint(maxLength: 100)
+  type:  String!         @constraint(minLength: 1)
+}
+
 input CreatePostInput {
-  authorAddress:    String!
-  content:    String
-  title:         String!
-  description:   String!
-  cid:           String!
-  media:      [MediaAttachmentInput!]
-  visibility: VisibilitySetting!
-  replyTo:    String
-  quoteOf:    String
+  authorAddress: String!               @constraint(minLength: 1)
+  title:         String!               @constraint(minLength: 1, maxLength: 100)
+  description:   String!               @constraint(maxLength: 20)
+  cid:           String!               @constraint(minLength: 1)
+  media:         [MediaAttachmentInput!]!
+  visibility:    VisibilitySetting!
 }
 
 input UpdatePostInput {
-  postId:     String!
-  content:    String
-  title:         String
-  description:   String
-  cid:           String
+  postId:     String!                  @constraint(minLength: 1)
+  title:      String          @constraint(minLength: 1, maxLength: 100)
+  description:String          @constraint(maxLength: 20)
+  cid:        String          @constraint(minLength: 1)
   visibility: VisibilitySetting
+  media:      [MediaAttachmentInput!]
 }
 
-input MediaAttachmentInput {
-  url:  String
-  cid:  String
-  title:  String
-  type: MediaType!
-}
+####################
+#      QUERIES     #
+####################
 
 extend type Query {
-  getPost(id: String!): Post
-  getPostsByAuthor(author: String!, limit: Int): [Post!]!
+  getPost(
+    id: String!                         @constraint(minLength: 1)
+  ): Post
+  getPostsByAuthor(
+    author: String!                     @constraint(minLength: 1)
+    limit:  Int                         @constraint(min: 1, max: 100)
+  ): [Post!]!
 }
+
+####################
+#     MUTATIONS    #
+####################
 
 extend type Mutation {
   createPost(input: CreatePostInput!): Post!
   updatePost(input: UpdatePostInput!): Post!
-  deletePost(postId: String!): Boolean!
-  incrementPostView(postId: String!): Post!
+  deletePost(
+    postId: String!                     @constraint(minLength: 1)
+  ): Boolean!
+  incrementPostView(
+    postId: String!                     @constraint(minLength: 1)
+  ): Post!
 }

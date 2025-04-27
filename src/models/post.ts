@@ -1,18 +1,14 @@
 import type { Post, CreatePostInput } from '@/schema/types'
 
-
 export function defaultPostData(): Omit<
     Post,
     | 'id'
     | 'author'
-    | 'content'
     | 'title'
     | 'description'
     | 'cid'
     | 'media'
     | 'visibility'
-    | 'replyTo'
-    | 'quoteOf'
     | 'createdAt'
     | 'updatedAt'
 > {
@@ -34,7 +30,6 @@ export function makeNewPost(
     return {
         id,
         author: { address: authorAddress } as any,
-        content:    input?.content ?? '',
         title:      input.title,
         description:      input.description,
         cid:      input.cid,
@@ -46,12 +41,6 @@ export function makeNewPost(
             type: m.type,
         })) ?? [],
         visibility: input.visibility,
-        replyTo:    input.replyTo
-            ? ({ id: input.replyTo } as any)
-            : null,
-        quoteOf:    input.quoteOf
-            ? ({ id: input.quoteOf } as any)
-            : null,
 
         ...defaultPostData(),
 

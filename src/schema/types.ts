@@ -17,7 +17,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   Date: { input: Date | string; output: Date | string; }
-  /** ISO‑8601 Date‑Time string (e.g. 2024‑04‑17T15:22:00.000Z) */
+  /** ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z) */
   DateTime: { input: Date | string; output: Date | string; }
   JSON: { input: any; output: any; }
   /** Unix epoch in milliseconds (number). */
@@ -32,11 +32,8 @@ export type CacheControlScope =
 export type CreatePostInput = {
   authorAddress: Scalars['String']['input'];
   cid: Scalars['String']['input'];
-  content?: InputMaybe<Scalars['String']['input']>;
   description: Scalars['String']['input'];
-  media?: InputMaybe<Array<MediaAttachmentInput>>;
-  quoteOf?: InputMaybe<Scalars['String']['input']>;
-  replyTo?: InputMaybe<Scalars['String']['input']>;
+  media: Array<MediaAttachmentInput>;
   title: Scalars['String']['input'];
   visibility: VisibilitySetting;
 };
@@ -46,27 +43,21 @@ export type FilterInput = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** An attachment in a post. */
 export type MediaAttachment = {
   __typename?: 'MediaAttachment';
-  cid?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
+  cid: Scalars['String']['output'];
+  id: Scalars['String']['output'];
   title?: Maybe<Scalars['String']['output']>;
-  type: MediaType;
+  type: Scalars['String']['output'];
   url?: Maybe<Scalars['String']['output']>;
 };
 
 export type MediaAttachmentInput = {
-  cid?: InputMaybe<Scalars['String']['input']>;
+  cid: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
-  type: MediaType;
+  type: Scalars['String']['input'];
   url?: InputMaybe<Scalars['String']['input']>;
 };
-
-export type MediaType =
-  | 'AUDIO'
-  | 'IMAGE'
-  | 'VIDEO';
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -108,23 +99,19 @@ export type MutationupdateUserArgs = {
   input: UpdateUserInput;
 };
 
-/** A user’s post/publication. */
 export type Post = {
   __typename?: 'Post';
   author: User;
   bookmarkCount: Scalars['Int']['output'];
   cid: Scalars['String']['output'];
   commentCount: Scalars['Int']['output'];
-  content: Scalars['String']['output'];
   createdAt: Scalars['Timestamp']['output'];
   description: Scalars['String']['output'];
   id: Scalars['String']['output'];
   likeCount: Scalars['Int']['output'];
-  media?: Maybe<Array<MediaAttachment>>;
-  quoteOf?: Maybe<Post>;
-  replyTo?: Maybe<Post>;
+  media: Array<MediaAttachment>;
   title: Scalars['String']['output'];
-  updatedAt?: Maybe<Scalars['Timestamp']['output']>;
+  updatedAt: Scalars['Timestamp']['output'];
   viewCount: Scalars['Int']['output'];
   visibility: VisibilitySetting;
 };
@@ -182,19 +169,19 @@ export type QuerygetUsersArgs = {
 
 export type SocialLink = {
   __typename?: 'SocialLink';
-  platform?: Maybe<Scalars['String']['output']>;
-  url?: Maybe<Scalars['String']['output']>;
+  platform: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type SocialLinkInput = {
-  platform?: InputMaybe<Scalars['String']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
+  platform: Scalars['String']['input'];
+  url: Scalars['String']['input'];
 };
 
 export type UpdatePostInput = {
   cid?: InputMaybe<Scalars['String']['input']>;
-  content?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  media?: InputMaybe<Array<MediaAttachmentInput>>;
   postId: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
   visibility?: InputMaybe<VisibilitySetting>;
@@ -213,33 +200,33 @@ export type UpdateUserInput = {
 export type User = {
   __typename?: 'User';
   address: Scalars['String']['output'];
-  bio?: Maybe<Scalars['String']['output']>;
+  bio: Scalars['String']['output'];
   bookmarksCount: Scalars['Int']['output'];
   coverPicture?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Timestamp']['output'];
-  displayName?: Maybe<Scalars['String']['output']>;
+  displayName: Scalars['String']['output'];
   followersCount: Scalars['Int']['output'];
   followingCount: Scalars['Int']['output'];
   profilePicture?: Maybe<Scalars['String']['output']>;
   publicationsCount: Scalars['Int']['output'];
-  socialLinks?: Maybe<Array<Maybe<SocialLink>>>;
+  socialLinks?: Maybe<Array<SocialLink>>;
   updatedAt: Scalars['Timestamp']['output'];
-  username?: Maybe<Scalars['String']['output']>;
+  username: Scalars['String']['output'];
   verified?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type UserByInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
+  address: Scalars['String']['input'];
 };
 
 export type UserInput = {
   address: Scalars['String']['input'];
-  bio?: InputMaybe<Scalars['String']['input']>;
+  bio: Scalars['String']['input'];
   coverPicture?: InputMaybe<Scalars['String']['input']>;
-  displayName?: InputMaybe<Scalars['String']['input']>;
+  displayName: Scalars['String']['input'];
   profilePicture?: InputMaybe<Scalars['String']['input']>;
-  socialLinks?: InputMaybe<Array<SocialLinkInput>>;
-  username?: InputMaybe<Scalars['String']['input']>;
+  socialLinks: Array<SocialLinkInput>;
+  username: Scalars['String']['input'];
 };
 
 export type VisibilitySetting =
@@ -326,12 +313,11 @@ export type ResolversTypes = {
   FilterInput: FilterInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
-  MediaAttachment: ResolverTypeWrapper<Omit<MediaAttachment, 'type'> & { type: ResolversTypes['MediaType'] }>;
+  MediaAttachment: ResolverTypeWrapper<MediaAttachment>;
   MediaAttachmentInput: MediaAttachmentInput;
-  MediaType: ResolverTypeWrapper<'IMAGE' | 'VIDEO' | 'AUDIO'>;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  Post: ResolverTypeWrapper<Omit<Post, 'media' | 'quoteOf' | 'replyTo' | 'visibility'> & { media?: Maybe<Array<ResolversTypes['MediaAttachment']>>, quoteOf?: Maybe<ResolversTypes['Post']>, replyTo?: Maybe<ResolversTypes['Post']>, visibility: ResolversTypes['VisibilitySetting'] }>;
+  Post: ResolverTypeWrapper<Omit<Post, 'visibility'> & { visibility: ResolversTypes['VisibilitySetting'] }>;
   Query: ResolverTypeWrapper<{}>;
   SocialLink: ResolverTypeWrapper<SocialLink>;
   SocialLinkInput: SocialLinkInput;
@@ -358,7 +344,7 @@ export type ResolversParentTypes = {
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: {};
   Boolean: Scalars['Boolean']['output'];
-  Post: Omit<Post, 'media' | 'quoteOf' | 'replyTo'> & { media?: Maybe<Array<ResolversParentTypes['MediaAttachment']>>, quoteOf?: Maybe<ResolversParentTypes['Post']>, replyTo?: Maybe<ResolversParentTypes['Post']> };
+  Post: Post;
   Query: {};
   SocialLink: SocialLink;
   SocialLinkInput: SocialLinkInput;
@@ -394,15 +380,13 @@ export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MediaAttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaAttachment'] = ResolversParentTypes['MediaAttachment']> = {
-  cid?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['MediaType'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
-
-export type MediaTypeResolvers = EnumResolverSignature<{ AUDIO?: any, IMAGE?: any, VIDEO?: any }, ResolversTypes['MediaType']>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationcreatePostArgs, 'input'>>;
@@ -418,16 +402,13 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   bookmarkCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   commentCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   likeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  media?: Resolver<Maybe<Array<ResolversTypes['MediaAttachment']>>, ParentType, ContextType>;
-  quoteOf?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
-  replyTo?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
+  media?: Resolver<Array<ResolversTypes['MediaAttachment']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  updatedAt?: Resolver<Maybe<ResolversTypes['Timestamp']>, ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   viewCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   visibility?: Resolver<ResolversTypes['VisibilitySetting'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -444,8 +425,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type SocialLinkResolvers<ContextType = any, ParentType extends ResolversParentTypes['SocialLink'] = ResolversParentTypes['SocialLink']> = {
-  platform?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  platform?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -459,18 +440,18 @@ export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  bio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   bookmarksCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   coverPicture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
-  displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   followersCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   followingCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   profilePicture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   publicationsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  socialLinks?: Resolver<Maybe<Array<Maybe<ResolversTypes['SocialLink']>>>, ParentType, ContextType>;
+  socialLinks?: Resolver<Maybe<Array<ResolversTypes['SocialLink']>>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -483,7 +464,6 @@ export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   JSON?: GraphQLScalarType;
   MediaAttachment?: MediaAttachmentResolvers<ContextType>;
-  MediaType?: MediaTypeResolvers;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
