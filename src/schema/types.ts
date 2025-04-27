@@ -17,17 +17,12 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   Date: { input: Date | string; output: Date | string; }
-  /** ISO‑8601 Date‑Time string (e.g. 2024‑04‑17T15:22:00.000Z) */
+  /** ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z) */
   DateTime: { input: Date | string; output: Date | string; }
   JSON: { input: any; output: any; }
   /** Unix epoch in milliseconds (number). */
   Timestamp: { input: Date | string | number; output: Date | string | number; }
   Upload: { input: any; output: any; }
-};
-
-/** Bookmark / unbookmark a post. */
-export type BookmarkPostInput = {
-  postId: Scalars['String']['input'];
 };
 
 export type CacheControlScope =
@@ -57,11 +52,8 @@ export type CreateCommentInput = {
 export type CreatePostInput = {
   authorAddress: Scalars['String']['input'];
   cid: Scalars['String']['input'];
-  content?: InputMaybe<Scalars['String']['input']>;
   description: Scalars['String']['input'];
-  media?: InputMaybe<Array<MediaAttachmentInput>>;
-  quoteOf?: InputMaybe<Scalars['String']['input']>;
-  replyTo?: InputMaybe<Scalars['String']['input']>;
+  media: Array<MediaAttachmentInput>;
   title: Scalars['String']['input'];
   visibility: VisibilitySetting;
 };
@@ -71,67 +63,33 @@ export type FilterInput = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** Follow / unfollow someone. */
-export type FollowInput = {
-  targetAddress: Scalars['String']['input'];
-};
-
-/** Like / unlike a comment. */
-export type LikeCommentInput = {
-  commentId: Scalars['String']['input'];
-};
-
-/** Like / unlike a post. */
-export type LikePostInput = {
-  postId: Scalars['String']['input'];
-};
-
-/** An attachment in a post. */
 export type MediaAttachment = {
   __typename?: 'MediaAttachment';
-  cid?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['String']['output']>;
+  cid: Scalars['String']['output'];
+  id: Scalars['String']['output'];
   title?: Maybe<Scalars['String']['output']>;
-  type: MediaType;
+  type: Scalars['String']['output'];
   url?: Maybe<Scalars['String']['output']>;
 };
 
 export type MediaAttachmentInput = {
-  cid?: InputMaybe<Scalars['String']['input']>;
+  cid: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
-  type: MediaType;
+  type: Scalars['String']['input'];
   url?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type MediaType =
-  | 'AUDIO'
-  | 'IMAGE'
-  | 'VIDEO';
-
 export type Mutation = {
   __typename?: 'Mutation';
-  bookmarkPost: Scalars['Boolean']['output'];
   createComment: Comment;
   createPost: Post;
   createUser: User;
   deleteComment: Scalars['Boolean']['output'];
   deletePost: Scalars['Boolean']['output'];
-  followUser: Scalars['Boolean']['output'];
   incrementPostView: Post;
-  likeComment: Scalars['Boolean']['output'];
-  likePost: Scalars['Boolean']['output'];
-  unbookmarkPost: Scalars['Boolean']['output'];
-  unfollowUser: Scalars['Boolean']['output'];
-  unlikeComment: Scalars['Boolean']['output'];
-  unlikePost: Scalars['Boolean']['output'];
   updateComment: Comment;
   updatePost: Post;
   updateUser: User;
-};
-
-
-export type MutationbookmarkPostArgs = {
-  input: BookmarkPostInput;
 };
 
 
@@ -160,43 +118,8 @@ export type MutationdeletePostArgs = {
 };
 
 
-export type MutationfollowUserArgs = {
-  input: FollowInput;
-};
-
-
 export type MutationincrementPostViewArgs = {
   postId: Scalars['String']['input'];
-};
-
-
-export type MutationlikeCommentArgs = {
-  input: LikeCommentInput;
-};
-
-
-export type MutationlikePostArgs = {
-  input: LikePostInput;
-};
-
-
-export type MutationunbookmarkPostArgs = {
-  input: BookmarkPostInput;
-};
-
-
-export type MutationunfollowUserArgs = {
-  input: FollowInput;
-};
-
-
-export type MutationunlikeCommentArgs = {
-  input: LikeCommentInput;
-};
-
-
-export type MutationunlikePostArgs = {
-  input: LikePostInput;
 };
 
 
@@ -214,39 +137,28 @@ export type MutationupdateUserArgs = {
   input: UpdateUserInput;
 };
 
-/** A user’s post/publication. */
 export type Post = {
   __typename?: 'Post';
   author: User;
   bookmarkCount: Scalars['Int']['output'];
   cid: Scalars['String']['output'];
   commentCount: Scalars['Int']['output'];
-  content: Scalars['String']['output'];
   createdAt: Scalars['Timestamp']['output'];
   description: Scalars['String']['output'];
   id: Scalars['String']['output'];
   likeCount: Scalars['Int']['output'];
-  media?: Maybe<Array<MediaAttachment>>;
-  quoteOf?: Maybe<Post>;
-  replyTo?: Maybe<Post>;
+  media: Array<MediaAttachment>;
   title: Scalars['String']['output'];
-  updatedAt?: Maybe<Scalars['Timestamp']['output']>;
+  updatedAt: Scalars['Timestamp']['output'];
   viewCount: Scalars['Int']['output'];
   visibility: VisibilitySetting;
 };
 
 export type Query = {
   __typename?: 'Query';
-  getActiveUsers: Array<User>;
-  getAllPosts: Array<Post>;
   getCommentsByPost: Array<Comment>;
-  getIsFollowing: Scalars['Boolean']['output'];
-  getPopularPosts: Array<Post>;
-  getPopularUsers: Array<User>;
   getPost?: Maybe<Post>;
   getPostsByAuthor: Array<Post>;
-  getRecentPosts: Array<Post>;
-  getRecentUsers: Array<User>;
   getRepliesByComment: Array<Comment>;
   getUser?: Maybe<User>;
   getUserBookmarks: Array<Post>;
@@ -256,35 +168,9 @@ export type Query = {
 };
 
 
-export type QuerygetActiveUsersArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QuerygetAllPostsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
 export type QuerygetCommentsByPostArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   postId: Scalars['String']['input'];
-};
-
-
-export type QuerygetIsFollowingArgs = {
-  followerAddress: Scalars['String']['input'];
-  targetAddress: Scalars['String']['input'];
-};
-
-
-export type QuerygetPopularPostsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QuerygetPopularUsersArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -295,16 +181,6 @@ export type QuerygetPostArgs = {
 
 export type QuerygetPostsByAuthorArgs = {
   author: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QuerygetRecentPostsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QuerygetRecentUsersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -345,13 +221,13 @@ export type QuerygetUsersArgs = {
 
 export type SocialLink = {
   __typename?: 'SocialLink';
-  platform?: Maybe<Scalars['String']['output']>;
-  url?: Maybe<Scalars['String']['output']>;
+  platform: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type SocialLinkInput = {
-  platform?: InputMaybe<Scalars['String']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
+  platform: Scalars['String']['input'];
+  url: Scalars['String']['input'];
 };
 
 export type UpdateCommentInput = {
@@ -361,8 +237,8 @@ export type UpdateCommentInput = {
 
 export type UpdatePostInput = {
   cid?: InputMaybe<Scalars['String']['input']>;
-  content?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  media?: InputMaybe<Array<MediaAttachmentInput>>;
   postId: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
   visibility?: InputMaybe<VisibilitySetting>;
@@ -381,33 +257,33 @@ export type UpdateUserInput = {
 export type User = {
   __typename?: 'User';
   address: Scalars['String']['output'];
-  bio?: Maybe<Scalars['String']['output']>;
+  bio: Scalars['String']['output'];
   bookmarksCount: Scalars['Int']['output'];
   coverPicture?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Timestamp']['output'];
-  displayName?: Maybe<Scalars['String']['output']>;
+  displayName: Scalars['String']['output'];
   followersCount: Scalars['Int']['output'];
   followingCount: Scalars['Int']['output'];
   profilePicture?: Maybe<Scalars['String']['output']>;
   publicationsCount: Scalars['Int']['output'];
-  socialLinks?: Maybe<Array<Maybe<SocialLink>>>;
+  socialLinks?: Maybe<Array<SocialLink>>;
   updatedAt: Scalars['Timestamp']['output'];
-  username?: Maybe<Scalars['String']['output']>;
+  username: Scalars['String']['output'];
   verified?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type UserByInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
+  address: Scalars['String']['input'];
 };
 
 export type UserInput = {
   address: Scalars['String']['input'];
-  bio?: InputMaybe<Scalars['String']['input']>;
+  bio: Scalars['String']['input'];
   coverPicture?: InputMaybe<Scalars['String']['input']>;
-  displayName?: InputMaybe<Scalars['String']['input']>;
+  displayName: Scalars['String']['input'];
   profilePicture?: InputMaybe<Scalars['String']['input']>;
-  socialLinks?: InputMaybe<Array<SocialLinkInput>>;
-  username?: InputMaybe<Scalars['String']['input']>;
+  socialLinks: Array<SocialLinkInput>;
+  username: Scalars['String']['input'];
 };
 
 export type VisibilitySetting =
@@ -486,26 +362,21 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  BookmarkPostInput: BookmarkPostInput;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
   CacheControlScope: ResolverTypeWrapper<'PUBLIC' | 'PRIVATE'>;
   Comment: ResolverTypeWrapper<Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversTypes['Comment']>, post: ResolversTypes['Post'] }>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   CreateCommentInput: CreateCommentInput;
   CreatePostInput: CreatePostInput;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   FilterInput: FilterInput;
-  FollowInput: FollowInput;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
-  LikeCommentInput: LikeCommentInput;
-  LikePostInput: LikePostInput;
-  MediaAttachment: ResolverTypeWrapper<Omit<MediaAttachment, 'type'> & { type: ResolversTypes['MediaType'] }>;
+  MediaAttachment: ResolverTypeWrapper<MediaAttachment>;
   MediaAttachmentInput: MediaAttachmentInput;
-  MediaType: ResolverTypeWrapper<'IMAGE' | 'VIDEO' | 'AUDIO'>;
   Mutation: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  Post: ResolverTypeWrapper<Omit<Post, 'media' | 'quoteOf' | 'replyTo' | 'visibility'> & { media?: Maybe<Array<ResolversTypes['MediaAttachment']>>, quoteOf?: Maybe<ResolversTypes['Post']>, replyTo?: Maybe<ResolversTypes['Post']>, visibility: ResolversTypes['VisibilitySetting'] }>;
+  Post: ResolverTypeWrapper<Omit<Post, 'visibility'> & { visibility: ResolversTypes['VisibilitySetting'] }>;
   Query: ResolverTypeWrapper<{}>;
   SocialLink: ResolverTypeWrapper<SocialLink>;
   SocialLinkInput: SocialLinkInput;
@@ -522,24 +393,20 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  BookmarkPostInput: BookmarkPostInput;
-  String: Scalars['String']['output'];
   Comment: Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversParentTypes['Comment']>, post: ResolversParentTypes['Post'] };
+  String: Scalars['String']['output'];
   Int: Scalars['Int']['output'];
   CreateCommentInput: CreateCommentInput;
   CreatePostInput: CreatePostInput;
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
   FilterInput: FilterInput;
-  FollowInput: FollowInput;
   JSON: Scalars['JSON']['output'];
-  LikeCommentInput: LikeCommentInput;
-  LikePostInput: LikePostInput;
   MediaAttachment: MediaAttachment;
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: {};
   Boolean: Scalars['Boolean']['output'];
-  Post: Omit<Post, 'media' | 'quoteOf' | 'replyTo'> & { media?: Maybe<Array<ResolversParentTypes['MediaAttachment']>>, quoteOf?: Maybe<ResolversParentTypes['Post']>, replyTo?: Maybe<ResolversParentTypes['Post']> };
+  Post: Post;
   Query: {};
   SocialLink: SocialLink;
   SocialLinkInput: SocialLinkInput;
@@ -588,31 +455,21 @@ export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MediaAttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaAttachment'] = ResolversParentTypes['MediaAttachment']> = {
-  cid?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['MediaType'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MediaTypeResolvers = EnumResolverSignature<{ AUDIO?: any, IMAGE?: any, VIDEO?: any }, ResolversTypes['MediaType']>;
-
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  bookmarkPost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationbookmarkPostArgs, 'input'>>;
   createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationcreateCommentArgs, 'input'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationcreatePostArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationcreateUserArgs, 'input'>>;
   deleteComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeleteCommentArgs, 'commentId'>>;
   deletePost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeletePostArgs, 'postId'>>;
-  followUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationfollowUserArgs, 'input'>>;
   incrementPostView?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationincrementPostViewArgs, 'postId'>>;
-  likeComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlikeCommentArgs, 'input'>>;
-  likePost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlikePostArgs, 'input'>>;
-  unbookmarkPost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationunbookmarkPostArgs, 'input'>>;
-  unfollowUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationunfollowUserArgs, 'input'>>;
-  unlikeComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationunlikeCommentArgs, 'input'>>;
-  unlikePost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationunlikePostArgs, 'input'>>;
   updateComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationupdateCommentArgs, 'input'>>;
   updatePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationupdatePostArgs, 'input'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationupdateUserArgs, 'input'>>;
@@ -623,32 +480,22 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
   bookmarkCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   commentCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   likeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  media?: Resolver<Maybe<Array<ResolversTypes['MediaAttachment']>>, ParentType, ContextType>;
-  quoteOf?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
-  replyTo?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
+  media?: Resolver<Array<ResolversTypes['MediaAttachment']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  updatedAt?: Resolver<Maybe<ResolversTypes['Timestamp']>, ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   viewCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   visibility?: Resolver<ResolversTypes['VisibilitySetting'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getActiveUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetActiveUsersArgs>>;
-  getAllPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetAllPostsArgs>>;
   getCommentsByPost?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetCommentsByPostArgs, 'postId'>>;
-  getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'followerAddress' | 'targetAddress'>>;
-  getPopularPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetPopularPostsArgs>>;
-  getPopularUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetPopularUsersArgs>>;
   getPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostArgs, 'id'>>;
   getPostsByAuthor?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostsByAuthorArgs, 'author'>>;
-  getRecentPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetRecentPostsArgs>>;
-  getRecentUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetRecentUsersArgs>>;
   getRepliesByComment?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetRepliesByCommentArgs, 'commentId'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserArgs, 'address'>>;
   getUserBookmarks?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetUserBookmarksArgs, 'address'>>;
@@ -658,8 +505,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type SocialLinkResolvers<ContextType = any, ParentType extends ResolversParentTypes['SocialLink'] = ResolversParentTypes['SocialLink']> = {
-  platform?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  platform?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -673,18 +520,18 @@ export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  bio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   bookmarksCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   coverPicture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
-  displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   followersCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   followingCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   profilePicture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   publicationsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  socialLinks?: Resolver<Maybe<Array<Maybe<ResolversTypes['SocialLink']>>>, ParentType, ContextType>;
+  socialLinks?: Resolver<Maybe<Array<ResolversTypes['SocialLink']>>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -698,7 +545,6 @@ export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   JSON?: GraphQLScalarType;
   MediaAttachment?: MediaAttachmentResolvers<ContextType>;
-  MediaType?: MediaTypeResolvers;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

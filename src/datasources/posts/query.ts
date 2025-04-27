@@ -2,11 +2,11 @@ import { DataSourceManager } from '../manager';
 import type { Post } from '../../schema/types';
 
 export class PostsQuery extends DataSourceManager {
-    getPost(id: string): Promise<Post | null> {
+    async getPost(id: string): Promise<Post | null> {
         return this.fs<Post>('posts').get(id);
     }
 
-    getPostsByAuthor(author: string, limit = 20): Promise<Post[]> {
+    async getPostsByAuthor(author: string, limit = 20): Promise<Post[]> {
         return this.fs<Post>('posts')
             .query([{ field: 'author.address', op: '==', value: author }], limit);
     }
@@ -29,7 +29,7 @@ export class PostsQuery extends DataSourceManager {
         return snap.docs.map((d: any) => d.data() as Post);
     }
 
-    allPosts(): Promise<Post[]> {
+    async allPosts(): Promise<Post[]> {
         return this.fs<Post>('posts').list();
     }
 }

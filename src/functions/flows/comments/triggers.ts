@@ -11,7 +11,7 @@ export const commentCreated = onDocumentCreated(
             console.warn(`commentCreated without postId on ${event.params.commentId}`)
             return
         }
-        await ds.Posts.bumpField(postId, 'commentCount', +1)
+        await ds.Posts.updateCounterField(postId, 'commentCount', +1)
         console.log(`🔥 commentCreated for ${event.params.commentId}`)
     })
 )
@@ -25,7 +25,7 @@ export const commentDeleted = onDocumentDeleted(
             console.warn(`commentDeleted without postId on ${event.params.commentId}`);
             return;
         }
-        await ds.Posts.bumpField(postId, 'commentCount', -1);
+        await ds.Posts.updateCounterField(postId, 'commentCount', -1);
         console.log(`🔥 commentDeleted for ${event.params.commentId}`);
     })
 );

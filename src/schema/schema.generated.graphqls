@@ -1,10 +1,5 @@
 directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
-"""Bookmark / unbookmark a post."""
-input BookmarkPostInput {
-  postId: String!
-}
-
 enum CacheControlScope {
   PRIVATE
   PUBLIC
@@ -32,18 +27,15 @@ input CreateCommentInput {
 input CreatePostInput {
   authorAddress: String!
   cid: String!
-  content: String
   description: String!
-  media: [MediaAttachmentInput!]
-  quoteOf: String
-  replyTo: String
+  media: [MediaAttachmentInput!]!
   title: String!
   visibility: VisibilitySetting!
 }
 
 scalar Date
 
-"""ISO‑8601 Date‑Time string (e.g. 2024‑04‑17T15:22:00.000Z)"""
+"""ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
 scalar DateTime
 
 input FilterInput {
@@ -51,96 +43,55 @@ input FilterInput {
   offset: Int
 }
 
-"""Follow / unfollow someone."""
-input FollowInput {
-  targetAddress: String!
-}
-
 scalar JSON
 
-"""Like / unlike a comment."""
-input LikeCommentInput {
-  commentId: String!
-}
-
-"""Like / unlike a post."""
-input LikePostInput {
-  postId: String!
-}
-
-"""An attachment in a post."""
 type MediaAttachment {
-  cid: String
-  id: String
+  cid: String!
+  id: String!
   title: String
-  type: MediaType!
+  type: String!
   url: String
 }
 
 input MediaAttachmentInput {
-  cid: String
+  cid: String!
   title: String
-  type: MediaType!
+  type: String!
   url: String
 }
 
-enum MediaType {
-  AUDIO
-  IMAGE
-  VIDEO
-}
-
 type Mutation {
-  bookmarkPost(input: BookmarkPostInput!): Boolean!
   createComment(input: CreateCommentInput!): Comment!
   createPost(input: CreatePostInput!): Post!
   createUser(input: UserInput!): User!
   deleteComment(commentId: String!): Boolean!
   deletePost(postId: String!): Boolean!
-  followUser(input: FollowInput!): Boolean!
   incrementPostView(postId: String!): Post!
-  likeComment(input: LikeCommentInput!): Boolean!
-  likePost(input: LikePostInput!): Boolean!
-  unbookmarkPost(input: BookmarkPostInput!): Boolean!
-  unfollowUser(input: FollowInput!): Boolean!
-  unlikeComment(input: LikeCommentInput!): Boolean!
-  unlikePost(input: LikePostInput!): Boolean!
   updateComment(input: UpdateCommentInput!): Comment!
   updatePost(input: UpdatePostInput!): Post!
   updateUser(input: UpdateUserInput!): User!
 }
 
-"""A user’s post/publication."""
 type Post {
   author: User!
   bookmarkCount: Int!
   cid: String!
   commentCount: Int!
-  content: String!
   createdAt: Timestamp!
   description: String!
   id: String!
   likeCount: Int!
-  media: [MediaAttachment!]
-  quoteOf: Post
-  replyTo: Post
+  media: [MediaAttachment!]!
   title: String!
-  updatedAt: Timestamp
+  updatedAt: Timestamp!
   viewCount: Int!
   visibility: VisibilitySetting!
 }
 
 type Query {
-  getActiveUsers(limit: Int): [User!]!
-  getAllPosts(limit: Int): [Post!]!
   getCommentsByPost(limit: Int, postId: String!): [Comment!]!
-  getIsFollowing(followerAddress: String!, targetAddress: String!): Boolean!
-  getPopularPosts(limit: Int): [Post!]!
-  getPopularUsers(limit: Int): [User!]!
   getPost(id: String!): Post
   getPostsByAuthor(author: String!, limit: Int): [Post!]!
-  getRecentPosts(limit: Int): [Post!]!
-  getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
   getUser(address: String!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!
@@ -150,13 +101,13 @@ type Query {
 }
 
 type SocialLink {
-  platform: String
-  url: String
+  platform: String!
+  url: String!
 }
 
 input SocialLinkInput {
-  platform: String
-  url: String
+  platform: String!
+  url: String!
 }
 
 """Unix epoch in milliseconds (number)."""
@@ -169,8 +120,8 @@ input UpdateCommentInput {
 
 input UpdatePostInput {
   cid: String
-  content: String
   description: String
+  media: [MediaAttachmentInput!]
   postId: String!
   title: String
   visibility: VisibilitySetting
@@ -190,33 +141,33 @@ scalar Upload
 
 type User {
   address: String!
-  bio: String
+  bio: String!
   bookmarksCount: Int!
   coverPicture: String
   createdAt: Timestamp!
-  displayName: String
+  displayName: String!
   followersCount: Int!
   followingCount: Int!
   profilePicture: String
   publicationsCount: Int!
-  socialLinks: [SocialLink]
+  socialLinks: [SocialLink!]
   updatedAt: Timestamp!
-  username: String
+  username: String!
   verified: Boolean
 }
 
 input UserByInput {
-  address: String
+  address: String!
 }
 
 input UserInput {
   address: String!
-  bio: String
+  bio: String!
   coverPicture: String
-  displayName: String
+  displayName: String!
   profilePicture: String
-  socialLinks: [SocialLinkInput!]
-  username: String
+  socialLinks: [SocialLinkInput!]!
+  username: String!
 }
 
 enum VisibilitySetting {

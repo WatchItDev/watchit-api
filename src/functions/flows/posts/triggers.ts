@@ -10,7 +10,7 @@ export const postCreated = onDocumentCreated(
             console.warn(`postCreated without author on ${event.params.postId}`)
             return
         }
-        await ds.Users.bumpField(auth, 'publicationsCount', +1)
+        await ds.Users.updateCounterField(auth, 'publicationsCount', +1)
         console.log(`🔥 postCreated for ${event.params.postId}`)
     })
 )
@@ -24,7 +24,7 @@ export const postDeleted = onDocumentDeleted(
             console.warn(`postDeleted without author on ${event.params.postId}`);
             return;
         }
-        await ds.Users.bumpField(auth, 'publicationsCount', -1);
+        await ds.Users.updateCounterField(auth, 'publicationsCount', -1);
         console.log(`🔥 postDeleted for ${event.params.postId}`);
     })
 );

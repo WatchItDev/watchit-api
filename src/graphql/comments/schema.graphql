@@ -17,25 +17,44 @@ type Comment {
   content:        String!
 }
 
+####################
+#     INPUTS       #
+####################
+
 input CreateCommentInput {
-  authorAddress: String!
-  postId:        String!
-  parentComment: String
-  content:       String!
+  authorAddress: String!   @constraint(minLength: 1)
+  postId:        String!   @constraint(minLength: 1)
+  parentComment: String    @constraint(minLength: 1)
+  content:       String!   @constraint(minLength: 1, maxLength: 500)
 }
 
 input UpdateCommentInput {
-  commentId: String!
-  content:   String!
+  commentId: String!      @constraint(minLength: 1)
+  content:   String!      @constraint(minLength: 1, maxLength: 500)
 }
 
+####################
+#      QUERIES     #
+####################
+
 extend type Query {
-  getCommentsByPost(postId: String!, limit: Int):    [Comment!]!
-  getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
+  getCommentsByPost(
+    postId: String!       @constraint(minLength: 1)
+    limit:  Int           @constraint(min: 1, max: 100)
+  ): [Comment!]!
+
+  getRepliesByComment(
+    commentId: String!    @constraint(minLength: 1)
+    limit:     Int        @constraint(min: 1, max: 100)
+  ): [Comment!]!
 }
+
+####################
+#     MUTATIONS    #
+####################
 
 extend type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   updateComment(input: UpdateCommentInput!): Comment!
-  deleteComment(commentId: String!): Boolean!
+  deleteComment(commentId: String! @constraint(minLength: 1)): Boolean!
 }

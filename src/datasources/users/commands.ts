@@ -1,5 +1,5 @@
 import { DataSourceManager } from '../manager'
-import type { User, UserInput } from '../../schema/types'
+import type {UpdateUserInput, User, UserInput} from '../../schema/types'
 import { makeNewUser } from '../../models/user';
 import { FieldValue } from 'firebase-admin/firestore';
 
@@ -12,13 +12,13 @@ export class UsersCommands extends DataSourceManager {
 
     async updateUser(
         address: string,
-        patch: Partial<Omit<User, 'address' | 'createdAt'>>
+        patch: Partial<Omit<UpdateUserInput, 'address' | 'createdAt'>>
     ): Promise<User> {
-        await this.fs<User>('users').update(address, { ...patch, updatedAt: Date.now() })
+        await this.fs<UpdateUserInput & { updatedAt: number }>('users').update(address, { ...patch, updatedAt: Date.now() })
         return (await this.fs<User>('users').get(address))!
     }
 
-    async bumpField(
+    async updateCounterField(
         address: string,
         field: keyof Pick<User,'followersCount'|'followingCount'|'publicationsCount'|'bookmarksCount'>,
         delta: number

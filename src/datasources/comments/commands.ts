@@ -39,7 +39,7 @@ export class CommentsCommands extends DataSourceManager {
         await this.fs<Comment>('comments').delete(commentId)
     }
 
-    async bumpField(
+    async updateCounterField(
         id: string,
         field: keyof Post,
         delta: number
