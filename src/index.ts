@@ -21,7 +21,9 @@ import { GQL } from "@/types";
 //     WEB3_AUTH_SOCIAL_JWKS
 // }: NodeJS.Process["env"] = process.env
 
+const host = '0.0.0.0';
 const port = (process.env.PORT || 4000) as number
+
 const server = new ApolloServer<GQL.ContextType>({
     resolvers,
     typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
@@ -36,7 +38,7 @@ const startServer = async () => {
     const services = Services({ ds: dataSources, ext: externals })
 
     return await startStandaloneServer(server, {
-        listen: { port },
+        listen: { port, host },
         context: async ({ req }) => {
             try {
                 // // idToken passed from the frontend in the Authorization header

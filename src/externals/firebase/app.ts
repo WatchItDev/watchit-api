@@ -13,7 +13,6 @@ const {
     FIREBASE_DATABASE,
     EMULATOR_HOST,
     EMULATOR_PORT,
-
 } = process.env
 
 
