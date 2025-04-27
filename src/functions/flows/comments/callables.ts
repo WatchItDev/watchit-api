@@ -1,0 +1,49 @@
+import 'reflect-metadata'
+import { onCall }   from 'firebase-functions/v2/https'
+import { HttpsError } from 'firebase-functions/v1/https'
+
+import { enhanceFunction }  from '../../manager'
+
+import type {
+  Comment,
+  CreateCommentInput,
+  UpdateCommentInput,
+} from '../../../schema/types'
+
+export const commentsCreate = onCall(
+  { region: 'auto' },
+  enhanceFunction(async ({ ds }, req): Promise<{ comment: Comment }> => {
+    const input = req.data as CreateCommentInput
+
+    const comment = await ds.Comments.createComment(input.authorAddress, input)
+    console.log(`🆕 comment created ${comment.id}`)
+    return { comment }
+  })
+)
+
+export const commentsUpdate = onCall(
+  { region: 'auto' },
+  enhanceFunction(async ({ ds }, req): Promise<{ comment: Comment | null }> => {
+    const input = req.data as UpdateCommentInput
+
+    const existing = await ds.Comments.getComment(input.commentId)
+    if (!existing) {
+      throw new HttpsError('not-found', 'comment not found')
+    }
+
+    const comment = await ds.Comments.updateComment(input)
+    console.log(`✏️  comment updated ${input.commentId}`)
+    return { comment }
+  })
+)
+
+export const commentsDelete = onCall(
+  { region: 'auto' },
+  enhanceFunction(async ({ ds }, req): Promise<{ success: boolean }> => {
+    const { commentId } = req.data as { commentId: string }
+
+    await ds.Comments.deleteComment(commentId)
+    console.log(`❌ comment deleted ${commentId}`)
+    return { success: true }
+  })
+)

@@ -5,6 +5,25 @@ enum CacheControlScope {
   PUBLIC
 }
 
+"""A comment on a post, or a reply to another comment."""
+type Comment {
+  author: User!
+  content: String!
+  createdAt: Timestamp!
+  id: String!
+  likeCount: Int!
+  parentComment: Comment
+  post: Post!
+  updatedAt: Timestamp
+}
+
+input CreateCommentInput {
+  authorAddress: String!
+  content: String!
+  parentComment: String
+  postId: String!
+}
+
 input CreatePostInput {
   authorAddress: String!
   cid: String!
@@ -42,10 +61,13 @@ input MediaAttachmentInput {
 }
 
 type Mutation {
+  createComment(input: CreateCommentInput!): Comment!
   createPost(input: CreatePostInput!): Post!
   createUser(input: UserInput!): User!
+  deleteComment(commentId: String!): Boolean!
   deletePost(postId: String!): Boolean!
   incrementPostView(postId: String!): Post!
+  updateComment(input: UpdateCommentInput!): Comment!
   updatePost(input: UpdatePostInput!): Post!
   updateUser(input: UpdateUserInput!): User!
 }
@@ -67,8 +89,10 @@ type Post {
 }
 
 type Query {
+  getCommentsByPost(limit: Int, postId: String!): [Comment!]!
   getPost(id: String!): Post
   getPostsByAuthor(author: String!, limit: Int): [Post!]!
+  getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
   getUser(address: String!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!
   getUserFollowers(address: String!, limit: Int): [User!]!
@@ -88,6 +112,11 @@ input SocialLinkInput {
 
 """Unix epoch in milliseconds (number)."""
 scalar Timestamp
+
+input UpdateCommentInput {
+  commentId: String!
+  content: String!
+}
 
 input UpdatePostInput {
   cid: String
