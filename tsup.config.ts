@@ -1,4 +1,6 @@
 import { defineConfig } from 'tsup'
+import TsconfigPathsPlugin from '@esbuild-plugins/tsconfig-paths'
+
 const env = process.env.NODE_ENV;
 
 export default defineConfig({
@@ -11,5 +13,6 @@ export default defineConfig({
     noExternal: ['*'],
     outDir: 'dist',
     sourcemap: true,
+    tsconfig: './tsconfig.json',
     clean: true
 })
