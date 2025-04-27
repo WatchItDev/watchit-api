@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/graphql/users/resolvers/SocialLink.ts"],"sourcesContent":["import type   { SocialLinkResolvers } from './../../../schema/types';\n    export const SocialLink: SocialLinkResolvers = {\n    /* Implement SocialLink resolver logic here */\n  };"],"mappings":"AACW,MAAM,aAAkC;AAAA;AAEjD;","names":[]}

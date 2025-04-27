@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../src/graphql/posts/resolvers/MediaAttachment.ts"],"sourcesContent":["import type   { MediaAttachmentResolvers } from './../../../schema/types';\n    export const MediaAttachment: MediaAttachmentResolvers = {\n    /* Implement MediaAttachment resolver logic here */\n  };"],"mappings":"AACW,MAAM,kBAA4C;AAAA;AAE3D;","names":[]}
