@@ -65,5 +65,40 @@ export const Functions = () => {
                 'commentsCallable-commentsDelete'
             ),
         },
+
+        social: {
+            follow: httpsCallable<{ me: string; target: string }, { user: User }>(
+                fn,
+                'socialCallable-follow'
+            ),
+            unfollow: httpsCallable<{ me: string; target: string }, { user: User }>(
+                fn,
+                'socialCallable-unfollow'
+            ),
+            likePost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+                fn,
+                'socialCallable-likePost'
+            ),
+            unlikePost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+                fn,
+                'socialCallable-unlikePost'
+            ),
+            bookmarkPost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+                fn,
+                'socialCallable-bookmarkPost'
+            ),
+            unbookmarkPost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+                fn,
+                'socialCallable-unbookmarkPost'
+            ),
+            likeComment: httpsCallable<{ me: string; commentId: string }, { comment: Comment }>(
+                fn,
+                'socialCallable-likeComment'
+            ),
+            unlikeComment: httpsCallable<{ me: string; commentId: string }, { comment: Comment }>(
+                fn,
+                'socialCallable-unlikeComment'
+            ),
+        },
     };
 };
