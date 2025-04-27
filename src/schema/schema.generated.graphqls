@@ -5,9 +5,18 @@ enum CacheControlScope {
   PUBLIC
 }
 
+input CreatePostInput {
+  authorAddress: String!
+  cid: String!
+  description: String!
+  media: [MediaAttachmentInput!]!
+  title: String!
+  visibility: VisibilitySetting!
+}
+
 scalar Date
 
-"""ISO‑8601 Date‑Time string (e.g. 2024‑04‑17T15:22:00.000Z)"""
+"""ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
 scalar DateTime
 
 input FilterInput {
@@ -17,27 +26,77 @@ input FilterInput {
 
 scalar JSON
 
+type MediaAttachment {
+  cid: String!
+  id: String!
+  title: String
+  type: String!
+  url: String
+}
+
+input MediaAttachmentInput {
+  cid: String!
+  title: String
+  type: String!
+  url: String
+}
+
 type Mutation {
+  createPost(input: CreatePostInput!): Post!
   createUser(input: UserInput!): User!
+  deletePost(postId: String!): Boolean!
+  incrementPostView(postId: String!): Post!
+  updatePost(input: UpdatePostInput!): Post!
   updateUser(input: UpdateUserInput!): User!
 }
 
+type Post {
+  author: User!
+  bookmarkCount: Int!
+  cid: String!
+  commentCount: Int!
+  createdAt: Timestamp!
+  description: String!
+  id: String!
+  likeCount: Int!
+  media: [MediaAttachment!]!
+  title: String!
+  updatedAt: Timestamp!
+  viewCount: Int!
+  visibility: VisibilitySetting!
+}
+
 type Query {
-  user(address: String!): User
+  getPost(id: String!): Post
+  getPostsByAuthor(author: String!, limit: Int): [Post!]!
+  getUser(address: String!): User
+  getUserBookmarks(address: String!, limit: Int): [Post!]!
+  getUserFollowers(address: String!, limit: Int): [User!]!
+  getUserFollowing(address: String!, limit: Int): [User!]!
+  getUsers(limit: Int, prefix: String!): [User!]!
 }
 
 type SocialLink {
-  platform: String
-  url: String
+  platform: String!
+  url: String!
 }
 
 input SocialLinkInput {
-  platform: String
-  url: String
+  platform: String!
+  url: String!
 }
 
 """Unix epoch in milliseconds (number)."""
 scalar Timestamp
+
+input UpdatePostInput {
+  cid: String
+  description: String
+  media: [MediaAttachmentInput!]
+  postId: String!
+  title: String
+  visibility: VisibilitySetting
+}
 
 input UpdateUserInput {
   address: String!
@@ -53,30 +112,37 @@ scalar Upload
 
 type User {
   address: String!
-  bio: String
+  bio: String!
+  bookmarksCount: Int!
   coverPicture: String
-  createdAt: Int!
-  displayName: String
+  createdAt: Timestamp!
+  displayName: String!
   followersCount: Int!
   followingCount: Int!
   profilePicture: String
   publicationsCount: Int!
-  socialLinks: [SocialLink]
-  updatedAt: Int!
-  username: String
+  socialLinks: [SocialLink!]
+  updatedAt: Timestamp!
+  username: String!
   verified: Boolean
 }
 
 input UserByInput {
-  address: String
+  address: String!
 }
 
 input UserInput {
   address: String!
-  bio: String
+  bio: String!
   coverPicture: String
-  displayName: String
+  displayName: String!
   profilePicture: String
-  socialLinks: [SocialLinkInput!]
-  username: String
+  socialLinks: [SocialLinkInput!]!
+  username: String!
+}
+
+enum VisibilitySetting {
+  FOLLOWERS_ONLY
+  PRIVATE
+  PUBLIC
 }

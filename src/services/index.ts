@@ -1,10 +1,9 @@
 import { ProfileService } from './profile';
-import {DataSourcesType} from "@/datasources";
-import type * as Externals   from '@/externals';
+import { PostService }    from './posts';
 
-export const Services = (params: {
-    ds:  DataSourcesType;
-    ext: typeof Externals;
-}) => ({
-    Profile: new ProfileService(params),
+export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
+    Profile:  new ProfileService({ ds, ext }),
+    Posts:    new PostService({ ds, ext }),
 });
+
+export type ServicesType = ReturnType<typeof Services>;

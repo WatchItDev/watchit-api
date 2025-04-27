@@ -1,3 +1,7 @@
+#----------------------------------------------------------------
+#  root/base schema — no manual @constraint here, plugin will add it
+#----------------------------------------------------------------
+
 type Query
 type Mutation
 
@@ -13,7 +17,7 @@ directive @cacheControl(
 ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 """
-ISO‑8601 Date‑Time string (e.g. 2024‑04‑17T15:22:00.000Z)
+ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)
 """
 scalar DateTime
 
@@ -21,6 +25,7 @@ scalar DateTime
 Unix epoch in milliseconds (number).
 """
 scalar Timestamp
+
 scalar Date
 scalar JSON
 scalar Upload

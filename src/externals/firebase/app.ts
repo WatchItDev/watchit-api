@@ -21,23 +21,25 @@ if (process.env.NODE_ENV !== 'production') {
     process.env.FIRESTORE_EMULATOR_HOST ??= `${EMULATOR_HOST}:${EMULATOR_PORT}`;
 }
 
-export const App = () => {
-  const client = !clientApps().length
-    ? clientInitialize(clientKey)
-    : clientApp()
-
-  const admin = !getApps().length
-    ? initializeApp({
+let admin: ReturnType<typeof getApp>
+try {
+    admin = getApp()
+} catch {
+    admin = initializeApp({
         credential: cert(adminKey as ServiceAccount),
         projectId: FIREBASE_PROJECT_ID,
-        databaseURL: FIREBASE_DATABASE
-      })
-    : getApp()
+        databaseURL: FIREBASE_DATABASE,
+    })
+}
 
-  return {
+const client =
+    !clientApps().length
+        ? clientInitialize(clientKey)
+        : clientApp()
+
+export const App = () => ({
     getAdmin: () => admin,
     getClient: () => client,
     clientKey,
-    adminKey
-  }
-}
+    adminKey,
+})

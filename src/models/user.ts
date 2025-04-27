@@ -7,10 +7,11 @@ export function defaultUserData(): Omit<
     'createdAt' | 'updatedAt'
 > {
     return {
-        followersCount:   0,
-        followingCount:   0,
-        publicationsCount:0,
-        verified:         false,
+        followersCount: 0,
+        followingCount: 0,
+        publicationsCount: 0,
+        bookmarksCount: 0,
+        verified: false,
     };
 }
 
