@@ -1,41 +1,48 @@
 import { DataSourceManager } from '../manager';
 
 export class SocialCommands extends DataSourceManager {
-    /* ------------------- FOLLOW ------------------- */
-    async followUser(me: string, target: string): Promise<void> {
-        console.log('hello follow');
-        console.log(me, target);
-        await this.fs('users').sub(me,   'following').create(target, {});
-        await this.fs('users').sub(target, 'followers').create(me,   {});
-    }
-    async unfollowUser(me: string, target: string): Promise<void> {
-        await this.fs('users').sub(me,   'following').delete(target);
-        await this.fs('users').sub(target, 'followers').delete(me);
+    async toggleFollow(me: string, target: string): Promise<boolean> {
+        const following = this.fs('users').sub(me, 'following');
+        const exists    = await (following as any).ref.doc(target).get();
+
+        if (exists.exists) {
+            await following.delete(target);
+            await this.fs('users').sub(target, 'followers').delete(me);
+            return false;
+        }
+        await following.create(target, {});
+        await this.fs('users').sub(target, 'followers').create(me, {});
+        return true;
     }
 
-    /* ------------------- LIKE post ------------------- */
-    async likePost(user: string, postId: string) {
-        await this.fs('posts').sub(postId, 'likes').create(user, {});
-    }
-    async unlikePost(user: string, postId: string) {
-        await this.fs('posts').sub(postId, 'likes').delete(user);
+    async togglePostLike(user: string, postId: string): Promise<boolean> {
+        const likes = this.fs('posts').sub(postId, 'likes');
+        const snap  = await (likes as any).ref.doc(user).get();
+
+        if (snap.exists) { await likes.delete(user);  return false; }
+        await likes.create(user, {});                 return true;
     }
 
-    /* ------------------- BOOKMARK ------------------- */
-    async bookmarkPost(user: string, postId: string) {
-        await this.fs('posts').sub(postId, 'bookmarks').create(user, {});
-        await this.fs('users').sub(user, 'bookmarks').create(postId, {});
-    }
-    async unbookmarkPost(user: string, postId: string) {
-        await this.fs('posts').sub(postId, 'bookmarks').delete(user);
-        await this.fs('users').sub(user, 'bookmarks').delete(postId);
+    async toggleBookmark(user: string, postId: string): Promise<boolean> {
+        const postsBms  = this.fs('posts').sub(postId, 'bookmarks');
+        const userBms   = this.fs('users').sub(user,  'bookmarks');
+        const snap      = await (postsBms as any).ref.doc(user).get();
+
+        if (snap.exists) {
+            await postsBms.delete(user);
+            await userBms.delete(postId);
+            return false;
+        }
+        await postsBms.create(user, {});
+        await userBms.create(postId, {});
+        return true;
     }
 
-    /* ------------------- LIKE comment -------------- */
-    async likeComment(user: string, commentId: string) {
-        await this.fs('comments').sub(commentId, 'likes').create(user, {});
-    }
-    async unlikeComment(user: string, commentId: string) {
-        await this.fs('comments').sub(commentId, 'likes').delete(user);
+    async toggleCommentLike(user: string, commentId: string): Promise<boolean> {
+        const likes = this.fs('comments').sub(commentId, 'likes');
+        const snap  = await (likes as any).ref.doc(user).get();
+
+        if (snap.exists) { await likes.delete(user);  return false; }
+        await likes.create(user, {});                 return true;
     }
 }

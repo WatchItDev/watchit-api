@@ -1,8 +1,15 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
     import type   { Resolvers } from './types';
-    import    { getCommentsByPost as Query_getCommentsByPost } from './../graphql/comments/resolvers/Query/getCommentsByPost';
+    import    { getActiveUsers as Query_getActiveUsers } from './../graphql/feeds/resolvers/Query/getActiveUsers';
+import    { getAllPosts as Query_getAllPosts } from './../graphql/feeds/resolvers/Query/getAllPosts';
+import    { getCommentsByPost as Query_getCommentsByPost } from './../graphql/comments/resolvers/Query/getCommentsByPost';
+import    { getIsFollowing as Query_getIsFollowing } from './../graphql/social/resolvers/Query/getIsFollowing';
+import    { getPopularPosts as Query_getPopularPosts } from './../graphql/feeds/resolvers/Query/getPopularPosts';
+import    { getPopularUsers as Query_getPopularUsers } from './../graphql/feeds/resolvers/Query/getPopularUsers';
 import    { getPost as Query_getPost } from './../graphql/posts/resolvers/Query/getPost';
 import    { getPostsByAuthor as Query_getPostsByAuthor } from './../graphql/posts/resolvers/Query/getPostsByAuthor';
+import    { getRecentPosts as Query_getRecentPosts } from './../graphql/feeds/resolvers/Query/getRecentPosts';
+import    { getRecentUsers as Query_getRecentUsers } from './../graphql/feeds/resolvers/Query/getRecentUsers';
 import    { getRepliesByComment as Query_getRepliesByComment } from './../graphql/comments/resolvers/Query/getRepliesByComment';
 import    { getUser as Query_getUser } from './../graphql/users/resolvers/Query/getUser';
 import    { getUserBookmarks as Query_getUserBookmarks } from './../graphql/users/resolvers/Query/getUserBookmarks';
@@ -15,6 +22,10 @@ import    { createUser as Mutation_createUser } from './../graphql/users/resolve
 import    { deleteComment as Mutation_deleteComment } from './../graphql/comments/resolvers/Mutation/deleteComment';
 import    { deletePost as Mutation_deletePost } from './../graphql/posts/resolvers/Mutation/deletePost';
 import    { incrementPostView as Mutation_incrementPostView } from './../graphql/posts/resolvers/Mutation/incrementPostView';
+import    { toggleBookmark as Mutation_toggleBookmark } from './../graphql/social/resolvers/Mutation/toggleBookmark';
+import    { toggleCommentLike as Mutation_toggleCommentLike } from './../graphql/social/resolvers/Mutation/toggleCommentLike';
+import    { toggleFollow as Mutation_toggleFollow } from './../graphql/social/resolvers/Mutation/toggleFollow';
+import    { togglePostLike as Mutation_togglePostLike } from './../graphql/social/resolvers/Mutation/togglePostLike';
 import    { updateComment as Mutation_updateComment } from './../graphql/comments/resolvers/Mutation/updateComment';
 import    { updatePost as Mutation_updatePost } from './../graphql/posts/resolvers/Mutation/updatePost';
 import    { updateUser as Mutation_updateUser } from './../graphql/users/resolvers/Mutation/updateUser';
@@ -26,8 +37,8 @@ import    { User } from './../graphql/users/resolvers/User';
 import    { Upload } from './../graphql/_base/resolvers/Upload';
 import    { DateResolver,DateTimeResolver,JSONResolver,TimestampResolver } from 'graphql-scalars';
     export const resolvers: Resolvers = {
-      Query: { getCommentsByPost: Query_getCommentsByPost,getPost: Query_getPost,getPostsByAuthor: Query_getPostsByAuthor,getRepliesByComment: Query_getRepliesByComment,getUser: Query_getUser,getUserBookmarks: Query_getUserBookmarks,getUserFollowers: Query_getUserFollowers,getUserFollowing: Query_getUserFollowing,getUsers: Query_getUsers },
-      Mutation: { createComment: Mutation_createComment,createPost: Mutation_createPost,createUser: Mutation_createUser,deleteComment: Mutation_deleteComment,deletePost: Mutation_deletePost,incrementPostView: Mutation_incrementPostView,updateComment: Mutation_updateComment,updatePost: Mutation_updatePost,updateUser: Mutation_updateUser },
+      Query: { getActiveUsers: Query_getActiveUsers,getAllPosts: Query_getAllPosts,getCommentsByPost: Query_getCommentsByPost,getIsFollowing: Query_getIsFollowing,getPopularPosts: Query_getPopularPosts,getPopularUsers: Query_getPopularUsers,getPost: Query_getPost,getPostsByAuthor: Query_getPostsByAuthor,getRecentPosts: Query_getRecentPosts,getRecentUsers: Query_getRecentUsers,getRepliesByComment: Query_getRepliesByComment,getUser: Query_getUser,getUserBookmarks: Query_getUserBookmarks,getUserFollowers: Query_getUserFollowers,getUserFollowing: Query_getUserFollowing,getUsers: Query_getUsers },
+      Mutation: { createComment: Mutation_createComment,createPost: Mutation_createPost,createUser: Mutation_createUser,deleteComment: Mutation_deleteComment,deletePost: Mutation_deletePost,incrementPostView: Mutation_incrementPostView,toggleBookmark: Mutation_toggleBookmark,toggleCommentLike: Mutation_toggleCommentLike,toggleFollow: Mutation_toggleFollow,togglePostLike: Mutation_togglePostLike,updateComment: Mutation_updateComment,updatePost: Mutation_updatePost,updateUser: Mutation_updateUser },
       
       Comment: Comment,
 MediaAttachment: MediaAttachment,

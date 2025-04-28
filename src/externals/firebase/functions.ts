@@ -67,37 +67,21 @@ export const Functions = () => {
         },
 
         social: {
-            follow: httpsCallable<{ me: string; target: string }, { user: User }>(
+            toggleFollow: httpsCallable<{ me: string; targetAddress: string }, { success: boolean }>(
                 fn,
-                'socialCallable-follow'
+                'socialCallable-toggleFollow'
             ),
-            unfollow: httpsCallable<{ me: string; target: string }, { user: User }>(
+            togglePostLike: httpsCallable<{ me: string; postId: string }, { success: boolean }>(
                 fn,
-                'socialCallable-unfollow'
+                'socialCallable-togglePostLike'
             ),
-            likePost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+            toggleBookmark: httpsCallable<{ me: string; postId: string }, { success: boolean }>(
                 fn,
-                'socialCallable-likePost'
+                'socialCallable-toggleBookmark'
             ),
-            unlikePost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
+            toggleCommentLike: httpsCallable<{ me: string; commentId: string }, { success: boolean }>(
                 fn,
-                'socialCallable-unlikePost'
-            ),
-            bookmarkPost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
-                fn,
-                'socialCallable-bookmarkPost'
-            ),
-            unbookmarkPost: httpsCallable<{ me: string; postId: string }, { post: Post }>(
-                fn,
-                'socialCallable-unbookmarkPost'
-            ),
-            likeComment: httpsCallable<{ me: string; commentId: string }, { comment: Comment }>(
-                fn,
-                'socialCallable-likeComment'
-            ),
-            unlikeComment: httpsCallable<{ me: string; commentId: string }, { comment: Comment }>(
-                fn,
-                'socialCallable-unlikeComment'
+                'socialCallable-toggleCommentLike'
             ),
         },
     };
