@@ -14,12 +14,15 @@ import { Services } from './services'
 import { FireStore } from './externals';
 import { DataSources } from './datasources';
 import * as externals from './externals'
-import {GQL} from "@/types";
+import { GQL } from "@/types";
 
 
 // const {
 //     WEB3_AUTH_SOCIAL_JWKS
 // }: NodeJS.Process["env"] = process.env
+
+const host = process.env.HOST || '0.0.0.0';
+const port = (process.env.PORT || 4000) as number
 
 const server = new ApolloServer<GQL.ContextType>({
     resolvers,
@@ -35,6 +38,7 @@ const startServer = async () => {
     const services = Services({ ds: dataSources, ext: externals })
 
     return await startStandaloneServer(server, {
+        listen: { port, host },
         context: async ({ req }) => {
             try {
                 // // idToken passed from the frontend in the Authorization header
