@@ -9,3 +9,6 @@ export * as commentsTrigger  from './flows/comments/triggers';
 
 export * as socialCallable   from './flows/social/callables';
 export * as socialTrigger    from './flows/social/triggers';
+
+export * as xpCallable from './flows/xp/callables';
+export * as xpTrigger from './flows/xp/triggers';

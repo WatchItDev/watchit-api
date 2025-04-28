@@ -1,0 +1,44 @@
+###########################
+#          XP             #
+###########################
+
+type XPEntry {
+  id:             ID!
+  action:         String!      # e.g. "REGISTER_BONUS" | "POST_CREATED"
+  description:    String!
+  amount:         Int!         # positive = earn, negative = burn
+  balanceBefore:  Int!
+  balanceAfter:   Int!
+  createdAt:      Timestamp!
+}
+
+####################
+#     INPUTS       #
+####################
+
+input AddXPInput {
+  address:       String! @constraint(minLength: 1)
+  action:        String! @constraint(minLength: 1)
+  description:   String! @constraint(minLength: 1)
+  amount:        Int!    @constraint(min: -2147483648, max: 2147483647)
+}
+
+####################
+#     QUERIES      #
+####################
+
+extend type Query {
+  getUserXPHistory(
+    address: String! @constraint(minLength: 1)
+    limit:   Int = 50
+    offset:  Int = 0
+  ): [XPEntry!]!
+}
+
+####################
+#    MUTATIONS     #
+####################
+
+extend type Mutation {
+  addXP(input: AddXPInput!): Boolean!
+}
