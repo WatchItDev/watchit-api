@@ -1,5 +1,5 @@
 import { DataSourceManager } from '../manager';
-import { XPEntry }           from '@/models/xp';
+import { XPEntry }           from '../../models/xp';
 
 export class XPCommands extends DataSourceManager {
     async addEntry(address: string, entry: XPEntry): Promise<void> {

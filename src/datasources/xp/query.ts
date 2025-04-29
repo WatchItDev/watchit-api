@@ -1,5 +1,5 @@
 import { DataSourceManager } from '../manager';
-import type { XPEntry }      from '@/models/xp';
+import type { XPEntry }      from '../../models/xp';
 
 export class XPQuery extends DataSourceManager {
     async getHistory(address: string, limit = 50, offset = 0): Promise<XPEntry[]> {

@@ -1,15 +1,15 @@
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
-import {enhanceTrigger} from "@/functions/manager";
-import type {ServiceParams} from "@/services/manager";
+import { enhanceTrigger }    from '../../manager';
 
 export const xpBalanceUpdater = onDocumentCreated(
     'users/{uid}/xpHistory/{entryId}',
-    enhanceTrigger(async ({ ds }: ServiceParams, event) => {
-        // const { uid, entryId } = event.params
-        const old = event.data?.data();
-        // if (!uid || !entryId) return
-        // await ds.Users.updateCounterField(userId, 'bookmarksCount', +1)
-        console.log('old', old)
-        console.log(`🔖 XP gain`)
+    enhanceTrigger(async ({ ds }, event) => {
+        const { uid } = event.params;
+        const { amount } = event.data!.data() as { amount: number };
+
+        if (typeof amount !== 'number') return;
+
+        await ds.Users.updateCounterField(uid, 'xpBalance', amount);
+        console.log(`⭐️ XP balance updated for ${uid}: Δ ${amount}`);
     })
-)
+);
