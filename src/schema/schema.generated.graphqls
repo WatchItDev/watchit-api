@@ -1,5 +1,12 @@
 directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
+input AddXPInput {
+  action: String!
+  address: String!
+  amount: Int!
+  description: String!
+}
+
 input BookmarkPostInput {
   postId: String!
 }
@@ -124,6 +131,7 @@ type Query {
   getUserBookmarks(address: String!, limit: Int): [Post!]!
   getUserFollowers(address: String!, limit: Int): [User!]!
   getUserFollowing(address: String!, limit: Int): [User!]!
+  getUserXPHistory(address: String!, limit: Int = 50, offset: Int = 0): [XPEntry!]!
   getUsers(limit: Int, prefix: String!): [User!]!
 }
 
@@ -181,6 +189,7 @@ type User {
   updatedAt: Timestamp!
   username: String!
   verified: Boolean
+  xpBalance: Int!
 }
 
 input UserByInput {
@@ -201,4 +210,14 @@ enum VisibilitySetting {
   FOLLOWERS_ONLY
   PRIVATE
   PUBLIC
+}
+
+type XPEntry {
+  action: String!
+  amount: Int!
+  balanceAfter: Int!
+  balanceBefore: Int!
+  createdAt: Timestamp!
+  description: String!
+  id: ID!
 }

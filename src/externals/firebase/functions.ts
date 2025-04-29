@@ -9,8 +9,9 @@ import type {
     UpdatePostInput,
     Comment,
     CreateCommentInput,
-    UpdateCommentInput,
+    UpdateCommentInput, AddXPInput,
 } from '@/schema/types';
+import {addXP} from "@/functions/flows/xp/callables";
 
 export const Functions = () => {
     const fn = getFunctions(App().getClient(), 'auto');
@@ -89,6 +90,10 @@ export const Functions = () => {
                 fn,
                 'likesCallable-toggleCommentLike'
             ),
+        },
+
+        xp: {
+            addXP: httpsCallable<AddXPInput, { success: boolean }>(fn, 'xpCallable-addXP'),
         },
     };
 };

@@ -11,6 +11,7 @@ export function defaultUserData(): Omit<
         followingCount: 0,
         publicationsCount: 0,
         bookmarksCount: 0,
+        xpBalance: 0,
         verified: false,
     };
 }

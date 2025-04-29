@@ -17,3 +17,6 @@ export * as followsTrigger    from './flows/follows/triggers';
 
 export * as likesCallable   from './flows/likes/callables';
 export * as likesTrigger    from './flows/likes/triggers';
+
+export * as xpCallable from './flows/xp/callables';
+export * as xpTrigger from './flows/xp/triggers';

@@ -20,7 +20,7 @@ export class UsersCommands extends DataSourceManager {
 
     async updateCounterField(
         address: string,
-        field: keyof Pick<User,'followersCount'|'followingCount'|'publicationsCount'|'bookmarksCount'>,
+        field: keyof Pick<User,'followersCount'|'followingCount'|'publicationsCount'|'bookmarksCount'|'xpBalance'>,
         delta: number
     ): Promise<void> {
         const dao = this.fs<User>('users') as any;

@@ -6,6 +6,7 @@ import FeedsDS    from './feeds';
 import BookmarksDS   from './bookmarks';
 import FollowsDS   from './follows';
 import LikesDS   from './likes';
+import XPDS    from './xp';
 
 export const DataSources = (store: FireStore) => ({
     Users:    new UsersDS(store),
@@ -15,6 +16,7 @@ export const DataSources = (store: FireStore) => ({
     Bookmarks:   new BookmarksDS(store),
     Follows:   new FollowsDS(store),
     Likes:   new LikesDS(store),
+    XP:       new XPDS(store),
 });
 
 export type DataSourcesType = ReturnType<typeof DataSources>;

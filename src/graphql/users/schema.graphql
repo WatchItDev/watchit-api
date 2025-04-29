@@ -19,6 +19,7 @@ type User {
   profilePicture: String
   coverPicture: String
   socialLinks: [SocialLink!]
+  xpBalance: Int!
 
   followersCount: Int!
   followingCount: Int!

@@ -5,6 +5,7 @@ import { FeedsService }   from './feeds';
 import { LikesService }  from './likes';
 import { BookmarkService }  from './bookmarks';
 import { FollowService }  from './follows';
+import { XPService }   from './xp';
 
 export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
     Profile:  new ProfileService({ ds, ext }),
@@ -14,6 +15,7 @@ export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
     Likes:   new LikesService({ ds, ext }),
     Bookmarks:   new BookmarkService({ ds, ext }),
     Follows:   new FollowService({ ds, ext }),
+    XP:       new XPService({ ds, ext }),
 });
 
 export type ServicesType = ReturnType<typeof Services>;

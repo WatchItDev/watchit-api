@@ -11,7 +11,7 @@ export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?:
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
+  ID: { input: string; output: string | number; }
   String: { input: string; output: string; }
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
@@ -23,6 +23,13 @@ export type Scalars = {
   /** Unix epoch in milliseconds (number). */
   Timestamp: { input: Date | string | number; output: Date | string | number; }
   Upload: { input: any; output: any; }
+};
+
+export type AddXPInput = {
+  action: Scalars['String']['input'];
+  address: Scalars['String']['input'];
+  amount: Scalars['Int']['input'];
+  description: Scalars['String']['input'];
 };
 
 export type BookmarkPostInput = {
@@ -211,6 +218,7 @@ export type Query = {
   getUserBookmarks: Array<Post>;
   getUserFollowers: Array<User>;
   getUserFollowing: Array<User>;
+  getUserXPHistory: Array<XPEntry>;
   getUsers: Array<User>;
 };
 
@@ -297,6 +305,13 @@ export type QuerygetUserFollowingArgs = {
 };
 
 
+export type QuerygetUserXPHistoryArgs = {
+  address: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QuerygetUsersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   prefix: Scalars['String']['input'];
@@ -353,6 +368,7 @@ export type User = {
   updatedAt: Scalars['Timestamp']['output'];
   username: Scalars['String']['output'];
   verified?: Maybe<Scalars['Boolean']['output']>;
+  xpBalance: Scalars['Int']['output'];
 };
 
 export type UserByInput = {
@@ -373,6 +389,17 @@ export type VisibilitySetting =
   | 'FOLLOWERS_ONLY'
   | 'PRIVATE'
   | 'PUBLIC';
+
+export type XPEntry = {
+  __typename?: 'XPEntry';
+  action: Scalars['String']['output'];
+  amount: Scalars['Int']['output'];
+  balanceAfter: Scalars['Int']['output'];
+  balanceBefore: Scalars['Int']['output'];
+  createdAt: Scalars['Timestamp']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+};
 
 
 
@@ -445,11 +472,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  BookmarkPostInput: BookmarkPostInput;
+  AddXPInput: AddXPInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  BookmarkPostInput: BookmarkPostInput;
   CacheControlScope: ResolverTypeWrapper<'PUBLIC' | 'PRIVATE'>;
   Comment: ResolverTypeWrapper<Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversTypes['Comment']>, post: ResolversTypes['Post'] }>;
-  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   CreateCommentInput: CreateCommentInput;
   CreatePostInput: CreatePostInput;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
@@ -476,14 +504,17 @@ export type ResolversTypes = {
   UserByInput: UserByInput;
   UserInput: UserInput;
   VisibilitySetting: ResolverTypeWrapper<'PUBLIC' | 'FOLLOWERS_ONLY' | 'PRIVATE'>;
+  XPEntry: ResolverTypeWrapper<XPEntry>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  BookmarkPostInput: BookmarkPostInput;
+  AddXPInput: AddXPInput;
   String: Scalars['String']['output'];
-  Comment: Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversParentTypes['Comment']>, post: ResolversParentTypes['Post'] };
   Int: Scalars['Int']['output'];
+  BookmarkPostInput: BookmarkPostInput;
+  Comment: Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversParentTypes['Comment']>, post: ResolversParentTypes['Post'] };
   CreateCommentInput: CreateCommentInput;
   CreatePostInput: CreatePostInput;
   Date: Scalars['Date']['output'];
@@ -509,6 +540,8 @@ export type ResolversParentTypes = {
   User: User;
   UserByInput: UserByInput;
   UserInput: UserInput;
+  XPEntry: XPEntry;
+  ID: Scalars['ID']['output'];
 };
 
 export type cacheControlDirectiveArgs = {
@@ -603,6 +636,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getUserBookmarks?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetUserBookmarksArgs, 'address'>>;
   getUserFollowers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserFollowersArgs, 'address'>>;
   getUserFollowing?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserFollowingArgs, 'address'>>;
+  getUserXPHistory?: Resolver<Array<ResolversTypes['XPEntry']>, ParentType, ContextType, RequireFields<QuerygetUserXPHistoryArgs, 'address' | 'limit' | 'offset'>>;
   getUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUsersArgs, 'prefix'>>;
 };
 
@@ -635,10 +669,22 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   updatedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   verified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  xpBalance?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type VisibilitySettingResolvers = EnumResolverSignature<{ FOLLOWERS_ONLY?: any, PRIVATE?: any, PUBLIC?: any }, ResolversTypes['VisibilitySetting']>;
+
+export type XPEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['XPEntry'] = ResolversParentTypes['XPEntry']> = {
+  action?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  balanceAfter?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  balanceBefore?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type Resolvers<ContextType = any> = {
   CacheControlScope?: CacheControlScopeResolvers;
@@ -655,6 +701,7 @@ export type Resolvers<ContextType = any> = {
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
   VisibilitySetting?: VisibilitySettingResolvers;
+  XPEntry?: XPEntryResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = any> = {
