@@ -3,7 +3,7 @@
     import    { getActiveUsers as Query_getActiveUsers } from './../graphql/feeds/resolvers/Query/getActiveUsers';
 import    { getAllPosts as Query_getAllPosts } from './../graphql/feeds/resolvers/Query/getAllPosts';
 import    { getCommentsByPost as Query_getCommentsByPost } from './../graphql/comments/resolvers/Query/getCommentsByPost';
-import    { getIsFollowing as Query_getIsFollowing } from './../graphql/social/resolvers/Query/getIsFollowing';
+import    { getIsFollowing as Query_getIsFollowing } from './../graphql/follows/resolvers/Query/getIsFollowing';
 import    { getPopularPosts as Query_getPopularPosts } from './../graphql/feeds/resolvers/Query/getPopularPosts';
 import    { getPopularUsers as Query_getPopularUsers } from './../graphql/feeds/resolvers/Query/getPopularUsers';
 import    { getPost as Query_getPost } from './../graphql/posts/resolvers/Query/getPost';
@@ -24,10 +24,10 @@ import    { createUser as Mutation_createUser } from './../graphql/users/resolve
 import    { deleteComment as Mutation_deleteComment } from './../graphql/comments/resolvers/Mutation/deleteComment';
 import    { deletePost as Mutation_deletePost } from './../graphql/posts/resolvers/Mutation/deletePost';
 import    { incrementPostView as Mutation_incrementPostView } from './../graphql/posts/resolvers/Mutation/incrementPostView';
-import    { toggleBookmark as Mutation_toggleBookmark } from './../graphql/social/resolvers/Mutation/toggleBookmark';
-import    { toggleCommentLike as Mutation_toggleCommentLike } from './../graphql/social/resolvers/Mutation/toggleCommentLike';
-import    { toggleFollow as Mutation_toggleFollow } from './../graphql/social/resolvers/Mutation/toggleFollow';
-import    { togglePostLike as Mutation_togglePostLike } from './../graphql/social/resolvers/Mutation/togglePostLike';
+import    { toggleBookmark as Mutation_toggleBookmark } from './../graphql/bookmarks/resolvers/Mutation/toggleBookmark';
+import    { toggleCommentLike as Mutation_toggleCommentLike } from './../graphql/likes/resolvers/Mutation/toggleCommentLike';
+import    { toggleFollow as Mutation_toggleFollow } from './../graphql/follows/resolvers/Mutation/toggleFollow';
+import    { togglePostLike as Mutation_togglePostLike } from './../graphql/likes/resolvers/Mutation/togglePostLike';
 import    { updateComment as Mutation_updateComment } from './../graphql/comments/resolvers/Mutation/updateComment';
 import    { updatePost as Mutation_updatePost } from './../graphql/posts/resolvers/Mutation/updatePost';
 import    { updateUser as Mutation_updateUser } from './../graphql/users/resolvers/Mutation/updateUser';

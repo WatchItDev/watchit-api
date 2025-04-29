@@ -1,0 +1,7 @@
+input BookmarkPostInput  {
+  postId: String!     @constraint(minLength: 1)
+}
+
+extend type Mutation {
+  toggleBookmark    (input: BookmarkPostInput!):  Boolean!
+}

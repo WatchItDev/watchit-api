@@ -9,16 +9,16 @@ import {
 import { adminKey, clientKey } from './credentials';
 
 const {
-    FIREBASE_PROJECT_ID,
-    FIREBASE_DATABASE,
-    EMULATOR_HOST,
-    EMULATOR_PORT,
+    API_FIREBASE_PROJECT_ID,
+    API_FIREBASE_DATABASE,
+    API_EMULATOR_HOST,
+    API_EMULATOR_PORT,
 } = process.env
 
 
 // This is for the Firebase Emulator Suite
 if (process.env.NODE_ENV !== 'production') {
-    process.env.FIRESTORE_EMULATOR_HOST ??= `${EMULATOR_HOST}:${EMULATOR_PORT}`;
+    process.env.API_FIRESTORE_EMULATOR_HOST ??= `${API_EMULATOR_HOST}:${API_EMULATOR_PORT}`;
 }
 
 let admin: ReturnType<typeof getApp>
@@ -27,8 +27,8 @@ try {
 } catch {
     admin = initializeApp({
         credential: cert(adminKey as ServiceAccount),
-        projectId: FIREBASE_PROJECT_ID,
-        databaseURL: FIREBASE_DATABASE,
+        projectId: API_FIREBASE_PROJECT_ID,
+        databaseURL: API_FIREBASE_DATABASE,
     })
 }
 

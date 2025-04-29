@@ -1,0 +1,11 @@
+input FollowInput {
+  targetAddress: String! @constraint(minLength: 1)
+}
+
+extend type Mutation {
+  toggleFollow(input: FollowInput!): Boolean!
+}
+
+extend type Query {
+  getIsFollowing(followerAddress: String!, targetAddress: String!): Boolean!
+}
