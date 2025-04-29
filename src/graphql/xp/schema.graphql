@@ -34,11 +34,3 @@ extend type Query {
     offset:  Int = 0
   ): [XPEntry!]!
 }
-
-####################
-#    MUTATIONS     #
-####################
-
-extend type Mutation {
-  addXP(input: AddXPInput!): Boolean!
-}

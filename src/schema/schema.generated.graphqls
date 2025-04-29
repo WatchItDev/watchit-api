@@ -84,7 +84,6 @@ input MediaAttachmentInput {
 }
 
 type Mutation {
-  addXP(input: AddXPInput!): Boolean!
   createComment(input: CreateCommentInput!): Comment!
   createPost(input: CreatePostInput!): Post!
   createUser(input: UserInput!): User!

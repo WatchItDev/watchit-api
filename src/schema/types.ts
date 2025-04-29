@@ -104,7 +104,6 @@ export type MediaAttachmentInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addXP: Scalars['Boolean']['output'];
   createComment: Comment;
   createPost: Post;
   createUser: User;
@@ -118,11 +117,6 @@ export type Mutation = {
   updateComment: Comment;
   updatePost: Post;
   updateUser: User;
-};
-
-
-export type MutationaddXPArgs = {
-  input: AddXPInput;
 };
 
 
@@ -594,7 +588,6 @@ export type MediaAttachmentResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addXP?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationaddXPArgs, 'input'>>;
   createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationcreateCommentArgs, 'input'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationcreatePostArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationcreateUserArgs, 'input'>>;
