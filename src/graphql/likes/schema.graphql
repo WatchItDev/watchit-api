@@ -1,0 +1,12 @@
+input LikePostInput {
+  postId: String!     @constraint(minLength: 1)
+}
+
+input LikeCommentInput {
+  commentId: String!  @constraint(minLength: 1)
+}
+
+extend type Mutation {
+  togglePostLike    (input: LikePostInput!):      Boolean!
+  toggleCommentLike (input: LikeCommentInput!):   Boolean!
+}

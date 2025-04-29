@@ -4,5 +4,5 @@ export const toggleFollow: NonNullable<MutationResolvers['toggleFollow']> =
     async (_parent, { input: { targetAddress } }, { services, reqUser }) => {
             const me = reqUser?.address
             if (!me) throw new Error('Not authenticated')
-            return await services.Social.toggleFollow(me, targetAddress)
+            return await services.Follows.toggleFollow(me, targetAddress)
     }
