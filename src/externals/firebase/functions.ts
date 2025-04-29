@@ -16,7 +16,7 @@ export const Functions = () => {
     const fn = getFunctions(App().getClient(), 'auto');
 
     if (process.env.NODE_ENV !== 'production') {
-        const host = process.env.EMULATOR_HOST ?? '127.0.0.1';
+        const host = process.env.API_EMULATOR_HOST ?? '127.0.0.1';
         connectFunctionsEmulator(fn, host, 5001);
     }
 

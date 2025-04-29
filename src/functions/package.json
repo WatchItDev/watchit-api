@@ -3,6 +3,7 @@
   "private": true,
   "main": "lib/src/functions/index.js",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "firebase-admin": "^12.0.3",
     "firebase-functions": "^5.1.0",
     "reflect-metadata": "^0.2.2"

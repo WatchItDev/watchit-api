@@ -18,7 +18,7 @@ import { GQL } from "@/types";
 
 
 // const {
-//     WEB3_AUTH_SOCIAL_JWKS
+//     API_WEB3_AUTH_SOCIAL_JWKS
 // }: NodeJS.Process["env"] = process.env
 
 const host = process.env.HOST || '0.0.0.0';
