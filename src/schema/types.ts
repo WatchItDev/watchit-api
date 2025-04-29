@@ -25,6 +25,10 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
+export type BookmarkPostInput = {
+  postId: Scalars['String']['input'];
+};
+
 export type CacheControlScope =
   | 'PRIVATE'
   | 'PUBLIC';
@@ -63,6 +67,18 @@ export type FilterInput = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type FollowInput = {
+  targetAddress: Scalars['String']['input'];
+};
+
+export type LikeCommentInput = {
+  commentId: Scalars['String']['input'];
+};
+
+export type LikePostInput = {
+  postId: Scalars['String']['input'];
+};
+
 export type MediaAttachment = {
   __typename?: 'MediaAttachment';
   cid: Scalars['String']['output'];
@@ -87,6 +103,10 @@ export type Mutation = {
   deleteComment: Scalars['Boolean']['output'];
   deletePost: Scalars['Boolean']['output'];
   incrementPostView: Post;
+  toggleBookmark: Scalars['Boolean']['output'];
+  toggleCommentLike: Scalars['Boolean']['output'];
+  toggleFollow: Scalars['Boolean']['output'];
+  togglePostLike: Scalars['Boolean']['output'];
   updateComment: Comment;
   updatePost: Post;
   updateUser: User;
@@ -123,6 +143,26 @@ export type MutationincrementPostViewArgs = {
 };
 
 
+export type MutationtoggleBookmarkArgs = {
+  input: BookmarkPostInput;
+};
+
+
+export type MutationtoggleCommentLikeArgs = {
+  input: LikeCommentInput;
+};
+
+
+export type MutationtoggleFollowArgs = {
+  input: FollowInput;
+};
+
+
+export type MutationtogglePostLikeArgs = {
+  input: LikePostInput;
+};
+
+
 export type MutationupdateCommentArgs = {
   input: UpdateCommentInput;
 };
@@ -156,9 +196,16 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query';
+  getActiveUsers: Array<User>;
+  getAllPosts: Array<Post>;
   getCommentsByPost: Array<Comment>;
+  getIsFollowing: Scalars['Boolean']['output'];
+  getPopularPosts: Array<Post>;
+  getPopularUsers: Array<User>;
   getPost?: Maybe<Post>;
   getPostsByAuthor: Array<Post>;
+  getRecentPosts: Array<Post>;
+  getRecentUsers: Array<User>;
   getRepliesByComment: Array<Comment>;
   getUser?: Maybe<User>;
   getUserBookmarks: Array<Post>;
@@ -168,9 +215,35 @@ export type Query = {
 };
 
 
+export type QuerygetActiveUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QuerygetAllPostsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QuerygetCommentsByPostArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   postId: Scalars['String']['input'];
+};
+
+
+export type QuerygetIsFollowingArgs = {
+  followerAddress: Scalars['String']['input'];
+  targetAddress: Scalars['String']['input'];
+};
+
+
+export type QuerygetPopularPostsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QuerygetPopularUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -181,6 +254,16 @@ export type QuerygetPostArgs = {
 
 export type QuerygetPostsByAuthorArgs = {
   author: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QuerygetRecentPostsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QuerygetRecentUsersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -362,16 +445,20 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  BookmarkPostInput: BookmarkPostInput;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   CacheControlScope: ResolverTypeWrapper<'PUBLIC' | 'PRIVATE'>;
   Comment: ResolverTypeWrapper<Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversTypes['Comment']>, post: ResolversTypes['Post'] }>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   CreateCommentInput: CreateCommentInput;
   CreatePostInput: CreatePostInput;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   FilterInput: FilterInput;
+  FollowInput: FollowInput;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  LikeCommentInput: LikeCommentInput;
+  LikePostInput: LikePostInput;
   MediaAttachment: ResolverTypeWrapper<MediaAttachment>;
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -393,15 +480,19 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Comment: Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversParentTypes['Comment']>, post: ResolversParentTypes['Post'] };
+  BookmarkPostInput: BookmarkPostInput;
   String: Scalars['String']['output'];
+  Comment: Omit<Comment, 'parentComment' | 'post'> & { parentComment?: Maybe<ResolversParentTypes['Comment']>, post: ResolversParentTypes['Post'] };
   Int: Scalars['Int']['output'];
   CreateCommentInput: CreateCommentInput;
   CreatePostInput: CreatePostInput;
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
   FilterInput: FilterInput;
+  FollowInput: FollowInput;
   JSON: Scalars['JSON']['output'];
+  LikeCommentInput: LikeCommentInput;
+  LikePostInput: LikePostInput;
   MediaAttachment: MediaAttachment;
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: {};
@@ -470,6 +561,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeleteCommentArgs, 'commentId'>>;
   deletePost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeletePostArgs, 'postId'>>;
   incrementPostView?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationincrementPostViewArgs, 'postId'>>;
+  toggleBookmark?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleBookmarkArgs, 'input'>>;
+  toggleCommentLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleCommentLikeArgs, 'input'>>;
+  toggleFollow?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleFollowArgs, 'input'>>;
+  togglePostLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtogglePostLikeArgs, 'input'>>;
   updateComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationupdateCommentArgs, 'input'>>;
   updatePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationupdatePostArgs, 'input'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationupdateUserArgs, 'input'>>;
@@ -493,9 +588,16 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getActiveUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetActiveUsersArgs>>;
+  getAllPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetAllPostsArgs>>;
   getCommentsByPost?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetCommentsByPostArgs, 'postId'>>;
+  getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'followerAddress' | 'targetAddress'>>;
+  getPopularPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetPopularPostsArgs>>;
+  getPopularUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetPopularUsersArgs>>;
   getPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostArgs, 'id'>>;
   getPostsByAuthor?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostsByAuthorArgs, 'author'>>;
+  getRecentPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetRecentPostsArgs>>;
+  getRecentUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetRecentUsersArgs>>;
   getRepliesByComment?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetRepliesByCommentArgs, 'commentId'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserArgs, 'address'>>;
   getUserBookmarks?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetUserBookmarksArgs, 'address'>>;

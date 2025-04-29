@@ -1,5 +1,9 @@
 directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
+input BookmarkPostInput {
+  postId: String!
+}
+
 enum CacheControlScope {
   PRIVATE
   PUBLIC
@@ -43,7 +47,19 @@ input FilterInput {
   offset: Int
 }
 
+input FollowInput {
+  targetAddress: String!
+}
+
 scalar JSON
+
+input LikeCommentInput {
+  commentId: String!
+}
+
+input LikePostInput {
+  postId: String!
+}
 
 type MediaAttachment {
   cid: String!
@@ -67,6 +83,10 @@ type Mutation {
   deleteComment(commentId: String!): Boolean!
   deletePost(postId: String!): Boolean!
   incrementPostView(postId: String!): Post!
+  toggleBookmark(input: BookmarkPostInput!): Boolean!
+  toggleCommentLike(input: LikeCommentInput!): Boolean!
+  toggleFollow(input: FollowInput!): Boolean!
+  togglePostLike(input: LikePostInput!): Boolean!
   updateComment(input: UpdateCommentInput!): Comment!
   updatePost(input: UpdatePostInput!): Post!
   updateUser(input: UpdateUserInput!): User!
@@ -89,9 +109,16 @@ type Post {
 }
 
 type Query {
+  getActiveUsers(limit: Int): [User!]!
+  getAllPosts(limit: Int): [Post!]!
   getCommentsByPost(limit: Int, postId: String!): [Comment!]!
+  getIsFollowing(followerAddress: String!, targetAddress: String!): Boolean!
+  getPopularPosts(limit: Int): [Post!]!
+  getPopularUsers(limit: Int): [User!]!
   getPost(id: String!): Post
   getPostsByAuthor(author: String!, limit: Int): [Post!]!
+  getRecentPosts(limit: Int): [Post!]!
+  getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
   getUser(address: String!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!

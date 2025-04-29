@@ -1,0 +1,12 @@
+###########################
+#        FEEDS            #
+###########################
+
+extend type Query {
+  getPopularUsers(limit: Int): [User!]!
+  getRecentUsers(limit: Int): [User!]!
+  getActiveUsers(limit: Int): [User!]!
+  getPopularPosts(limit: Int): [Post!]!
+  getRecentPosts(limit: Int): [Post!]!
+  getAllPosts(limit: Int): [Post!]!
+}
