@@ -37,13 +37,13 @@ export const commentsUpdate = onCall(
   })
 )
 
-export const commentsDelete = onCall(
+export const commentsHide = onCall(
   { region: 'auto' },
   enhanceFunction(async ({ ds }, req): Promise<{ success: boolean }> => {
     const { commentId } = req.data as { commentId: string }
 
-    await ds.Comments.deleteComment(commentId)
-    console.log(`❌ comment deleted ${commentId}`)
+    await ds.Comments.hideComment(commentId)
+    console.log(`❌ comment hidden ${commentId}`)
     return { success: true }
   })
 )

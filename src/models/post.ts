@@ -17,6 +17,7 @@ export function defaultPostData(): Omit<
         likeCount:      0,
         bookmarkCount:  0,
         viewCount:      0,
+        hidden:         false,
     }
 }
 

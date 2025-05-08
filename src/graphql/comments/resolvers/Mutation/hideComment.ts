@@ -1,7 +1,7 @@
 import type { MutationResolvers } from './../../../../schema/types'
 
-export const deleteComment: NonNullable<MutationResolvers['deleteComment']> =
+export const hideComment: NonNullable<MutationResolvers['hideComment']> =
     async (_parent, { commentId }, { services }) => {
-            await services.Comments.deleteComment(commentId)
+            await services.Comments.hideComment(commentId)
             return true
     }

@@ -8,4 +8,10 @@ export class LikesService extends ServiceManager {
     toggleCommentLike = (me: string, commentId: string)    =>
         this.ext.Functions().likes.toggleCommentLike({ me, commentId })
             .then(r => r.data.success);
+
+    isPostLiked = (postId: string, me: string) =>
+        this.ds.Likes.isPostLiked(postId, me);
+
+    isCommentLiked = (commentId: string, me: string) =>
+        this.ds.Likes.isCommentLiked(commentId, me);
 }

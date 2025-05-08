@@ -31,15 +31,15 @@ export const postsUpdate = onCall(
   })
 );
 
-export const postsDelete = onCall(
+export const postsHide = onCall(
   { region: 'auto' },
   enhanceFunction(async ({ ds }, req): Promise<{ success: boolean }> => {
     const { postId } = req.data as { postId?: string };
     if (!postId) {
       throw new HttpsError('invalid-argument', 'postId required');
     }
-    await ds.Posts.deletePost(postId);
-    console.log(`❌ post deleted ${postId}`);
+    await ds.Posts.hidePost(postId);
+    console.log(`❌ post hidden ${postId}`);
     return { success: true };
   })
 );

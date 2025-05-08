@@ -10,3 +10,8 @@ extend type Mutation {
   togglePostLike    (input: LikePostInput!):      Boolean!
   toggleCommentLike (input: LikeCommentInput!):   Boolean!
 }
+
+extend type Query {
+  getIsPostLiked(postId: String!): Boolean!
+  getIsCommentLiked(commentId: String!): Boolean!
+}

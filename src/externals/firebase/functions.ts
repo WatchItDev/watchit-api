@@ -11,7 +11,6 @@ import type {
     CreateCommentInput,
     UpdateCommentInput, AddXPInput,
 } from '@/schema/types';
-import {addXP} from "@/functions/flows/xp/callables";
 
 export const Functions = () => {
     const fn = getFunctions(App().getClient(), 'auto');
@@ -42,9 +41,9 @@ export const Functions = () => {
                 fn,
                 'postsCallable-postsUpdate'
             ),
-            delete: httpsCallable<{ postId: string }, { success: boolean }>(
+            hide: httpsCallable<{ postId: string }, { success: boolean }>(
                 fn,
-                'postsCallable-postsDelete'
+                'postsCallable-postsHide'
             ),
             incrementView: httpsCallable<{ postId: string }, { post: Post }>(
                 fn,
@@ -61,9 +60,9 @@ export const Functions = () => {
                 fn,
                 'commentsCallable-commentsUpdate'
             ),
-            delete: httpsCallable<{ commentId: string }, { success: boolean }>(
+            hide: httpsCallable<{ commentId: string }, { success: boolean }>(
                 fn,
-                'commentsCallable-commentsDelete'
+                'commentsCallable-commentsHide'
             ),
         },
 

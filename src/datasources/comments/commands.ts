@@ -35,8 +35,12 @@ export class CommentsCommands extends DataSourceManager {
         return raw
     }
 
-    async deleteComment(commentId: string): Promise<void> {
-        await this.fs<Comment>('comments').delete(commentId)
+    async hideComment(commentId: string): Promise<void> {
+        const dao = this.fs<Comment>('comments') as any;
+        await dao.ref.doc(commentId).update({
+            hidden: true,
+            updatedAt: Date.now(),
+        });
     }
 
     async updateCounterField(

@@ -24,18 +24,23 @@ export class FeedsQuery extends DataSourceManager {
     }
 
     async popularPosts(limit = 20): Promise<Post[]> {
-        const all = await this.fs<Post>('posts').list(limit);
-        return all
-            .sort((a, b) => b.likeCount + b.commentCount - (a.likeCount + a.commentCount))
-            .slice(0, limit);
+        return this.fs<Post>('posts').query(
+            [{ field: 'hidden', op: '==', value: false }],
+            { orderBy: { field: 'likeCount', direction: 'desc' }, limit }
+        );
     }
 
     async recentPosts(limit = 20): Promise<Post[]> {
-        return this.fs<Post>('posts')
-            .query([], limit);
+        return this.fs<Post>('posts').query(
+            [{ field: 'hidden', op: '==', value: false }],
+            { orderBy: { field: 'createdAt', direction: 'desc' }, limit }
+        );
     }
 
     async allPosts(limit = 100): Promise<Post[]> {
-        return this.fs<Post>('posts').list(limit);
+        return this.fs<Post>('posts').query(
+            [{ field: 'hidden', op: '==', value: false }],
+            { limit }
+        );
     }
 }

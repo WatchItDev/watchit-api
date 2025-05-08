@@ -1,19 +1,31 @@
 import { DataSourceManager } from '../manager';
-import type { Post } from '../../schema/types';
+import type {Post, User} from '../../schema/types';
 
 export class PostsQuery extends DataSourceManager {
     async getPost(id: string): Promise<Post | null> {
-        return this.fs<Post>('posts').get(id);
+        const p = await this.fs<Post>('posts').get(id);
+        return p && !p.hidden ? p : null;
+    }
+
+    getPosts = async (q: string, limit = 50): Promise<Post[]> => {
+        if (!q) return [];
+        return this.fs<Post>('posts').search(q, limit);
     }
 
     async getPostsByAuthor(author: string, limit = 20): Promise<Post[]> {
-        return this.fs<Post>('posts')
-            .query([{ field: 'author.address', op: '==', value: author }], limit);
+        return this.fs<Post>('posts').query(
+            [
+                { field: 'author.address', op: '==', value: author },
+                { field: 'hidden',         op: '==', value: false  },
+            ],
+            { limit }
+        );
     }
 
     async recentPosts(limit = 20): Promise<Post[]> {
         const dao = this.fs<Post>('posts') as any;
         const snap = await dao.ref
+            .where('hidden', '==', false)
             .orderBy('createdAt', 'desc')
             .limit(limit)
             .get();
@@ -23,6 +35,7 @@ export class PostsQuery extends DataSourceManager {
     async popularPosts(limit = 20): Promise<Post[]> {
         const dao = this.fs<Post>('posts') as any;
         const snap = await dao.ref
+            .where('hidden', '==', false)
             .orderBy('likeCount', 'desc')
             .limit(limit)
             .get();
@@ -30,6 +43,6 @@ export class PostsQuery extends DataSourceManager {
     }
 
     async allPosts(): Promise<Post[]> {
-        return this.fs<Post>('posts').list();
+        return this.fs<Post>('posts').query([{ field: 'hidden', op: '==', value: false }], {});
     }
 }

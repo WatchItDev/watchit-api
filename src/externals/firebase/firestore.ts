@@ -5,7 +5,6 @@ import type {
   DocumentData,
   WithFieldValue,
   Query as FSQuery,
-  QuerySnapshot,
 } from 'firebase-admin/firestore';
 import { App } from './app';
 
@@ -21,6 +20,8 @@ export class CollectionDAO<T> {
     this.admin = getAdminFS(App().getAdmin());
     this.ref   = this.admin.collection(path);
   }
+
+  /* ---------- basic CRUD ---------- */
 
   async get(id: string): Promise<T | null> {
     const snap = await this.ref.doc(id).get();
@@ -38,12 +39,14 @@ export class CollectionDAO<T> {
   }
 
   async update(id: string, data: Partial<WithFieldValue<T>>): Promise<void> {
-    await this.ref.doc(id).update(data)
+    await this.ref.doc(id).update(data);
   }
 
   async delete(id: string): Promise<void> {
     await this.ref.doc(id).delete();
   }
+
+  /* ---------- querying helpers ---------- */
 
   async ids(limit = 50): Promise<string[]> {
     const snap = await this.ref.limit(limit).get();
@@ -52,28 +55,42 @@ export class CollectionDAO<T> {
 
   async query(
     clauses: Array<{ field: string; op: FirebaseFirestore.WhereFilterOp; value: unknown }>,
-    limit?: number
+    options?: {
+      limit?: number;
+      orderBy?: { field: string; direction?: FirebaseFirestore.OrderByDirection };  // 'asc' | 'desc'
+    },
   ): Promise<T[]> {
     let q: FSQuery<DocumentData> = this.ref;
     for (const c of clauses) q = q.where(c.field, c.op, c.value);
-    if (limit) q = q.limit(limit);
-    const snap: QuerySnapshot = await q.get();
-    return snap.docs.map((d) => d.data() as T);
+    if (options?.orderBy) q = q.orderBy(options.orderBy.field, options.orderBy.direction);
+    if (options?.limit) q = q.limit(options.limit);
+    const snap = await q.get();
+    return snap.docs.map(d => d.data() as T);
   }
 
-  async prefixSearch(field: string, prefix: string, limit = 20): Promise<T[]> {
-    return this.query(
-      [
-        { field, op: '>=', value: prefix },
-        { field, op: '<=', value: prefix + '\uf8ff' },
-      ],
-      limit
-    );
+  /** Substring search based on a `keywords` array field. */
+  async search(query: string, limit = 20): Promise<T[]> {
+    const terms = query
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 10);               // Firestore limit for array-contains-any
+
+    if (!terms.length) return [];
+
+    let q: FSQuery<DocumentData> = this.ref
+      .where('keywords', 'array-contains-any', terms)
+      .where('hidden', '==', false);
+
+    if (limit) q = q.limit(limit);
+
+    const snap = await q.get();
+    return snap.docs.map(d => d.data() as T);
   }
 
   sub(id: string, sub: string): CollectionDAO<T> {
-    const subPath = `${this.ref.path}/${id}/${sub}`
-    return new CollectionDAO<T>(subPath)
+    const subPath = `${this.ref.path}/${id}/${sub}`;
+    return new CollectionDAO<T>(subPath);
   }
 
   async exists(id: string): Promise<boolean> {

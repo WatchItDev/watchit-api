@@ -34,6 +34,7 @@ type Post {
   visibility:    VisibilitySetting!
   createdAt:     Timestamp!
   updatedAt:     Timestamp!
+  hidden: Boolean!
 
   #–– raw counts ––
   commentCount:  Int!
@@ -56,7 +57,7 @@ input MediaAttachmentInput {
 input CreatePostInput {
   authorAddress: String!               @constraint(minLength: 1)
   title:         String!               @constraint(minLength: 1, maxLength: 100)
-  description:   String!               @constraint(maxLength: 20)
+  description:   String!               @constraint(minLength: 10)
   cid:           String!               @constraint(minLength: 1)
   media:         [MediaAttachmentInput!]!
   visibility:    VisibilitySetting!
@@ -65,7 +66,7 @@ input CreatePostInput {
 input UpdatePostInput {
   postId:     String!                  @constraint(minLength: 1)
   title:      String          @constraint(minLength: 1, maxLength: 100)
-  description:String          @constraint(maxLength: 20)
+  description:String          @constraint(minLength: 10)
   cid:        String          @constraint(minLength: 1)
   visibility: VisibilitySetting
   media:      [MediaAttachmentInput!]
@@ -79,6 +80,10 @@ extend type Query {
   getPost(
     id: String!                         @constraint(minLength: 1)
   ): Post
+  getPosts(
+    query: String!
+    limit:  Int              @constraint(min: 1, max: 100)
+  ): [Post!]!
   getPostsByAuthor(
     author: String!                     @constraint(minLength: 1)
     limit:  Int                         @constraint(min: 1, max: 100)
@@ -92,7 +97,7 @@ extend type Query {
 extend type Mutation {
   createPost(input: CreatePostInput!): Post!
   updatePost(input: UpdatePostInput!): Post!
-  deletePost(
+  hidePost(
     postId: String!                     @constraint(minLength: 1)
   ): Boolean!
   incrementPostView(

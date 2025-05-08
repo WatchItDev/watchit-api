@@ -24,8 +24,8 @@ export class ProfileService extends ServiceManager {
         return this.ds.Users.getUser(address);
     }
 
-    getUsers(prefix: string, limit?: number): Promise<User[]> {
-        return this.ds.Users.getUsers(prefix, limit);
+    getUsers(query: string, limit?: number): Promise<User[]> {
+        return this.ds.Users.getUsers(query, limit);
     }
 
     getFollowers(address: string): Promise<User[]> {
