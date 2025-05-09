@@ -1,6 +1,5 @@
 import 'dotenv/config'
-import * as jose from "jose"
-import { GraphQLError } from 'graphql';
+
 import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone';
 import {
@@ -14,12 +13,9 @@ import { Services } from './services'
 import { FireStore } from './externals';
 import { DataSources } from './datasources';
 import * as externals from './externals'
+import buildCtx from './context'
 import { GQL } from "@/types";
 
-
-// const {
-//     API_WEB3_AUTH_SOCIAL_JWKS
-// }: NodeJS.Process["env"] = process.env
 
 const host = process.env.API_HOST || '0.0.0.0';
 const port = (process.env.API_PORT || 4000) as number
@@ -36,33 +32,10 @@ const startServer = async () => {
     const fireStore = FireStore();
     const dataSources = DataSources(fireStore);
     const services = Services({ ds: dataSources, ext: externals })
+    const context = buildCtx({ services, dataSources });
 
     return await startStandaloneServer(server, {
-        listen: { port, host },
-        context: async ({ req }) => {
-            try {
-                // // idToken passed from the frontend in the Authorization header
-                const address = req.headers.authorization as string;
-                // const idToken = req.headers.authorization?.split(' ')[1] as string;
-                // if (!idToken) throw new Error("Invalid token");
-
-                // // TODO pending to check the address from public key
-                // const jwks = jose.createRemoteJWKSet(new URL(WEB3_AUTH_SOCIAL_JWKS)); // for social logins
-                // const jwtDecoded = await jose.jwtVerify(idToken, jwks, { algorithms: ["ES256"] });
-
-                return {
-                    services,
-                    dataSources,
-                    reqUser: {
-                        address
-                    }
-                    // ...jwtDecoded
-                }
-            } catch (err) {
-                console.error(`Error attempting to access ${err}`)
-                throw new GraphQLError('Authentication token is invalid')
-            }
-        }
+        listen: { port, host }, context
     })
 }
 

@@ -1,5 +1,6 @@
 import type { DataSourcesType } from '@/datasources';
-import type { ServicesType }    from '@/services';
+import type { ServicesType } from '@/services';
+import { Request } from "express"
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -10,6 +11,7 @@ declare namespace NodeJS {
 declare namespace GQL {
   interface ContextType {
     dataSources: DataSourcesType;
-    services:    ServicesType;
+    services: ServicesType;
+    req: Request
   }
 }
