@@ -11,7 +11,7 @@ import type {
 } from '../../../schema/types'
 
 export const commentsCreate = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ comment: Comment }> => {
     const input = req.data as CreateCommentInput
 
@@ -22,7 +22,7 @@ export const commentsCreate = onCall(
 )
 
 export const commentsUpdate = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ comment: Comment | null }> => {
     const input = req.data as UpdateCommentInput
 
@@ -38,7 +38,7 @@ export const commentsUpdate = onCall(
 )
 
 export const commentsHide = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ success: boolean }> => {
     const { commentId } = req.data as { commentId: string }
 

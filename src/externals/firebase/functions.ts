@@ -13,7 +13,7 @@ import type {
 } from '@/schema/types';
 
 export const Functions = () => {
-    const fn = getFunctions(App().getClient(), 'auto');
+    const fn = getFunctions(App().getClient(), 'us-central1');
 
     if (process.env.NODE_ENV !== 'production') {
         const host = process.env.API_EMULATOR_HOST ?? '127.0.0.1';

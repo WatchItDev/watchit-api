@@ -8,7 +8,7 @@ import type {
 } from '../../../schema/types';
 
 export const postsCreate = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ post: Post }> => {
     const input = req.data as CreatePostInput;
     const post = await ds.Posts.createPost(input.authorAddress, input);
@@ -18,7 +18,7 @@ export const postsCreate = onCall(
 );
 
 export const postsUpdate = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ post: Post | null }> => {
     const input = req.data as UpdatePostInput;
     const existing = await ds.Posts.getPost(input.postId);
@@ -32,7 +32,7 @@ export const postsUpdate = onCall(
 );
 
 export const postsHide = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ success: boolean }> => {
     const { postId } = req.data as { postId?: string };
     if (!postId) {
@@ -45,7 +45,7 @@ export const postsHide = onCall(
 );
 
 export const postsIncrementView = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(
     async ({ ds }, req): Promise<{ post: Post | null }> => {
       const { postId } = req.data as { postId: string };
