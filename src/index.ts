@@ -13,7 +13,6 @@ import { Services } from './services'
 import { FireStore } from './externals';
 import { DataSources } from './datasources';
 import * as externals from './externals'
-import buildCtx from './context'
 import { GQL } from "@/types";
 
 
@@ -32,10 +31,11 @@ const startServer = async () => {
     const fireStore = FireStore();
     const dataSources = DataSources(fireStore);
     const services = Services({ ds: dataSources, ext: externals })
-    const context = buildCtx({ services, dataSources });
 
     return await startStandaloneServer(server, {
-        listen: { port, host }, context
+        listen: { port, host }, context: ({ req }) => {
+            return { services, dataSources, req }
+        }
     })
 }
 
