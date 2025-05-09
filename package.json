@@ -28,9 +28,6 @@
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   },
-  "peerDependencies": {
-    "@esbuild/darwin-x64": "^0.25.3"
-  },
   "scripts": {
     "build": "tsup --env.NODE_ENV production",
     "dev": "npx tsx watch src/index.ts",
