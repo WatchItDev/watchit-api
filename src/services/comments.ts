@@ -24,11 +24,11 @@ export class CommentService extends ServiceManager {
         return res.data.comment;
     }
 
-    /** Delete a comment via Cloud Function */
-    async deleteComment(commentId: string): Promise<boolean> {
+    /** Hide a comment via Cloud Function */
+    async hideComment(commentId: string): Promise<boolean> {
         const res = await this.ext
             .Functions()
-            .comments.delete({ commentId });
+            .comments.hide({ commentId });
         return res.data.success;
     }
 

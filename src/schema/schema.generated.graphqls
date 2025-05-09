@@ -21,11 +21,12 @@ type Comment {
   author: User!
   content: String!
   createdAt: Timestamp!
+  hidden: Boolean!
   id: String!
   likeCount: Int!
   parentComment: Comment
   post: Post!
-  updatedAt: Timestamp
+  updatedAt: Timestamp!
 }
 
 input CreateCommentInput {
@@ -87,8 +88,8 @@ type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   createPost(input: CreatePostInput!): Post!
   createUser(input: UserInput!): User!
-  deleteComment(commentId: String!): Boolean!
-  deletePost(postId: String!): Boolean!
+  hideComment(commentId: String!): Boolean!
+  hidePost(postId: String!): Boolean!
   incrementPostView(postId: String!): Post!
   toggleBookmark(input: BookmarkPostInput!): Boolean!
   toggleCommentLike(input: LikeCommentInput!): Boolean!
@@ -106,6 +107,7 @@ type Post {
   commentCount: Int!
   createdAt: Timestamp!
   description: String!
+  hidden: Boolean!
   id: String!
   likeCount: Int!
   media: [MediaAttachment!]!
@@ -119,10 +121,14 @@ type Query {
   getActiveUsers(limit: Int): [User!]!
   getAllPosts(limit: Int): [Post!]!
   getCommentsByPost(limit: Int, postId: String!): [Comment!]!
+  getIsBookmarked(postId: String!): Boolean!
+  getIsCommentLiked(commentId: String!): Boolean!
   getIsFollowing(followerAddress: String!, targetAddress: String!): Boolean!
+  getIsPostLiked(postId: String!): Boolean!
   getPopularPosts(limit: Int): [Post!]!
   getPopularUsers(limit: Int): [User!]!
   getPost(id: String!): Post
+  getPosts(limit: Int, query: String!): [Post!]!
   getPostsByAuthor(author: String!, limit: Int): [Post!]!
   getRecentPosts(limit: Int): [Post!]!
   getRecentUsers(limit: Int): [User!]!
@@ -132,7 +138,7 @@ type Query {
   getUserFollowers(address: String!, limit: Int): [User!]!
   getUserFollowing(address: String!, limit: Int): [User!]!
   getUserXPHistory(address: String!, limit: Int = 50, offset: Int = 0): [XPEntry!]!
-  getUsers(limit: Int, prefix: String!): [User!]!
+  getUsers(limit: Int, query: String!): [User!]!
 }
 
 type SocialLink {
@@ -178,17 +184,17 @@ type User {
   address: String!
   bio: String!
   bookmarksCount: Int!
-  coverPicture: String
+  coverPicture: String!
   createdAt: Timestamp!
   displayName: String!
   followersCount: Int!
   followingCount: Int!
-  profilePicture: String
+  profilePicture: String!
   publicationsCount: Int!
   socialLinks: [SocialLink!]
   updatedAt: Timestamp!
   username: String!
-  verified: Boolean
+  verified: Boolean!
   xpBalance: Int!
 }
 

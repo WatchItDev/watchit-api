@@ -16,8 +16,8 @@ type User {
   username: String!
   displayName: String!
   bio: String!
-  profilePicture: String
-  coverPicture: String
+  profilePicture: String!
+  coverPicture: String!
   socialLinks: [SocialLink!]
   xpBalance: Int!
 
@@ -26,7 +26,7 @@ type User {
   publicationsCount: Int!
   bookmarksCount:    Int!
 
-  verified: Boolean
+  verified: Boolean!
   createdAt: Timestamp!
   updatedAt: Timestamp!
 }
@@ -43,21 +43,21 @@ input SocialLinkInput {
 
 input UserInput {
   address:        String!          @constraint(minLength: 1)
-  username:       String!          @constraint(minLength: 3, maxLength: 30)
-  displayName:    String!          @constraint(minLength: 1, maxLength: 50)
-  bio:            String!          @constraint(maxLength: 10)
-  profilePicture: String          @constraint(format: "uri")
-  coverPicture:   String          @constraint(format: "uri")
+  username:       String!          @constraint(minLength: 3, maxLength: 15)
+  displayName:    String!          @constraint(minLength: 1, maxLength: 30)
+  bio:            String!          @constraint(minLength: 10, maxLength: 200)
+  profilePicture: String           @constraint(minLength: 1)
+  coverPicture:   String           @constraint(minLength: 1)
   socialLinks:    [SocialLinkInput!]!
 }
 
 input UpdateUserInput {
   address:        String!          @constraint(minLength: 1)
-  username:       String          @constraint(minLength: 3, maxLength: 30)
-  displayName:    String          @constraint(minLength: 1, maxLength: 50)
-  bio:            String          @constraint(maxLength: 160)
-  profilePicture: String          @constraint(format: "uri")
-  coverPicture:   String          @constraint(format: "uri")
+  username:       String          @constraint(minLength: 3, maxLength: 15)
+  displayName:    String          @constraint(minLength: 1, maxLength: 30)
+  bio:            String          @constraint(minLength: 10, maxLength: 200)
+  profilePicture: String          @constraint(minLength: 1)
+  coverPicture:   String          @constraint(minLength: 1)
   socialLinks:    [SocialLinkInput!]
 }
 
@@ -72,7 +72,7 @@ input UserByInput {
 extend type Query {
   getUser(address: String!): User
   getUsers(
-    prefix: String!          @constraint(minLength: 1)
+    query: String!
     limit:  Int              @constraint(min: 1, max: 100)
   ): [User!]!
   getUserFollowers(

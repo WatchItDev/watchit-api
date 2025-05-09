@@ -5,11 +5,10 @@ export class UsersQuery extends DataSourceManager {
     getUser = async (addr: string): Promise<User | null> =>
         this.fs<User>('users').get(addr)
 
-    // TODO instead of prefixSearch, use only search and it searches for the username, visibleName, address and bio
-    getUsers = async (q: string, limit = 50): Promise<User[]> =>
-        q.trim()
-            ? this.fs<User>('users').prefixSearch('username', q, limit)
-            : Promise.resolve([])
+    getUsers = async (q: string, limit = 50): Promise<User[]> => {
+        if (!q) return [];
+        return this.fs<User>('users').search(q, limit);
+    }
 
     async getFollowers(address: string, limit = 50): Promise<User[]> {
         const ids = await this.fs('users').sub(address, 'followers').ids(limit);
@@ -23,7 +22,7 @@ export class UsersQuery extends DataSourceManager {
 
     async getPublications(address: string, limit = 20): Promise<Post[]> {
         return this.fs<Post>('publications')
-            .query([{ field: 'authorAddress', op: '==', value: address }], limit);
+            .query([{ field: 'authorAddress', op: '==', value: address }], { limit });
     }
 
     async getBookmarks(address: string, limit = 50): Promise<Post[]> {

@@ -8,7 +8,7 @@ import type {
 } from '../../../schema/types';
 
 export const postsCreate = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ post: Post }> => {
     const input = req.data as CreatePostInput;
     const post = await ds.Posts.createPost(input.authorAddress, input);
@@ -18,7 +18,7 @@ export const postsCreate = onCall(
 );
 
 export const postsUpdate = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ post: Post | null }> => {
     const input = req.data as UpdatePostInput;
     const existing = await ds.Posts.getPost(input.postId);
@@ -31,21 +31,21 @@ export const postsUpdate = onCall(
   })
 );
 
-export const postsDelete = onCall(
-  { region: 'auto' },
+export const postsHide = onCall(
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ success: boolean }> => {
     const { postId } = req.data as { postId?: string };
     if (!postId) {
       throw new HttpsError('invalid-argument', 'postId required');
     }
-    await ds.Posts.deletePost(postId);
-    console.log(`❌ post deleted ${postId}`);
+    await ds.Posts.hidePost(postId);
+    console.log(`❌ post hidden ${postId}`);
     return { success: true };
   })
 );
 
 export const postsIncrementView = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(
     async ({ ds }, req): Promise<{ post: Post | null }> => {
       const { postId } = req.data as { postId: string };

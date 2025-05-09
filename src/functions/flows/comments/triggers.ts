@@ -1,6 +1,6 @@
-import { onDocumentCreated, onDocumentDeleted } from 'firebase-functions/v2/firestore'
-import { enhanceTrigger }                           from '../../manager'
-import {ServiceParams} from "@/services/manager";
+import {onDocumentCreated, onDocumentUpdated} from 'firebase-functions/v2/firestore'
+import { enhanceTrigger } from '../../manager'
+import {ServiceParams} from "../../../services/manager";
 
 export const commentCreated = onDocumentCreated(
     'comments/{commentId}',
@@ -16,17 +16,22 @@ export const commentCreated = onDocumentCreated(
     })
 )
 
-export const commentDeleted = onDocumentDeleted(
+export const commentHidden = onDocumentUpdated(
     'comments/{commentId}',
-    enhanceTrigger(async ({ ds }, event) => {
-        const old = event.data?.data();
-        const postId = old?.post?.id;
-        if (!postId) {
-            console.warn(`commentDeleted without postId on ${event.params.commentId}`);
-            return;
+    enhanceTrigger(async ({ ds }: ServiceParams, event) => {
+        const before = event?.data?.before.data();
+        const after  = event?.data?.after.data();
+
+        if (!before?.hidden && after?.hidden) {
+            const postId = after.postId;
+            if (!postId) {
+                console.warn(`commentHidden without postId on ${event.params.commentId}`);
+                return;
+            }
+
+            await ds.Posts.updateCounterField(postId, 'commentCount', -1);
+            console.log(`🔥 commentHidden for ${event.params.commentId}`);
         }
-        await ds.Posts.updateCounterField(postId, 'commentCount', -1);
-        console.log(`🔥 commentDeleted for ${event.params.commentId}`);
     })
 );
 

@@ -5,7 +5,7 @@ import { makeXpEntry }     from '../../../models/xp';
 import type { AddXPInput } from '../../../schema/types';
 
 export const addXP = onCall(
-    { region: 'auto' },
+    { region: 'us-central1' },
     enhanceFunction(async ({ ds }, req): Promise<{ success: boolean }> => {
         const { address, action, description, amount } = req.data as AddXPInput;
 

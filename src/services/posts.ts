@@ -2,7 +2,7 @@ import { ServiceManager } from './manager';
 import type {
     Post,
     CreatePostInput,
-    UpdatePostInput
+    UpdatePostInput, User
 } from '@/schema/types';
 
 export class PostService extends ServiceManager {
@@ -24,11 +24,11 @@ export class PostService extends ServiceManager {
         return res.data.post;
     }
 
-    /** Delete a post via Cloud Function */
-    async deletePost(postId: string): Promise<boolean> {
+    /** Hide a post via Cloud Function */
+    async hidePost(postId: string): Promise<boolean> {
         const res = await this.ext
             .Functions()
-            .posts.delete({ postId });
+            .posts.hide({ postId });
         return res.data.success;
     }
 
@@ -43,6 +43,10 @@ export class PostService extends ServiceManager {
     /** Read-only fetches */
     getPost(id: string): Promise<Post | null> {
         return this.ds.Posts.getPost(id);
+    }
+
+    getPosts(query: string, limit?: number): Promise<Post[]> {
+        return this.ds.Posts.getPosts(query, limit);
     }
 
     getPostsByAuthor(author: string, limit?: number): Promise<Post[]> {

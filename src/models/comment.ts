@@ -12,6 +12,7 @@ export function defaultCommentData(): Omit<
 > {
     return {
         likeCount: 0,
+        hidden:    false,
     }
 }
 

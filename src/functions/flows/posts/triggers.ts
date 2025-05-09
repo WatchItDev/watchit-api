@@ -1,5 +1,6 @@
-import { onDocumentCreated, onDocumentDeleted } from 'firebase-functions/v2/firestore'
-import { enhanceTrigger }                       from '../../manager'
+import {onDocumentCreated, onDocumentUpdated} from 'firebase-functions/v2/firestore'
+import { enhanceTrigger } from '../../manager'
+import {ServiceParams} from "../../../services/manager";
 
 export const postCreated = onDocumentCreated(
     'posts/{postId}',
@@ -15,16 +16,21 @@ export const postCreated = onDocumentCreated(
     })
 )
 
-export const postDeleted = onDocumentDeleted(
+export const postHidden = onDocumentUpdated(
     'posts/{postId}',
-    enhanceTrigger(async ({ ds }, event) => {
-        const old = event.data?.data();
-        const auth = old?.author?.address;
-        if (!auth) {
-            console.warn(`postDeleted without author on ${event.params.postId}`);
-            return;
+    enhanceTrigger(async ({ ds }: ServiceParams, event) => {
+        const before = event?.data?.before.data();
+        const after  = event?.data?.after.data();
+
+        if (!before?.hidden && after?.hidden) {
+            const auth = after.author?.address;
+            if (!auth) {
+                console.warn(`postHidden without author on ${event.params.postId}`);
+                return;
+            }
+
+            await ds.Users.updateCounterField(auth, 'publicationsCount', -1);
+            console.log(`🔥 postHidden for ${event.params.postId}`);
         }
-        await ds.Users.updateCounterField(auth, 'publicationsCount', -1);
-        console.log(`🔥 postDeleted for ${event.params.postId}`);
     })
 );

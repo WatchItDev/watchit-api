@@ -6,15 +6,15 @@
 type Comment {
   id:             String!
   author:         User!
+  content:        String!
   post:           Post!
   parentComment:  Comment
   createdAt:      Timestamp!
-  updatedAt:      Timestamp
+  updatedAt:      Timestamp!
+  hidden:         Boolean!
 
   #–– raw count ––
   likeCount:      Int!
-
-  content:        String!
 }
 
 ####################
@@ -56,5 +56,5 @@ extend type Query {
 extend type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   updateComment(input: UpdateCommentInput!): Comment!
-  deleteComment(commentId: String! @constraint(minLength: 1)): Boolean!
+  hideComment(commentId: String! @constraint(minLength: 1)): Boolean!
 }

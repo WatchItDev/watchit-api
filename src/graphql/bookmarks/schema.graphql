@@ -3,5 +3,9 @@ input BookmarkPostInput  {
 }
 
 extend type Mutation {
-  toggleBookmark    (input: BookmarkPostInput!):  Boolean!
+  toggleBookmark(input: BookmarkPostInput!):  Boolean!
+}
+
+extend type Query {
+  getIsBookmarked(postId: String!): Boolean!
 }

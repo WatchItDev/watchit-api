@@ -1,5 +1,5 @@
 import type { QueryResolvers } from './../../../../schema/types'
 
-export const getUsers: NonNullable<QueryResolvers['getUsers']> =
+export const getPosts: NonNullable<QueryResolvers['getPosts']> =
     (_parent, { query, limit }, { services }) =>
-        services.Profile.getUsers(query, limit)
+        services.Posts.getPosts(query, limit)

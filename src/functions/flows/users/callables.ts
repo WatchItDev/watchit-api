@@ -4,7 +4,7 @@ import { enhanceFunction } from '../../manager';
 import type { User, UserInput, UpdateUserInput } from '../../../schema/types';
 
 export const usersCreate = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ user: User }> => {
     const input = req.data as UserInput;
     const existing = await ds.Users.getUser(input.address)
@@ -18,7 +18,7 @@ export const usersCreate = onCall(
 );
 
 export const usersUpdate = onCall(
-  { region: 'auto' },
+  { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ user: User }> => {
     const input = req.data as UpdateUserInput;
     const existing = await ds.Users.getUser(input.address);
