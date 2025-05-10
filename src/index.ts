@@ -4,6 +4,7 @@ import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
 import { format } from 'url';
+import { rateLimit } from 'express-rate-limit'
 
 import { ApolloServer } from '@apollo/server'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
@@ -45,11 +46,25 @@ const startServer = async () => {
     const fireStore = FireStore();
     const dataSources = DataSources(fireStore);
     const services = Services({ ds: dataSources, ext: externals })
+    // https://expressjs.com/en/resources/middleware/cors.html
+    // const corsOptions = {
+    //     origin: (origin)=> {
+            
+    //     }
+    // }
 
+    const limiter = rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+        standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+        legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+    })
+
+    app.disable('x-powered-by'),
     app.use(
         cors(),
         helmet(),
-        app.disable('x-powered-by'),
+        limiter,
         express.json({ limit: '50mb' }),
         expressMiddleware(server, {
             context: (({ req }) => {
