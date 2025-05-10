@@ -78,7 +78,7 @@ const startServer = async () => {
         httpServer.listen({ host, port }, resolve);
     });
 
-    return `http://{host}:{port}/`
+    return `http://${host}:${port}/`
 }
 
 // The `listen` method launches a web server
