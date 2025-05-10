@@ -3,7 +3,6 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
-import { format } from 'url';
 import { rateLimit } from 'express-rate-limit'
 
 import { ApolloServer } from '@apollo/server'
@@ -46,6 +45,8 @@ const startServer = async () => {
     const fireStore = FireStore();
     const dataSources = DataSources(fireStore);
     const services = Services({ ds: dataSources, ext: externals })
+
+    // TODO
     // https://expressjs.com/en/resources/middleware/cors.html
     // const corsOptions = {
     //     origin: (origin)=> {
@@ -77,7 +78,7 @@ const startServer = async () => {
         httpServer.listen({ host, port }, resolve);
     });
 
-    return format({ protocol: 'http', host, port, pathname: '/', });
+    return `http://{host}:{port}/`
 }
 
 // The `listen` method launches a web server
