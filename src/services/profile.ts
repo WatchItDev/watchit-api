@@ -14,7 +14,7 @@ export class ProfileService extends ServiceManager {
     }
 
     /** Update current user via Cloud Function */
-    async updateProfile(input: UpdateUserInput): Promise<User> {
+    async updateProfile(input: UpdateUserInput & { address: string; }): Promise<User> {
         const res = await this.ext.Functions().users.update(input);
         return res.data.user;
     }

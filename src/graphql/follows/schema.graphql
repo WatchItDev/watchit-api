@@ -7,5 +7,5 @@ extend type Mutation {
 }
 
 extend type Query {
-  getIsFollowing(followerAddress: String!, targetAddress: String!): Boolean!
+  getIsFollowing(targetAddress: String!): Boolean!
 }

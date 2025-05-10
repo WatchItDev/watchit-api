@@ -1,5 +1,7 @@
 import type { QueryResolvers } from './../../../../schema/types'
+import {requireAuth} from "@/graphql/hof/auth";
 
-export const getIsFollowing: NonNullable<QueryResolvers['getIsFollowing']> =
-    (_parent, { followerAddress, targetAddress }, { services }) =>
-        services.Follows.isFollowing(followerAddress, targetAddress)
+export const getIsFollowing: NonNullable<QueryResolvers['getIsFollowing']> = requireAuth(
+    (_parent, { targetAddress }, { services, user }) =>
+        services.Follows.isFollowing(user.address, targetAddress)
+)

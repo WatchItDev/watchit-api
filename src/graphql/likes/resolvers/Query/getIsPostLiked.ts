@@ -1,8 +1,8 @@
 import type { QueryResolvers } from './../../../../schema/types'
+import {requireAuth} from "@/graphql/hof/auth";
 
-export const getIsPostLiked: NonNullable<QueryResolvers['getIsPostLiked']> =
-    async (_parent, { postId }, { services, reqUser }) => {
-            const me = reqUser?.address
-            if (!me) throw new Error('Not authenticated')
-            return await services.Likes.isPostLiked(postId, me)
+export const getIsPostLiked: NonNullable<QueryResolvers['getIsPostLiked']> = requireAuth(
+    async (_parent, { postId }, { services, user }) => {
+        return await services.Likes.isPostLiked(postId, user.address)
     }
+)

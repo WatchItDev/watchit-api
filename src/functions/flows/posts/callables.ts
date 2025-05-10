@@ -10,7 +10,7 @@ import type {
 export const postsCreate = onCall(
   { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ post: Post }> => {
-    const input = req.data as CreatePostInput;
+    const input = req.data as CreatePostInput & { authorAddress: string };
     const post = await ds.Posts.createPost(input.authorAddress, input);
     console.log(`🆕 post created ${post.id}`);
     return { post };

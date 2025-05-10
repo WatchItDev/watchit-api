@@ -20,7 +20,7 @@ export const usersCreate = onCall(
 export const usersUpdate = onCall(
   { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ user: User }> => {
-    const input = req.data as UpdateUserInput;
+    const input = req.data as UpdateUserInput & { address: string };
     const existing = await ds.Users.getUser(input.address);
     if (!existing) {
       throw new HttpsError('not-found', 'user does not exist');

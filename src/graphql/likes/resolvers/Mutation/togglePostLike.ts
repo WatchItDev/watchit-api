@@ -1,8 +1,8 @@
 import type { MutationResolvers } from '../../../../schema/types'
+import {requireAuth} from "@/graphql/hof/auth";
 
-export const togglePostLike: NonNullable<MutationResolvers['togglePostLike']> =
-    async (_parent, { input: { postId } }, { services, reqUser }) => {
-            const me = reqUser?.address
-            if (!me) throw new Error('Not authenticated')
-            return await services.Likes.togglePostLike(me, postId)
+export const togglePostLike: NonNullable<MutationResolvers['togglePostLike']> = requireAuth(
+    async (_parent, { input: { postId } }, { services, user }) => {
+        return await services.Likes.togglePostLike(user.address, postId)
     }
+)

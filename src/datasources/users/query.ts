@@ -31,4 +31,10 @@ export class UsersQuery extends DataSourceManager {
         const posts = await Promise.all(ids.map(id => this.fs<Post>('posts').get(id)));
         return posts.filter(Boolean) as Post[];
     }
+
+    async getUserByEmail(email: string): Promise<User | null> {
+        const [u] = await this.fs<User>('users')
+            .query([{ field: 'email', op: '==', value: email.toLowerCase() }], { limit: 1 });
+        return u ?? null;
+    };
 }

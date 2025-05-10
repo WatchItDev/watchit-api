@@ -13,6 +13,7 @@ type SocialLink {
 
 type User {
   address: String!
+  email: String!
   username: String!
   displayName: String!
   bio: String!
@@ -43,6 +44,7 @@ input SocialLinkInput {
 
 input UserInput {
   address:        String!          @constraint(minLength: 1)
+  email:          String!          @constraint(format: "email")
   username:       String!          @constraint(minLength: 3, maxLength: 15)
   displayName:    String!          @constraint(minLength: 1, maxLength: 30)
   bio:            String!          @constraint(minLength: 10, maxLength: 200)
@@ -52,7 +54,6 @@ input UserInput {
 }
 
 input UpdateUserInput {
-  address:        String!          @constraint(minLength: 1)
   username:       String          @constraint(minLength: 3, maxLength: 15)
   displayName:    String          @constraint(minLength: 1, maxLength: 30)
   bio:            String          @constraint(minLength: 10, maxLength: 200)

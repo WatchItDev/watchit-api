@@ -2,7 +2,7 @@ import type { User, UserInput } from '@/schema/types';
 
 export function defaultUserData(): Omit<
     User,
-    'address' | 'username' | 'displayName' | 'bio' |
+    'address' | 'email' | 'username' | 'displayName' | 'bio' |
     'profilePicture' | 'coverPicture' | 'socialLinks' |
     'createdAt' | 'updatedAt'
 > {

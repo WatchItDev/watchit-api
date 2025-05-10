@@ -22,7 +22,6 @@ type Comment {
 ####################
 
 input CreateCommentInput {
-  authorAddress: String!   @constraint(minLength: 1)
   postId:        String!   @constraint(minLength: 1)
   parentComment: String    @constraint(minLength: 1)
   content:       String!   @constraint(minLength: 1, maxLength: 500)

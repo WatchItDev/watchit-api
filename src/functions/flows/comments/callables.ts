@@ -13,7 +13,7 @@ import type {
 export const commentsCreate = onCall(
   { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ comment: Comment }> => {
-    const input = req.data as CreateCommentInput
+    const input = req.data as CreateCommentInput & { authorAddress: string }
 
     const comment = await ds.Comments.createComment(input.authorAddress, input)
     console.log(`🆕 comment created ${comment.id}`)

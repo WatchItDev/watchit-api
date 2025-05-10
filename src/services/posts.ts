@@ -2,17 +2,15 @@ import { ServiceManager } from './manager';
 import type {
     Post,
     CreatePostInput,
-    UpdatePostInput, User
+    UpdatePostInput
 } from '@/schema/types';
 
 export class PostService extends ServiceManager {
     /** Create a new post via Cloud Function */
-    async createPost(
-        input: CreatePostInput
-    ): Promise<Post> {
+    async createPost(input: CreatePostInput, authorAddress: string): Promise<Post> {
         const res = await this.ext
             .Functions()
-            .posts.create(input);
+            .posts.create({ ...input, authorAddress});
         return res.data.post;
     }
 
