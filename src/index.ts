@@ -49,7 +49,7 @@ const startServer = async () => {
     // https://expressjs.com/en/resources/middleware/cors.html
     // const corsOptions = {
     //     origin: (origin)=> {
-            
+
     //     }
     // }
 
@@ -60,17 +60,16 @@ const startServer = async () => {
         legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
     })
 
-    app.disable('x-powered-by'),
-    app.use(
-        cors(),
-        helmet(),
-        limiter,
-        express.json({ limit: '50mb' }),
-        expressMiddleware(server, {
-            context: (({ req }) => {
-                return { services, dataSources, req }
-            })
-        }),
+    app.disable('x-powered-by');
+    app.use(cors())
+    app.use(helmet());
+    app.use(limiter);
+    app.use(express.json({ limit: '50mb' }))
+    app.use(expressMiddleware(server, {
+        context: (({ req }) => {
+            return { services, dataSources, req }
+        })
+    }),
     )
 
     // Wait for server to start listening
