@@ -10,11 +10,7 @@ declare namespace NodeJS {
   }
 }
 
-export interface AuthUser {
-  email: string;
-  address: string;
-  claims: JWTPayload;
-}
+export interface Address { address: string }
 
 declare namespace GQL {
   interface ContextType {

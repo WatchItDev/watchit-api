@@ -10,14 +10,14 @@ const POST_WHOLE_FIELDS  = ['id', 'cid'];
 
 export class PostsCommands extends DataSourceManager {
     async createPost(
-        authorAddress: string,
+        address: string,
         input: CreatePostInput
     ): Promise<Post> {
         const dao    = this.fs<Post>('posts') as any
         const ref    = dao.ref.doc()
         const id     = ref.id
 
-        const record = makeNewPost(id, authorAddress, input)
+        const record = makeNewPost(id, address, input)
         const keywords = buildKeywords({ ...record, id }, POST_PREFIX_FIELDS, POST_WHOLE_FIELDS);
         const fsRecord: FirestorePost = { ...record, keywords };
 

@@ -11,6 +11,7 @@ import type {
     CreateCommentInput,
     UpdateCommentInput, AddXPInput,
 } from '@/schema/types';
+import {Address} from "@/types";
 
 export const Functions = () => {
     const fn = getFunctions(App().getClient(), 'us-central1');
@@ -26,14 +27,14 @@ export const Functions = () => {
                 fn,
                 'usersCallable-usersCreate'
             ),
-            update: httpsCallable<UpdateUserInput & { address: string }, { user: User }>(
+            update: httpsCallable<UpdateUserInput & Address, { user: User }>(
                 fn,
                 'usersCallable-usersUpdate'
             ),
         },
 
         posts: {
-            create: httpsCallable<CreatePostInput & { authorAddress: string }, { post: Post }>(
+            create: httpsCallable<CreatePostInput & Address, { post: Post }>(
                 fn,
                 'postsCallable-postsCreate'
             ),
@@ -52,7 +53,7 @@ export const Functions = () => {
         },
 
         comments: {
-            create: httpsCallable<CreateCommentInput & { authorAddress: string }, { comment: Comment }>(
+            create: httpsCallable<CreateCommentInput & Address, { comment: Comment }>(
                 fn,
                 'commentsCallable-commentsCreate'
             ),

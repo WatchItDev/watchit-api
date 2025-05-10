@@ -23,14 +23,14 @@ export function defaultPostData(): Omit<
 
 export function makeNewPost(
     id: string,
-    authorAddress: string,
+    address: string,
     input: CreatePostInput
 ): Post {
     const now = Date.now()
 
     return {
         id,
-        author: { address: authorAddress } as any,
+        author: { address: address } as any,
         title:      input.title,
         description:      input.description,
         cid:      input.cid,

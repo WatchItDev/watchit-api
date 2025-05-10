@@ -7,11 +7,6 @@ const JWKS_URL  = process.env.API_WEB3_AUTH_SOCIAL_JWKS!;
 const AUD  = process.env.API_WEB3AUTH_CLIENT_ID!;
 const JWKS = createRemoteJWKSet(new URL(JWKS_URL));
 
-async function verify(token: string) {
-    const { payload } = await jwtVerify(token, JWKS, { audience: AUD });
-    return payload;
-}
-
 export function requireAuth<T extends (...a: any[]) => any>(resolver: T): T {
     return (async (parent, args, ctx: GQL.ContextType, info) => {
         // 1. Extract token from header
@@ -21,8 +16,10 @@ export function requireAuth<T extends (...a: any[]) => any>(resolver: T): T {
 
         // 2. Validate Web3Auth JWT
         let payload: JWTPayload;
-        try { payload = await verify(token); }
-        catch { throw new GraphQLError('INVALID_TOKEN'); }
+        try {
+            const res = await jwtVerify(token, JWKS, { audience: AUD })
+            payload = res.payload;
+        } catch { throw new GraphQLError('INVALID_TOKEN'); }
 
         const email = String(payload.email || '').toLowerCase();
         if (!email) throw new GraphQLError('EMAIL_MISSING');

@@ -22,7 +22,7 @@ export class UsersQuery extends DataSourceManager {
 
     async getPublications(address: string, limit = 20): Promise<Post[]> {
         return this.fs<Post>('publications')
-            .query([{ field: 'authorAddress', op: '==', value: address }], { limit });
+            .query([{ field: 'address', op: '==', value: address }], { limit });
     }
 
     async getBookmarks(address: string, limit = 50): Promise<Post[]> {

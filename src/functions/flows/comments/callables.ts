@@ -9,13 +9,14 @@ import type {
   CreateCommentInput,
   UpdateCommentInput,
 } from '../../../schema/types'
+import { Address } from "../../../types";
 
 export const commentsCreate = onCall(
   { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ comment: Comment }> => {
-    const input = req.data as CreateCommentInput & { authorAddress: string }
+    const input = req.data as CreateCommentInput & Address
 
-    const comment = await ds.Comments.createComment(input.authorAddress, input)
+    const comment = await ds.Comments.createComment(input.address, input)
     console.log(`🆕 comment created ${comment.id}`)
     return { comment }
   })
