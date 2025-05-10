@@ -18,14 +18,14 @@ export function defaultCommentData(): Omit<
 
 export function makeNewComment(
     id: string,
-    authorAddress: string,
+    address: string,
     input: CreateCommentInput
 ): Comment {
     const now = Date.now()
 
     return {
         id,
-        author:        { address: authorAddress } as any,
+        author:        { address: address } as any,
         post:          { id: input.postId }          as any,
         parentComment: input.parentComment
             ? ({ id: input.parentComment } as any)

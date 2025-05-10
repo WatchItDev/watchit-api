@@ -6,12 +6,13 @@ import type {
   CreatePostInput,
   UpdatePostInput,
 } from '../../../schema/types';
+import { Address } from "../../../types";
 
 export const postsCreate = onCall(
   { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ post: Post }> => {
-    const input = req.data as CreatePostInput;
-    const post = await ds.Posts.createPost(input.authorAddress, input);
+    const input = req.data as CreatePostInput & Address;
+    const post = await ds.Posts.createPost(input.address, input);
     console.log(`🆕 post created ${post.id}`);
     return { post };
   })

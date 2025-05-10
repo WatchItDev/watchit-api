@@ -55,14 +55,12 @@ export type Comment = {
 };
 
 export type CreateCommentInput = {
-  authorAddress: Scalars['String']['input'];
   content: Scalars['String']['input'];
   parentComment?: InputMaybe<Scalars['String']['input']>;
   postId: Scalars['String']['input'];
 };
 
 export type CreatePostInput = {
-  authorAddress: Scalars['String']['input'];
   cid: Scalars['String']['input'];
   description: Scalars['String']['input'];
   media: Array<MediaAttachmentInput>;
@@ -256,7 +254,6 @@ export type QuerygetIsCommentLikedArgs = {
 
 
 export type QuerygetIsFollowingArgs = {
-  followerAddress: Scalars['String']['input'];
   targetAddress: Scalars['String']['input'];
 };
 
@@ -370,7 +367,6 @@ export type UpdatePostInput = {
 };
 
 export type UpdateUserInput = {
-  address: Scalars['String']['input'];
   bio?: InputMaybe<Scalars['String']['input']>;
   coverPicture?: InputMaybe<Scalars['String']['input']>;
   displayName?: InputMaybe<Scalars['String']['input']>;
@@ -387,6 +383,7 @@ export type User = {
   coverPicture: Scalars['String']['output'];
   createdAt: Scalars['Timestamp']['output'];
   displayName: Scalars['String']['output'];
+  email: Scalars['String']['output'];
   followersCount: Scalars['Int']['output'];
   followingCount: Scalars['Int']['output'];
   profilePicture: Scalars['String']['output'];
@@ -407,6 +404,7 @@ export type UserInput = {
   bio: Scalars['String']['input'];
   coverPicture?: InputMaybe<Scalars['String']['input']>;
   displayName: Scalars['String']['input'];
+  email: Scalars['String']['input'];
   profilePicture?: InputMaybe<Scalars['String']['input']>;
   socialLinks: Array<SocialLinkInput>;
   username: Scalars['String']['input'];
@@ -655,7 +653,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getCommentsByPost?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetCommentsByPostArgs, 'postId'>>;
   getIsBookmarked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsBookmarkedArgs, 'postId'>>;
   getIsCommentLiked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsCommentLikedArgs, 'commentId'>>;
-  getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'followerAddress' | 'targetAddress'>>;
+  getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'targetAddress'>>;
   getIsPostLiked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsPostLikedArgs, 'postId'>>;
   getPopularPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetPopularPostsArgs>>;
   getPopularUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetPopularUsersArgs>>;
@@ -694,6 +692,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   coverPicture?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   followersCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   followingCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   profilePicture?: Resolver<ResolversTypes['String'], ParentType, ContextType>;

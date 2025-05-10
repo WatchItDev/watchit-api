@@ -18,7 +18,7 @@ const {
 
 // This is for the Firebase Emulator Suite
 if (process.env.NODE_ENV !== 'production') {
-    process.env.API_FIRESTORE_EMULATOR_HOST ??= `${API_EMULATOR_HOST}:${API_EMULATOR_PORT}`;
+    process.env.FIRESTORE_EMULATOR_HOST ??= `${API_EMULATOR_HOST}:${API_EMULATOR_PORT}`;
 }
 
 let admin: ReturnType<typeof getApp>

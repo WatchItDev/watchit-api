@@ -30,14 +30,12 @@ type Comment {
 }
 
 input CreateCommentInput {
-  authorAddress: String!
   content: String!
   parentComment: String
   postId: String!
 }
 
 input CreatePostInput {
-  authorAddress: String!
   cid: String!
   description: String!
   media: [MediaAttachmentInput!]!
@@ -123,7 +121,7 @@ type Query {
   getCommentsByPost(limit: Int, postId: String!): [Comment!]!
   getIsBookmarked(postId: String!): Boolean!
   getIsCommentLiked(commentId: String!): Boolean!
-  getIsFollowing(followerAddress: String!, targetAddress: String!): Boolean!
+  getIsFollowing(targetAddress: String!): Boolean!
   getIsPostLiked(postId: String!): Boolean!
   getPopularPosts(limit: Int): [Post!]!
   getPopularUsers(limit: Int): [User!]!
@@ -169,7 +167,6 @@ input UpdatePostInput {
 }
 
 input UpdateUserInput {
-  address: String!
   bio: String
   coverPicture: String
   displayName: String
@@ -187,6 +184,7 @@ type User {
   coverPicture: String!
   createdAt: Timestamp!
   displayName: String!
+  email: String!
   followersCount: Int!
   followingCount: Int!
   profilePicture: String!
@@ -207,6 +205,7 @@ input UserInput {
   bio: String!
   coverPicture: String
   displayName: String!
+  email: String!
   profilePicture: String
   socialLinks: [SocialLinkInput!]!
   username: String!

@@ -5,16 +5,16 @@ import {FieldValue} from "firebase-admin/firestore";
 
 export class CommentsCommands extends DataSourceManager {
     async createComment(
-        authorAddress: string,
+        address: string,
         input: CreateCommentInput
     ): Promise<Comment> {
         const dao    = this.fs<Comment>('comments') as any
         const ref    = dao.ref.doc()
         const id     = ref.id
-        const comment = makeNewComment(id, authorAddress, input)
+        const comment = makeNewComment(id, address, input)
 
         await ref.set({
-            authorAddress,
+            address,
             postId:          input.postId,
             parentCommentId: input.parentComment ?? null,
             ...comment,

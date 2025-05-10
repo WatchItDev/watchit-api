@@ -1,8 +1,14 @@
 import 'dotenv/config'
-import * as jose from "jose"
-import { GraphQLError } from 'graphql';
+import express from 'express';
+import http from 'http';
+import cors from 'cors';
+import helmet from 'helmet';
+import { rateLimit } from 'express-rate-limit'
+
 import { ApolloServer } from '@apollo/server'
-import { startStandaloneServer } from '@apollo/server/standalone';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4'
+
 import {
     createApollo4QueryValidationPlugin,
     constraintDirectiveTypeDefsGql
@@ -15,58 +21,67 @@ import { FireStore } from './externals';
 import { DataSources } from './datasources';
 import * as externals from './externals'
 import { GQL } from "@/types";
-
-
-// const {
-//     API_WEB3_AUTH_SOCIAL_JWKS
-// }: NodeJS.Process["env"] = process.env
-
-const host = process.env.API_HOST || '0.0.0.0';
-const port = (process.env.API_PORT || 4000) as number
-
-const server = new ApolloServer<GQL.ContextType>({
-    resolvers,
-    typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
-    plugins: [createApollo4QueryValidationPlugin()],
-})
-
+import { User } from "@/schema/types";
 
 const startServer = async () => {
+
+    const host = process.env.API_HOST || '0.0.0.0';
+    const port = (process.env.API_PORT || 4000) as number
+    const app: express.Express = express();
+    const httpServer: http.Server = http.createServer(app);
+
+    const server = new ApolloServer<GQL.ContextType>({
+        resolvers,
+        typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
+        plugins: [
+            createApollo4QueryValidationPlugin(),
+            ApolloServerPluginDrainHttpServer({ httpServer: httpServer })
+        ],
+    })
+
+
+    console.log("Starting server..")
+    await server.start();
 
     const fireStore = FireStore();
     const dataSources = DataSources(fireStore);
     const services = Services({ ds: dataSources, ext: externals })
 
-    return await startStandaloneServer(server, {
-        listen: { port, host },
-        context: async ({ req }) => {
-            try {
-                // // idToken passed from the frontend in the Authorization header
-                const address = req.headers.authorization as string;
-                // const idToken = req.headers.authorization?.split(' ')[1] as string;
-                // if (!idToken) throw new Error("Invalid token");
+    // TODO
+    // https://expressjs.com/en/resources/middleware/cors.html
+    // const corsOptions = {
+    //     origin: (origin)=> {
 
-                // // TODO pending to check the address from public key
-                // const jwks = jose.createRemoteJWKSet(new URL(WEB3_AUTH_SOCIAL_JWKS)); // for social logins
-                // const jwtDecoded = await jose.jwtVerify(idToken, jwks, { algorithms: ["ES256"] });
+    //     }
+    // }
 
-                return {
-                    services,
-                    dataSources,
-                    reqUser: {
-                        address
-                    }
-                    // ...jwtDecoded
-                }
-            } catch (err) {
-                console.error(`Error attempting to access ${err}`)
-                throw new GraphQLError('Authentication token is invalid')
-            }
-        }
+    const limiter = rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+        standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+        legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
     })
+
+    app.disable('x-powered-by');
+    app.use(cors())
+    app.use(helmet());
+    app.use(limiter);
+    app.use(express.json({ limit: '50mb' }))
+    app.use(expressMiddleware<GQL.ContextType>(server, {
+        context: async ({ req }: ExpressContextFunctionArgument): Promise<GQL.ContextType> => {
+            return { services, dataSources, req, user: {} as User }
+        }
+    }))
+
+    // Wait for server to start listening
+    await new Promise<void>((resolve) => {
+        httpServer.listen({ host, port }, resolve);
+    });
+
+    return `http://${host}:${port}/`
 }
 
 // The `listen` method launches a web server
-const { url } = await startServer();
+const url = await startServer();
 console.log(`🚀 Server ready at ${url}`)
 

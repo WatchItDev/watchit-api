@@ -7,12 +7,10 @@ import type {
 
 export class CommentService extends ServiceManager {
     /** Create a comment via Cloud Function */
-    async createComment(
-        input: CreateCommentInput
-    ): Promise<Comment> {
+    async createComment(input: CreateCommentInput, address: string): Promise<Comment> {
         const res = await this.ext
             .Functions()
-            .comments.create(input);
+            .comments.create({ ...input, address });
         return res.data.comment;
     }
 

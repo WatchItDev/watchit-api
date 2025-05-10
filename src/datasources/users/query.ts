@@ -22,7 +22,7 @@ export class UsersQuery extends DataSourceManager {
 
     async getPublications(address: string, limit = 20): Promise<Post[]> {
         return this.fs<Post>('publications')
-            .query([{ field: 'authorAddress', op: '==', value: address }], { limit });
+            .query([{ field: 'address', op: '==', value: address }], { limit });
     }
 
     async getBookmarks(address: string, limit = 50): Promise<Post[]> {
@@ -31,4 +31,10 @@ export class UsersQuery extends DataSourceManager {
         const posts = await Promise.all(ids.map(id => this.fs<Post>('posts').get(id)));
         return posts.filter(Boolean) as Post[];
     }
+
+    async getUserByEmail(email: string): Promise<User | null> {
+        const [u] = await this.fs<User>('users')
+            .query([{ field: 'email', op: '==', value: email.toLowerCase() }], { limit: 1 });
+        return u ?? null;
+    };
 }

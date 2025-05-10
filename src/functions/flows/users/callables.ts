@@ -2,6 +2,7 @@ import { onCall } from 'firebase-functions/v2/https';
 import { HttpsError } from 'firebase-functions/v1/https';
 import { enhanceFunction } from '../../manager';
 import type { User, UserInput, UpdateUserInput } from '../../../schema/types';
+import { Address } from "../../../types";
 
 export const usersCreate = onCall(
   { region: 'us-central1' },
@@ -20,7 +21,7 @@ export const usersCreate = onCall(
 export const usersUpdate = onCall(
   { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ user: User }> => {
-    const input = req.data as UpdateUserInput;
+    const input = req.data as UpdateUserInput & Address;
     const existing = await ds.Users.getUser(input.address);
     if (!existing) {
       throw new HttpsError('not-found', 'user does not exist');

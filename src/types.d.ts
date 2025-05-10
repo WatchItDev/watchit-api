@@ -1,5 +1,8 @@
 import type { DataSourcesType } from '@/datasources';
-import type { ServicesType }    from '@/services';
+import type { ServicesType } from '@/services';
+import { Request } from "express"
+import type {JWTPayload} from "jose";
+import { User } from "@/schema/types";
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -7,9 +10,13 @@ declare namespace NodeJS {
   }
 }
 
+export interface Address { address: string }
+
 declare namespace GQL {
   interface ContextType {
     dataSources: DataSourcesType;
-    services:    ServicesType;
+    services: ServicesType;
+    req: Request;
+    user: User;
   }
 }
