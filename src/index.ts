@@ -8,7 +8,7 @@ import { rateLimit } from 'express-rate-limit'
 
 import { ApolloServer } from '@apollo/server'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
-import { expressMiddleware } from '@apollo/server/express4'
+import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4'
 
 import {
     createApollo4QueryValidationPlugin,
@@ -22,6 +22,7 @@ import { FireStore } from './externals';
 import { DataSources } from './datasources';
 import * as externals from './externals'
 import { GQL } from "@/types";
+import { User } from "@/schema/types";
 
 const startServer = async () => {
 
@@ -65,12 +66,11 @@ const startServer = async () => {
     app.use(helmet());
     app.use(limiter);
     app.use(express.json({ limit: '50mb' }))
-    app.use(expressMiddleware(server, {
-        context: (({ req }) => {
-            return { services, dataSources, req }
-        })
-    }),
-    )
+    app.use(expressMiddleware<GQL.ContextType>(server, {
+        context: async ({ req }: ExpressContextFunctionArgument): Promise<GQL.ContextType> => {
+            return { services, dataSources, req, user: {} as User }
+        }
+    }))
 
     // Wait for server to start listening
     await new Promise<void>((resolve) => {
