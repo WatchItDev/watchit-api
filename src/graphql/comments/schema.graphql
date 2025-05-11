@@ -15,6 +15,7 @@ type Comment {
 
   #–– raw count ––
   likeCount:      Int!
+  repliesCount:      Int!
 }
 
 ####################

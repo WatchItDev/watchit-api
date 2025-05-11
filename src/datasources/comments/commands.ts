@@ -1,5 +1,5 @@
 import { DataSourceManager } from '../manager'
-import type {Comment, CreateCommentInput, Post, UpdateCommentInput} from '../../schema/types'
+import type {Comment, CreateCommentInput, UpdateCommentInput} from '../../schema/types'
 import { makeNewComment } from '../../models/comment'
 import {FieldValue} from "firebase-admin/firestore";
 
@@ -45,11 +45,10 @@ export class CommentsCommands extends DataSourceManager {
 
     async updateCounterField(
         id: string,
-        field: keyof Post,
+        field: keyof Pick<Comment, 'repliesCount' | 'likeCount'>,
         delta: number
     ): Promise<void> {
-        const dao = (this.fs<Post>('comments') as any).ref
+        const dao = (this.fs<Comment>('comments') as any).ref
         await dao.doc(id).update({ [field]: FieldValue.increment(delta) })
     }
-
 }

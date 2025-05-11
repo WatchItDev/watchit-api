@@ -5,16 +5,25 @@ import {ServiceParams} from "../../../services/manager";
 export const commentCreated = onDocumentCreated(
     'comments/{commentId}',
     enhanceTrigger(async ({ ds }: ServiceParams, event) => {
-        const c = await ds.Comments.getComment(event.params.commentId)
-        const postId = c?.post.id
-        if (!postId) {
-            console.warn(`commentCreated without postId on ${event.params.commentId}`)
-            return
+        const commentId = event.params.commentId;
+        const c = await ds.Comments.getComment(commentId);
+        if (!c) return;
+
+        if (c?.parentComment?.id) {
+            await ds.Comments.updateCounterField(c?.parentComment?.id, 'repliesCount', +1);
+            console.log(`🔥 replyCreated ${commentId} → parent ${c?.parentComment?.id}`);
+            return;
         }
-        await ds.Posts.updateCounterField(postId, 'commentCount', +1)
-        console.log(`🔥 commentCreated for ${event.params.commentId}`)
-    })
-)
+
+        const postId = c.post?.id;
+        if (!postId) {
+            console.warn(`commentCreated without postId on ${commentId}`);
+            return;
+        }
+        await ds.Posts.updateCounterField(postId, 'commentCount', +1);
+        console.log(`🔥 commentCreated ${commentId} → post ${postId}`);
+    }),
+);
 
 export const commentHidden = onDocumentUpdated(
     'comments/{commentId}',
