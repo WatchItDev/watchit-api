@@ -17,7 +17,7 @@ export const commentCreated = onDocumentCreated(
 
         const postId = c.post?.id;
         if (!postId) {
-            console.warn(`commentCreated sin postId en ${commentId}`);
+            console.warn(`commentCreated without postId on ${commentId}`);
             return;
         }
         await ds.Posts.updateCounterField(postId, 'commentCount', +1);
