@@ -51,6 +51,7 @@ export type Comment = {
   likeCount: Scalars['Int']['output'];
   parentComment?: Maybe<Comment>;
   post: Post;
+  repliesCount: Scalars['Int']['output'];
   updatedAt: Scalars['Timestamp']['output'];
 };
 
@@ -588,6 +589,7 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
   likeCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   parentComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType>;
   post?: Resolver<ResolversTypes['Post'], ParentType, ContextType>;
+  repliesCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

@@ -26,6 +26,7 @@ type Comment {
   likeCount: Int!
   parentComment: Comment
   post: Post!
+  repliesCount: Int!
   updatedAt: Timestamp!
 }
 
