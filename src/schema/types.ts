@@ -308,7 +308,7 @@ export type QuerygetRepliesByCommentArgs = {
 
 
 export type QuerygetUserArgs = {
-  address: Scalars['String']['input'];
+  input: UserByInput;
 };
 
 
@@ -387,6 +387,7 @@ export type User = {
   email: Scalars['String']['output'];
   followersCount: Scalars['Int']['output'];
   followingCount: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
   profilePicture: Scalars['String']['output'];
   publicationsCount: Scalars['Int']['output'];
   socialLinks?: Maybe<Array<SocialLink>>;
@@ -398,6 +399,7 @@ export type User = {
 
 export type UserByInput = {
   address: Scalars['String']['input'];
+  idSession?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserInput = {
@@ -405,9 +407,8 @@ export type UserInput = {
   bio: Scalars['String']['input'];
   coverPicture?: InputMaybe<Scalars['String']['input']>;
   displayName: Scalars['String']['input'];
-  email: Scalars['String']['input'];
   profilePicture?: InputMaybe<Scalars['String']['input']>;
-  socialLinks: Array<SocialLinkInput>;
+  socialLinks?: InputMaybe<Array<SocialLinkInput>>;
   username: Scalars['String']['input'];
 };
 
@@ -665,7 +666,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getRecentPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetRecentPostsArgs>>;
   getRecentUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetRecentUsersArgs>>;
   getRepliesByComment?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetRepliesByCommentArgs, 'commentId'>>;
-  getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserArgs, 'address'>>;
+  getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserArgs, 'input'>>;
   getUserBookmarks?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetUserBookmarksArgs, 'address'>>;
   getUserFollowers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserFollowersArgs, 'address'>>;
   getUserFollowing?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserFollowingArgs, 'address'>>;
@@ -697,6 +698,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   followersCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   followingCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   profilePicture?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   publicationsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   socialLinks?: Resolver<Maybe<Array<ResolversTypes['SocialLink']>>, ParentType, ContextType>;

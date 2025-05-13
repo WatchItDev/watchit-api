@@ -22,6 +22,11 @@ import { DataSources } from './datasources';
 import * as externals from './externals'
 import { GQL } from "@/types";
 import { User } from "@/schema/types";
+import { webcrypto } from 'crypto';
+
+if (!(globalThis as any).crypto) {
+    (globalThis as any).crypto = webcrypto;
+}
 
 const startServer = async () => {
 

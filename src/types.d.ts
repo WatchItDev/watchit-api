@@ -12,6 +12,11 @@ declare namespace NodeJS {
 
 export interface Address { address: string }
 
+export interface AuthData {
+  id: string
+  email: string
+}
+
 declare namespace GQL {
   interface ContextType {
     dataSources: DataSourcesType;

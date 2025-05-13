@@ -2,12 +2,12 @@ import { onCall } from 'firebase-functions/v2/https';
 import { HttpsError } from 'firebase-functions/v1/https';
 import { enhanceFunction } from '../../manager';
 import type { User, UserInput, UpdateUserInput } from '../../../schema/types';
-import { Address } from "../../../types";
+import {Address, AuthData} from "../../../types";
 
 export const usersCreate = onCall(
   { region: 'us-central1' },
   enhanceFunction(async ({ ds }, req): Promise<{ user: User }> => {
-    const input = req.data as UserInput;
+    const input = req.data as UserInput & AuthData;
     const existing = await ds.Users.getUser(input.address)
     if (existing) {
       throw new HttpsError('already-exists', 'wallet already onboarded');

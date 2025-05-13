@@ -132,7 +132,7 @@ type Query {
   getRecentPosts(limit: Int): [Post!]!
   getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
-  getUser(address: String!): User
+  getUser(input: UserByInput!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!
   getUserFollowers(address: String!, limit: Int): [User!]!
   getUserFollowing(address: String!, limit: Int): [User!]!
@@ -188,6 +188,7 @@ type User {
   email: String!
   followersCount: Int!
   followingCount: Int!
+  id: String!
   profilePicture: String!
   publicationsCount: Int!
   socialLinks: [SocialLink!]
@@ -199,6 +200,7 @@ type User {
 
 input UserByInput {
   address: String!
+  idSession: String
 }
 
 input UserInput {
@@ -206,9 +208,8 @@ input UserInput {
   bio: String!
   coverPicture: String
   displayName: String!
-  email: String!
   profilePicture: String
-  socialLinks: [SocialLinkInput!]!
+  socialLinks: [SocialLinkInput!]
   username: String!
 }
 
