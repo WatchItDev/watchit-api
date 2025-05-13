@@ -7,7 +7,7 @@ export class UsersQuery extends DataSourceManager {
 
     getUsers = async (q: string, limit = 50): Promise<User[]> => {
         if (!q) return [];
-        return this.fs<User>('users').search(q, limit);
+        return this.fs<User>('users').search(q, limit, false);
     }
 
     async getFollowers(address: string, limit = 50): Promise<User[]> {
