@@ -1,8 +1,9 @@
 import type { User, UserInput } from '@/schema/types';
+import {AuthData} from "@/types";
 
 export function defaultUserData(): Omit<
     User,
-    'address' | 'email' | 'username' | 'displayName' | 'bio' |
+    'address' | 'email' | 'id' | 'username' | 'displayName' | 'bio' |
     'profilePicture' | 'coverPicture' | 'socialLinks' |
     'createdAt' | 'updatedAt'
 > {
@@ -16,11 +17,13 @@ export function defaultUserData(): Omit<
     };
 }
 
-export function makeNewUser(input: UserInput): User {
+export function makeNewUser(input: UserInput & AuthData): User {
     const now = Date.now();
     return {
         ...defaultUserData(),
         ...input,
+        id:             input.id ?? '',
+        email:          input.email ?? '',
         profilePicture: input.profilePicture ?? '',
         coverPicture:   input.coverPicture ?? '',
         socialLinks:    input.socialLinks ?? [],

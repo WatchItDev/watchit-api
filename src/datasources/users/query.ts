@@ -7,7 +7,7 @@ export class UsersQuery extends DataSourceManager {
 
     getUsers = async (q: string, limit = 50): Promise<User[]> => {
         if (!q) return [];
-        return this.fs<User>('users').search(q, limit);
+        return this.fs<User>('users').search(q, limit, false);
     }
 
     async getFollowers(address: string, limit = 50): Promise<User[]> {
@@ -32,9 +32,9 @@ export class UsersQuery extends DataSourceManager {
         return posts.filter(Boolean) as Post[];
     }
 
-    async getUserByEmail(email: string): Promise<User | null> {
+    async getUserById(id: string): Promise<User | null> {
         const [u] = await this.fs<User>('users')
-            .query([{ field: 'email', op: '==', value: email.toLowerCase() }], { limit: 1 });
+            .query([{ field: 'id', op: '==', value: id.toLowerCase() }], { limit: 1 });
         return u ?? null;
     };
 }

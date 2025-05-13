@@ -3,13 +3,14 @@ import type {UpdateUserInput, User, UserInput} from '../../schema/types'
 import { makeNewUser } from '../../models/user';
 import { buildKeywords, stripNulls } from '../../externals/firebase/utils';
 import { FirestoreUser } from "../../externals/firebase/types";
+import { AuthData } from "../../types";
 import { FieldValue } from 'firebase-admin/firestore';
 
 const USER_PREFIX_FIELDS = ['username', 'displayName', 'bio'];
 const USER_WHOLE_FIELDS  = ['address'];
 
 export class UsersCommands extends DataSourceManager {
-    async createUser(input: UserInput): Promise<User> {
+    async createUser(input: UserInput & AuthData): Promise<User> {
         const user = makeNewUser(input);
         const keywords = buildKeywords(user, USER_PREFIX_FIELDS, USER_WHOLE_FIELDS);
         const record: FirestoreUser = { ...user, keywords };

@@ -5,10 +5,11 @@ import type {
     UpdateUserInput,
     Post
 } from '@/schema/types';
+import { AuthData } from "@/types";
 
 export class ProfileService extends ServiceManager {
     /** Create a new user via Cloud Function */
-    async createProfile(input: UserInput): Promise<User> {
+    async createProfile(input: UserInput & AuthData): Promise<User> {
         const res = await this.ext.Functions().users.create(input);
         return res.data.user;
     }

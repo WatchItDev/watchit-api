@@ -9,7 +9,7 @@ export class PostsQuery extends DataSourceManager {
 
     getPosts = async (q: string, limit = 50): Promise<Post[]> => {
         if (!q) return [];
-        return this.fs<Post>('posts').search(q, limit);
+        return this.fs<Post>('posts').search(q, limit, true);
     }
 
     async getPostsByAuthor(author: string, limit = 20): Promise<Post[]> {

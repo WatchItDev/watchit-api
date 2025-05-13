@@ -69,19 +69,21 @@ export class CollectionDAO<T> {
   }
 
   /** Substring search based on a `keywords` array field. */
-  async search(query: string, limit = 20): Promise<T[]> {
+  async search(
+      query: string,
+      limit = 20,
+      includeHidden = false,
+  ): Promise<T[]> {
     const terms = query
-      .toLowerCase()
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 10);               // Firestore limit for array-contains-any
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 10);
 
     if (!terms.length) return [];
 
-    let q: FSQuery<DocumentData> = this.ref
-      .where('keywords', 'array-contains-any', terms)
-      .where('hidden', '==', false);
-
+    let q: FSQuery<DocumentData> = this.ref.where('keywords', 'array-contains-any', terms);
+    if (includeHidden) q = q.where('hidden', '==', false);
     if (limit) q = q.limit(limit);
 
     const snap = await q.get();
