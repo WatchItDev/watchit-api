@@ -16,26 +16,28 @@ export interface ExtractAuthDataResult {
 export async function extractAuthData(ctx: GQL.ContextType): Promise<ExtractAuthDataResult> {
     const header = ctx.req.headers.authorization ?? '';
     const token  = header.replace(/^Bearer\s+/i, '');
+    const defaultRes = { payload: null, userId: '', email: '' };
+
+    if (!token) return defaultRes;
+
     let payload: JWTPayload | null = null;
-    if (token) {
-        try {
-            const res = await jwtVerify(token, JWKS, { audience: AUD });
-            payload = res.payload;
-        } catch {
-            payload = null;
-        }
+    try {
+        const res = await jwtVerify(token, JWKS, { audience: AUD });
+        payload = res.payload;
+    } catch {
+        payload = null;
     }
 
+    if (!payload) return defaultRes;
+
     let userId = '';
-    if (payload) {
-        const verifierId = String(payload.verifierId || '');
-        const typeOfLogin = String(payload.aggregateVerifier || '');
-        if (verifierId && typeOfLogin) {
-            userId = crypto
-                .createHash('sha256')
-                .update(`${verifierId}:${typeOfLogin}`)
-                .digest('hex');
-        }
+    const verifierId = String(payload.verifierId || '');
+    const typeOfLogin = String(payload.aggregateVerifier || '');
+    if (verifierId && typeOfLogin) {
+        userId = crypto
+            .createHash('sha256')
+            .update(`${verifierId}:${typeOfLogin}`)
+            .digest('hex');
     }
 
     const email: string = (payload?.email ?? '') as string;
