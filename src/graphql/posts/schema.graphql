@@ -55,6 +55,7 @@ input MediaAttachmentInput {
 }
 
 input CreatePostInput {
+  authorAddress: String!               @constraint(minLength: 1)
   title:         String!               @constraint(minLength: 1, maxLength: 100)
   description:   String!               @constraint(minLength: 10)
   cid:           String!               @constraint(minLength: 1)

@@ -37,6 +37,7 @@ input CreateCommentInput {
 }
 
 input CreatePostInput {
+  authorAddress: String!
   cid: String!
   description: String!
   media: [MediaAttachmentInput!]!
