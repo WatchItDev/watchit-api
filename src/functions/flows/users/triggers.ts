@@ -21,6 +21,13 @@ export const logUserCreated = onDocumentCreated(
         await ds.XP.addEntry(wallet, entry);
 
         console.log(`✨ 50 XP awarded to ${wallet} for completing user registration (previous balance: ${beforeBalance})`);
+
+        try {
+            const txHash = await ds.SynapseDS.transfer(wallet, 50)
+            console.log(`✨ 50 MMC sent to ${wallet}. TxHash: ${txHash}`)
+        } catch (err) {
+            console.error(`⚠️ Error sending 50 MMC to ${wallet}:`, err)
+        }
     })
 );
 

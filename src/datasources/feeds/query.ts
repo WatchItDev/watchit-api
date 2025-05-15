@@ -8,8 +8,7 @@ export class FeedsQuery extends DataSourceManager {
     }
 
     async recentUsers(limit = 20): Promise<User[]> {
-        const all = await this.fs<User>('users').list(limit)
-        return all.sort((a, b) => Number(b.createdAt ?? 0) - Number(a.createdAt ?? 0)).slice(0, limit)
+        return this.fs<User>('users').query([], { orderBy: { field: 'createdAt', direction: 'desc' }, limit });
     }
 
     async activeUsers(limit = 20): Promise<User[]> {
