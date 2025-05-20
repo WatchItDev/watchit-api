@@ -1,6 +1,4 @@
-import { ApolloError } from 'apollo-server-lambda'
-
-/**
+s/**
  * Populate with methods to handle error tracing.
  * @returns
  */
@@ -28,7 +26,7 @@ export default ({ Sentry }) => {
           scope.setExtra('name', ctx.operationName)
           scope.setExtra('query', ctx.request.query)
           scope.setExtra('variables', ctx.request.variables)
-          scope.setExtra('event', ctx.context.event)
+          scope.setExtra('event', ctx.context?.event)
           scope.setExtra('headers', ctx.context.headers)
           scope.setExtra('exp', ctx.context.exp)
 
