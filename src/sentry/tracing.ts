@@ -1,4 +1,4 @@
-s/**
+/**
  * Populate with methods to handle error tracing.
  * @returns
  */
