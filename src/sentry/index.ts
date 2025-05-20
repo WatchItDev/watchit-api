@@ -1,9 +1,6 @@
 import '@sentry/tracing'
 import * as Sentry from '@sentry/node'
-import { GraphQLRequestContext } from '@apollo/server'
-
 // import pj from '@/package.json'
-import pluginPerformance from '@/sentry/performance'
 import pluginTracing from '@/sentry/tracing'
 
 Sentry.init({
@@ -24,10 +21,7 @@ export default () => {
   // For plugin definition see the docs: https://www.apollographql.com/docs/apollo-server/integrations/plugins/
   return {
     requestDidStart(requestContext) {
-      return {
-        ...pluginPerformance({ Sentry, ...requestContext }),
-        ...pluginTracing({ Sentry, ...requestContext })
-      }
+      return { ...pluginTracing({ Sentry, ...requestContext }) }
     }
   }
 }
