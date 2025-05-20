@@ -6,11 +6,11 @@ import pluginPerformance from '@/sentry/performance'
 import pluginTracing from '@/sentry/tracing'
 
 Sentry.init({
+  sendDefaultPii: true,
   environment: process.env.NODE_ENV,
   // https://docs.sentry.io/platforms/javascript/configuration/options/
   // debug: process.env.SENTRY_ENV !== 'production',
   dsn: process.env.SENTRY_DSN,
-  sendDefaultPii: true,
   integrations: [Sentry.captureConsoleIntegration({ levels: ["error", "debug"] })],
   // release: pj.version,
   // Set tracesSampleRate to 1.0 to capture 100%
