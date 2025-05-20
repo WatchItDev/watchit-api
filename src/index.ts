@@ -76,7 +76,7 @@ const startServer = async () => {
     app.use(express.json({ limit: '50mb' }))
     app.use(expressMiddleware<GQL.ContextType>(server, {
         context: async ({ req }: ExpressContextFunctionArgument): Promise<GQL.ContextType> => {
-            console.error("hello world error")
+            throw new Error("hello world error")
             return { services, dataSources, req, user: {} as User }
         }
     }))

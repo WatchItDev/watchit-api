@@ -7,14 +7,22 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "baseUrl": "./",
+
     "paths": {
       "@/*": ["src/*"]
     },
+
     "outDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "inlineSources": true,
+
+    // Set `sourceRoot` to  "/" to strip the build path prefix
+    // from generated source code references.
+    // This improves issue grouping in Sentry.
+    "sourceRoot": "/"
   }
 }
