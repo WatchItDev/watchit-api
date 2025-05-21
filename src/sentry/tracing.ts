@@ -21,14 +21,14 @@ export default ({ Sentry }) => {
         Sentry.withScope(scope => {
           // Annotate whether failing operation was query/mutation/subscription
         //   scope.setUser({ id: ctx.context?.id ?? 0, email: ctx.context?.email })
-          scope.setTag('kind', ctx.operation.operation)
-          // Log query and variables as extras
-          scope.setExtra('name', ctx.operationName)
-          scope.setExtra('query', ctx.request.query)
-          scope.setExtra('variables', ctx.request.variables)
-          scope.setExtra('event', ctx.context?.event)
-          scope.setExtra('headers', ctx.context.headers)
-          scope.setExtra('exp', ctx.context.exp)
+          // scope.setTag('kind', ctx.operation.operation)
+          // // Log query and variables as extras
+          // scope.setExtra('name', ctx.operationName)
+          // scope.setExtra('query', ctx.request.query)
+          // scope.setExtra('variables', ctx.request.variables)
+          // scope.setExtra('event', ctx.context?.event)
+          // scope.setExtra('headers', ctx.context.headers)
+          // scope.setExtra('exp', ctx.context.exp)
 
           if (err.path) {
             // We can also add the path as breadcrumb
