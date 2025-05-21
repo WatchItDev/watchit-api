@@ -11,12 +11,6 @@ export default ({ Sentry }) => {
       }
 
       for (const err of ctx.errors) {
-        // Only report internal server errors,
-        // all errors extending ApolloError should be user-facing
-        // if (err.originalError instanceof ApolloError) {
-        //   continue
-        // }
-
         // Add scoped report details and send to Sentry
         Sentry.withScope(scope => {
           // Annotate whether failing operation was query/mutation/subscription
@@ -30,14 +24,14 @@ export default ({ Sentry }) => {
           // scope.setExtra('headers', ctx.context.headers)
           // scope.setExtra('exp', ctx.context.exp)
 
-          if (err.path) {
-            // We can also add the path as breadcrumb
-            scope.addBreadcrumb({
-              category: 'query-path',
-              message: err.path.join(' > '),
-              level: Sentry.Severity.Debug
-            })
-          }
+          // if (err.path) {
+          //   // We can also add the path as breadcrumb
+          //   scope.addBreadcrumb({
+          //     category: 'query-path',
+          //     message: err.path.join(' > '),
+          //     level: Sentry.Severity.Debug
+          //   })
+          // }
           Sentry.captureException(err)
         })
       }
