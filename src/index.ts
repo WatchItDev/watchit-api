@@ -24,6 +24,8 @@ import { GQL } from "@/types";
 import { User } from "@/schema/types";
 import { webcrypto } from 'crypto';
 
+import SentryPlugin from '@/sentry'
+
 if (!(globalThis as any).crypto) {
     (globalThis as any).crypto = webcrypto;
 }
@@ -34,13 +36,13 @@ const startServer = async () => {
     const port = (process.env.API_PORT || 4000) as number
     const app: express.Express = express();
     const httpServer: http.Server = http.createServer(app);
-
     const server = new ApolloServer<GQL.ContextType>({
         resolvers,
         typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
         plugins: [
             createApollo4QueryValidationPlugin(),
-            ApolloServerPluginDrainHttpServer({ httpServer: httpServer })
+            ApolloServerPluginDrainHttpServer({ httpServer: httpServer }),
+            SentryPlugin()
         ],
     })
 
