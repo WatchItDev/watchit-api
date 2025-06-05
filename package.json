@@ -36,7 +36,7 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "build": "tsup --env.NODE_ENV production",
+    "build": "npx tsup --env.NODE_ENV production",
     "dev": "tsx watch src/index.ts",
     "start": "node build/index.js",
     "generate": "graphql-codegen --config codegen.ts",
