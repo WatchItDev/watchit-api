@@ -53,8 +53,6 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
     console.log("Starting server..")
     await server.start();
 
-
-
     // TODO
     // https://expressjs.com/en/resources/middleware/cors.html
     // const corsOptions = {
@@ -90,6 +88,6 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
 }
 
 // The `listen` method launches a web server
-const { url, server } = await startServer();
+const { url } = await startServer();
 console.log(`🚀 Server ready at ${url}`)
 
