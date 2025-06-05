@@ -31,6 +31,9 @@ if (!(globalThis as any).crypto) {
 }
 
 const startServer = async (): Promise<{ url: string, server: http.Server }> => {
+    const fireStore = FireStore();
+    const dataSources = DataSources(fireStore);
+    const services = Services({ ds: dataSources, ext: externals })
 
     const host = process.env.API_HOST || '0.0.0.0';
     const port = (process.env.API_PORT || 4000) as number
@@ -50,9 +53,7 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
     console.log("Starting server..")
     await server.start();
 
-    const fireStore = FireStore();
-    const dataSources = DataSources(fireStore);
-    const services = Services({ ds: dataSources, ext: externals })
+
 
     // TODO
     // https://expressjs.com/en/resources/middleware/cors.html
