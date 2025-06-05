@@ -90,12 +90,5 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
 
 // The `listen` method launches a web server
 const { url, server } = await startServer();
-
-process.on('SIGTERM', () => {
-    console.debug('SIGTERM signal received: closing HTTP server')
-    server.close(() => {
-        console.debug('HTTP server closed')
-    })
-})
 console.log(`🚀 Server ready at ${url}`)
 
