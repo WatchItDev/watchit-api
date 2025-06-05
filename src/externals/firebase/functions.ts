@@ -11,7 +11,7 @@ import type {
     CreateCommentInput,
     UpdateCommentInput, AddXPInput,
 } from '@/schema/types';
-import {Address} from "@/types";
+import { Address } from "@/types";
 
 export const Functions = () => {
     const fn = getFunctions(App().getClient(), 'us-central1');

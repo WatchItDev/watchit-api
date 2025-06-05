@@ -1,13 +1,11 @@
 import { ServiceManager } from './manager';
 
 export class LikesService extends ServiceManager {
-    togglePostLike    = (me: string, postId: string)       =>
-        this.ext.Functions().likes.togglePostLike({ me, postId })
-            .then(r => r.data.success);
+    togglePostLike = async (me: string, postId: string) =>
+        this.ds.Likes.togglePostLike(me, postId);
 
-    toggleCommentLike = (me: string, commentId: string)    =>
-        this.ext.Functions().likes.toggleCommentLike({ me, commentId })
-            .then(r => r.data.success);
+    toggleCommentLike = (me: string, commentId: string) =>
+        this.ds.Likes.toggleCommentLike(me, commentId);
 
     isPostLiked = (postId: string, me: string) =>
         this.ds.Likes.isPostLiked(postId, me);
