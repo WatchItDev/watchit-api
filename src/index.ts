@@ -3,6 +3,7 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
+import compression from 'compression'
 // import { rateLimit } from 'express-rate-limit'
 
 import { ApolloServer } from '@apollo/server'
@@ -71,6 +72,7 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
     app.disable('x-powered-by');
     app.use(cors())
     app.use(helmet());
+    app.use(compression());
     // app.use(limiter);
     app.use(express.json({ limit: '50mb' }))
     app.use(expressMiddleware<GQL.ContextType>(server, {
