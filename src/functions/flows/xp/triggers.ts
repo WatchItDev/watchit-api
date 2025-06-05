@@ -6,7 +6,6 @@ export const xpBalanceUpdater = onDocumentCreated(
     enhanceTrigger(async ({ ds }, event) => {
         const { uid } = event.params;
         const { amount } = event.data!.data() as { amount: number };
-
         if (typeof amount !== 'number') return;
 
         await ds.Users.updateCounterField(uid, 'xpBalance', amount);
