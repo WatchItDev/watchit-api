@@ -3,7 +3,7 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
-import { rateLimit } from 'express-rate-limit'
+// import { rateLimit } from 'express-rate-limit'
 
 import { ApolloServer } from '@apollo/server'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
@@ -72,7 +72,7 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
     app.use(cors())
     app.use(helmet());
     // app.use(limiter);
-    // app.use(express.json({ limit: '50mb' }))
+    app.use(express.json({ limit: '50mb' }))
     app.use(expressMiddleware<GQL.ContextType>(server, {
         context: async ({ req }: ExpressContextFunctionArgument): Promise<GQL.ContextType> => {
             return { services, dataSources, req, user: {} as User }
