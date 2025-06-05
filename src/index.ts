@@ -7,6 +7,8 @@ import compression from 'compression'
 // import { rateLimit } from 'express-rate-limit'
 
 import { ApolloServer } from '@apollo/server'
+import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
+import { ApolloServerPluginInlineTraceDisabled } from '@apollo/server/plugin/disabled';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
 import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4'
 
@@ -43,8 +45,11 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
     const server = new ApolloServer<GQL.ContextType>({
         resolvers,
         typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
+        includeStacktraceInErrorResponses: false,
         plugins: [
             createApollo4QueryValidationPlugin(),
+            ApolloServerPluginInlineTraceDisabled(),
+            ApolloServerPluginLandingPageDisabled(),
             ApolloServerPluginDrainHttpServer({ httpServer }),
             SentryPlugin()
         ],
