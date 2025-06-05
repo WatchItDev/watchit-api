@@ -1,6 +1,5 @@
 import path from 'path'
 import { defineConfig } from 'tsup'
-const env = process.env.NODE_ENV;
 
 export default defineConfig({
     dts: false,
