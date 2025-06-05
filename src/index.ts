@@ -80,10 +80,6 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
         }
     }))
 
-    app.get('/healthz', (req, res) => {
-        res.status(200).send('Ok');
-    });
-
     // Wait for server to start listening
     await new Promise<void>((resolve) => {
         httpServer.listen({ host, port }, resolve);
