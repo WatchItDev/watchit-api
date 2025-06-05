@@ -5,7 +5,7 @@ const env = process.env.NODE_ENV;
 export default defineConfig({
     dts: false,
     entry: ['src/index.ts'],
-    minify: env === 'production',
+    minify: true,
     bundle: true,
     format: ['esm'],
     target: 'esnext',
