@@ -12,7 +12,7 @@ import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/serve
 import {
     createApollo4QueryValidationPlugin,
     constraintDirectiveTypeDefsGql
-} from 'graphql-constraint-directive/apollo4'
+} from 'graphql-constraint-directive/apollo4.js'
 
 import { typeDefs } from '@/schema/typeDefs.generated'
 import { resolvers } from '@/schema/resolvers.generated'

@@ -37,8 +37,8 @@
   },
   "scripts": {
     "build": "tsup --env.NODE_ENV production",
-    "dev": "npx tsx watch src/index.ts",
-    "start": "npx tsx --no-warnings src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx --no-warnings src/index.ts",
     "generate": "graphql-codegen --config codegen.ts",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org velatrix --project node-express ./dist && sentry-cli sourcemaps upload --org velatrix --project node-express ./dist"
   }
