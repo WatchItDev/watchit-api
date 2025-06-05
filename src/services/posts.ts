@@ -18,7 +18,7 @@ export class PostService extends ServiceManager {
 
     /** Hide a post via Cloud Function */
     async hidePost(postId: string): Promise<void> {
-        await this.ds.Posts.hidePost(postId);
+        return this.ds.Posts.hidePost(postId);
     }
 
     /** Increment view count via Cloud Function */
