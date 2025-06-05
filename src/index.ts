@@ -41,7 +41,7 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
         typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
         plugins: [
             createApollo4QueryValidationPlugin(),
-            ApolloServerPluginDrainHttpServer({ httpServer: httpServer }),
+            ApolloServerPluginDrainHttpServer({ httpServer }),
             SentryPlugin()
         ],
     })
