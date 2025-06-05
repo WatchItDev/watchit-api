@@ -80,7 +80,7 @@ const startServer = async (): Promise<{ url: string, server: http.Server }> => {
         }
     }))
 
-    app.get('/health', (req, res) => {
+    app.get('/healthz', (req, res) => {
         res.status(200).send('Ok');
     });
 
