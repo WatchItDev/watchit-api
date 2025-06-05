@@ -30,7 +30,7 @@ if (!(globalThis as any).crypto) {
     (globalThis as any).crypto = webcrypto;
 }
 
-const startServer = async () => {
+const startServer = async (): Promise<{ url: string, server: http.Server }> => {
 
     const host = process.env.API_HOST || '0.0.0.0';
     const port = (process.env.API_PORT || 4000) as number
@@ -80,15 +80,26 @@ const startServer = async () => {
         }
     }))
 
+    app.get('/health', (req, res) => {
+        res.status(200).send('Ok');
+    });
+
     // Wait for server to start listening
     await new Promise<void>((resolve) => {
         httpServer.listen({ host, port }, resolve);
     });
 
-    return `http://${host}:${port}/`
+    return { url: `http://${host}:${port}/`, server: httpServer }
 }
 
 // The `listen` method launches a web server
-const url = await startServer();
+const { url, server } = await startServer();
+
+process.on('SIGTERM', () => {
+    console.debug('SIGTERM signal received: closing HTTP server')
+    server.close(() => {
+        console.debug('HTTP server closed')
+    })
+})
 console.log(`🚀 Server ready at ${url}`)
 
