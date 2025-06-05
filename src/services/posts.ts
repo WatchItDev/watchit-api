@@ -8,34 +8,23 @@ import type {
 export class PostService extends ServiceManager {
     /** Create a new post via Cloud Function */
     async createPost(input: CreatePostInput, address: string): Promise<Post> {
-        const res = await this.ext
-            .Functions()
-            .posts.create({ ...input, address});
-        return res.data.post;
+        return this.ds.Posts.createPost(address, input);
     }
 
     /** Update an existing post via Cloud Function */
     async updatePost(input: UpdatePostInput): Promise<Post | null> {
-        const res = await this.ext
-            .Functions()
-            .posts.update(input);
-        return res.data.post;
+        return this.ds.Posts.updatePost(input.postId, input)
     }
 
     /** Hide a post via Cloud Function */
-    async hidePost(postId: string): Promise<boolean> {
-        const res = await this.ext
-            .Functions()
-            .posts.hide({ postId });
-        return res.data.success;
+    async hidePost(postId: string): Promise<void> {
+        await this.ds.Posts.hidePost(postId);
     }
 
     /** Increment view count via Cloud Function */
     async incrementView(postId: string): Promise<Post | null> {
-        const res = await this.ext
-            .Functions()
-            .posts.incrementView({ postId });
-        return res.data.post;
+        await this.ds.Posts.updateCounterField(postId, 'viewCount', 1);
+        return this.ds.Posts.getPost(postId);
     }
 
     /** Read-only fetches */

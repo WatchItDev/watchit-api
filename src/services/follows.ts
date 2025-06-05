@@ -2,8 +2,7 @@ import { ServiceManager } from './manager';
 
 export class FollowService extends ServiceManager {
     toggleFollow = (me: string, target: string) => {
-        return this.ext.Functions().follows.toggleFollow({ me, targetAddress: target })
-            .then(r => r.data.success);
+        return this.ds.Follows.toggleFollow(me, target);
     }
 
 
