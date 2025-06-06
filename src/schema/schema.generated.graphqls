@@ -87,8 +87,8 @@ type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   createPost(input: CreatePostInput!): Post!
   createUser(input: UserInput!): User!
-  hideComment(commentId: String!): Boolean!
-  hidePost(postId: String!): Boolean!
+  hideComment(commentId: String!): Boolean
+  hidePost(postId: String!): Boolean
   incrementPostView(postId: String!): Post!
   toggleBookmark(input: BookmarkPostInput!): Boolean!
   toggleCommentLike(input: LikeCommentInput!): Boolean!

@@ -8,26 +8,17 @@ import type {
 export class CommentService extends ServiceManager {
     /** Create a comment via Cloud Function */
     async createComment(input: CreateCommentInput, address: string): Promise<Comment> {
-        const res = await this.ext
-            .Functions()
-            .comments.create({ ...input, address });
-        return res.data.comment;
+        return this.ds.Comments.createComment(address, input)
     }
 
     /** Update a comment via Cloud Function */
     async updateComment(input: UpdateCommentInput): Promise<Comment | null> {
-        const res = await this.ext
-            .Functions()
-            .comments.update(input);
-        return res.data.comment;
+        return this.ds.Comments.updateComment(input)
     }
 
     /** Hide a comment via Cloud Function */
-    async hideComment(commentId: string): Promise<boolean> {
-        const res = await this.ext
-            .Functions()
-            .comments.hide({ commentId });
-        return res.data.success;
+    async hideComment(commentId: string): Promise<void> {
+        return this.ds.Comments.hideComment(commentId)
     }
 
     /** Read-only fetches */

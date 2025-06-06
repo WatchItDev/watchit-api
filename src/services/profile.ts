@@ -10,14 +10,12 @@ import { AuthData } from "@/types";
 export class ProfileService extends ServiceManager {
     /** Create a new user via Cloud Function */
     async createProfile(input: UserInput & AuthData): Promise<User> {
-        const res = await this.ext.Functions().users.create(input);
-        return res.data.user;
+        return this.ds.Users.createUser(input);
     }
 
     /** Update current user via Cloud Function */
     async updateProfile(input: UpdateUserInput & { address: string; }): Promise<User> {
-        const res = await this.ext.Functions().users.update(input);
-        return res.data.user;
+        return this.ds.Users.updateUser(input.address, input);
     }
 
     /** Read operations directly against the datasource */

@@ -98,7 +98,7 @@ extend type Mutation {
   updatePost(input: UpdatePostInput!): Post!
   hidePost(
     postId: String!                     @constraint(minLength: 1)
-  ): Boolean!
+  ): Boolean
   incrementPostView(
     postId: String!                     @constraint(minLength: 1)
   ): Post!

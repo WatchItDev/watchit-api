@@ -107,8 +107,8 @@ export type Mutation = {
   createComment: Comment;
   createPost: Post;
   createUser: User;
-  hideComment: Scalars['Boolean']['output'];
-  hidePost: Scalars['Boolean']['output'];
+  hideComment?: Maybe<Scalars['Boolean']['output']>;
+  hidePost?: Maybe<Scalars['Boolean']['output']>;
   incrementPostView: Post;
   toggleBookmark: Scalars['Boolean']['output'];
   toggleCommentLike: Scalars['Boolean']['output'];
@@ -620,8 +620,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationcreateCommentArgs, 'input'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationcreatePostArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationcreateUserArgs, 'input'>>;
-  hideComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationhideCommentArgs, 'commentId'>>;
-  hidePost?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationhidePostArgs, 'postId'>>;
+  hideComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationhideCommentArgs, 'commentId'>>;
+  hidePost?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationhidePostArgs, 'postId'>>;
   incrementPostView?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationincrementPostViewArgs, 'postId'>>;
   toggleBookmark?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleBookmarkArgs, 'input'>>;
   toggleCommentLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleCommentLikeArgs, 'input'>>;

@@ -1,5 +1,5 @@
 import { DataSourceManager } from '../manager';
-import type { Post } from "../../schema/types";
+import type { Post, Comment } from "../../schema/types";
 
 export class LikesQuery extends DataSourceManager {
     async isPostLiked(postId: string, me: string): Promise<boolean> {
