@@ -1,0 +1,21 @@
+####################
+#     INPUTS       #
+####################
+
+input LogEventInput {
+  type:       String!     @constraint(minLength: 1)
+  targetId:   String
+  targetType: String
+  progress:   Int
+  amount:     Int
+  currency:   String
+  meta:       JSON
+}
+
+############################
+#       MUTATIONS          #
+############################
+
+extend type Mutation {
+  logEvent       (input: LogEventInput!):  Boolean!
+}
