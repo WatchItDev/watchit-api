@@ -10,15 +10,19 @@ export const logUserCreated = onDocumentCreated(
         // Get the payload of the newly created user
         const newUser = event.data!.data() as FirestoreUser;
         const beforeBalance = newUser.xpBalance ?? 0;
+        const totalBefore   = newUser?.xpTotal   ?? 0
 
         // Create and save the XP entry
         const entry = makeXpEntry({
+            user:        wallet,
             action:      XpAction.REGISTER_BONUS,
             description: 'User registration',
             amount:      50,
             before:      beforeBalance,
-        });
-        await ds.XP.addEntry(wallet, entry);
+            totalBefore,
+        })
+
+        await ds.XP.addEntry(entry);
 
         console.log(`✨ 50 XP awarded to ${wallet} for completing user registration (previous balance: ${beforeBalance})`);
 

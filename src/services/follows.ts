@@ -1,15 +1,21 @@
-import { ServiceManager } from './manager';
-import { toggle } from "@/helpers/toggle";
+import { ServiceManager } from './manager'
+import { toggle }         from '@/helpers/toggle'
+import type { User }      from '@/schema/types'
 
 export class FollowService extends ServiceManager {
-    toggleFollow      = (u: string, t: string) =>
-        toggle(() => this.ds.Follows.isFollowing(u, t),
-            [() => this.ds.Follows.addFollowing(u, t),
-                () => this.ds.Follows.addFollower(t, u)],
-            [() => this.ds.Follows.removeFollowing(u, t),
-                () => this.ds.Follows.removeFollower(t, u)]);
+    toggleFollow = (me: string, target: string) =>
+        toggle(
+            () => this.ds.Follows.isFollowing(me, target),
+            () => this.ds.Follows.addFollow(me, target),
+            () => this.ds.Follows.removeFollow(me, target),
+        )
 
+    isFollowing = (follower: string, following: string) =>
+        this.ds.Follows.isFollowing(follower, following)
 
-    isFollowing = (follower: string, target: string) =>
-        this.ds.Follows.isFollowing(follower, target);
+    getFollowers = (addr: string, limit = 50): Promise<User[]> =>
+        this.ds.Follows.followersOf(addr, limit)
+
+    getFollowing = (addr: string, limit = 50): Promise<User[]> =>
+        this.ds.Follows.followingOf(addr, limit)
 }

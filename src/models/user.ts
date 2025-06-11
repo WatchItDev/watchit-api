@@ -13,6 +13,7 @@ export function defaultUserData(): Omit<
         publicationsCount: 0,
         bookmarksCount: 0,
         xpBalance: 0,
+        xpTotal:   0,
         verified: false,
     };
 }

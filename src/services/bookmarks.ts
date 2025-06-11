@@ -1,14 +1,21 @@
-import { ServiceManager } from './manager';
-import { toggle } from "@/helpers/toggle";
+import { ServiceManager } from './manager'
+import { toggle }         from '@/helpers/toggle'
+import type { Post, User } from '@/schema/types'
 
 export class BookmarkService extends ServiceManager {
-    toggleBookmark    = (u: string, p: string) =>
+    toggleBookmark = (addr: string, postId: string) =>
         toggle(
-            () => this.ds.Bookmarks.isBookmarked(p, u),
-            [() => this.ds.Bookmarks.addPostBookmark(u, p), () => this.ds.Bookmarks.addUserBookmark(u, p)],
-            [() => this.ds.Bookmarks.removePostBookmark(u, p), () => this.ds.Bookmarks.removeUserBookmark(u, p)]
-        );
+            () => this.ds.Bookmarks.isBookmarked(addr, postId),
+            () => this.ds.Bookmarks.addBookmark(addr, postId),
+            () => this.ds.Bookmarks.removeBookmark(addr, postId),
+        )
 
-    isBookmarked = (postId: string, me: string) =>
-        this.ds.Bookmarks.isBookmarked(postId, me);
+    isBookmarked = (address: string, postId: string) =>
+        this.ds.Bookmarks.isBookmarked(address, postId)
+
+    getBookmarksByUser = (addr: string, limit = 50): Promise<Post[]> =>
+        this.ds.Bookmarks.getBookmarksByUser(addr, limit)
+
+    getBookmarksByPost = (postId: string, limit = 50): Promise<User[]> =>
+        this.ds.Bookmarks.getBookmarksByPost(postId, limit)
 }

@@ -1,16 +1,15 @@
 import { DataSourceManager } from '../manager';
 
 export class LikesCommands extends DataSourceManager {
-    addPostLike(userId: string, postId: string) {
-        return this.fs('posts').sub(postId, 'likes').create(userId, {});
+    addLike(addr: string, targetId: string, targetType: string) {
+        return this.fs('likes').create(`${addr}_${targetId}`, {
+            targetId,
+            targetType,
+            author: addr,
+            createdAt: Date.now(),
+        })
     }
-    removePostLike(userId: string, postId: string) {
-        return this.fs('posts').sub(postId, 'likes').delete(userId);
-    }
-    addCommentLike(userId: string, commentId: string) {
-        return this.fs('comments').sub(commentId, 'likes').create(userId, {});
-    }
-    removeCommentLike(userId: string, commentId: string) {
-        return this.fs('comments').sub(commentId, 'likes').delete(userId);
+    removeLike(addr: string, targetId: string) {
+        return this.fs('likes').delete(`${addr}_${targetId}`)
     }
 }

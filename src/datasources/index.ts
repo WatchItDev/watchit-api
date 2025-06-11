@@ -8,6 +8,7 @@ import FollowsDS   from './follows';
 import LikesDS   from './likes';
 import XPDS    from './xp';
 import SynapseDS    from './synapse';
+import LogsDS    from './logs';
 
 export const DataSources = (store: FireStore) => ({
     Users:     new UsersDS(store),
@@ -19,6 +20,7 @@ export const DataSources = (store: FireStore) => ({
     Likes:     new LikesDS(store),
     XP:        new XPDS(store),
     SynapseDS: new SynapseDS(store),
+    Logs: new LogsDS(store),
 });
 
 export type DataSourcesType = ReturnType<typeof DataSources>;
