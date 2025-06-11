@@ -2,4 +2,4 @@
 
  export const getUserFollowing: NonNullable<QueryResolvers['getUserFollowing']> =
      (_parent, { address }, { services }) =>
-         services.Profile.getFollowing(address)
+         services.Follows.getFollowing(address)

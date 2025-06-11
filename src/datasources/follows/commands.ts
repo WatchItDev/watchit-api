@@ -1,16 +1,15 @@
-import { DataSourceManager } from '../manager';
+import { DataSourceManager } from '../manager'
 
 export class FollowsCommands extends DataSourceManager {
-    addFollowing (me: string, target: string) {
-        return this.fs('users').sub(me, 'following').create(target, {});
+    addFollow(follower: string, following: string) {
+        return this.fs('follows').create(`${follower}_${following}`, {
+            follower,
+            following,
+            createdAt: Date.now(),
+        })
     }
-    removeFollowing (me: string, target: string) {
-        return this.fs('users').sub(me, 'following').delete(target);
-    }
-    addFollower (target: string, me: string) {
-        return this.fs('users').sub(target, 'followers').create(me, {});
-    }
-    removeFollower (target: string, me: string) {
-        return this.fs('users').sub(target, 'followers').delete(me);
+
+    removeFollow(follower: string, following: string) {
+        return this.fs('follows').delete(`${follower}_${following}`)
     }
 }

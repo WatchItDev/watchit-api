@@ -7,7 +7,7 @@ input AddXPInput {
   description: String!
 }
 
-input BookmarkPostInput {
+input BookmarkInput {
   postId: String!
 }
 
@@ -49,6 +49,19 @@ scalar Date
 """ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
 scalar DateTime
 
+type EventLog {
+  amount: Int
+  author: String
+  createdAt: Timestamp!
+  currency: String
+  id: String!
+  meta: JSON
+  progress: Int
+  targetId: String
+  targetType: String
+  type: String!
+}
+
 input FilterInput {
   limit: Int
   offset: Int
@@ -60,12 +73,19 @@ input FollowInput {
 
 scalar JSON
 
-input LikeCommentInput {
-  commentId: String!
+input LikeInput {
+  targetId: String!
+  targetType: TargetType!
 }
 
-input LikePostInput {
-  postId: String!
+input LogEventInput {
+  amount: Int
+  currency: String
+  meta: JSON
+  progress: Int
+  targetId: String
+  targetType: String
+  type: String!
 }
 
 type MediaAttachment {
@@ -90,10 +110,11 @@ type Mutation {
   hideComment(commentId: String!): Boolean
   hidePost(postId: String!): Boolean
   incrementPostView(postId: String!): Post!
-  toggleBookmark(input: BookmarkPostInput!): Boolean!
-  toggleCommentLike(input: LikeCommentInput!): Boolean!
+  logAnonymousEvent(input: LogEventInput!): Boolean!
+  logEvent(input: LogEventInput!): Boolean!
+  toggleBookmark(input: BookmarkInput!): Boolean!
   toggleFollow(input: FollowInput!): Boolean!
-  togglePostLike(input: LikePostInput!): Boolean!
+  toggleLike(input: LikeInput!): Boolean!
   updateComment(input: UpdateCommentInput!): Comment!
   updatePost(input: UpdatePostInput!): Post!
   updateUser(input: UpdateUserInput!): User!
@@ -119,21 +140,26 @@ type Post {
 type Query {
   getActiveUsers(limit: Int): [User!]!
   getAllPosts(limit: Int): [Post!]!
+  getBookmarksByPost(limit: Int = 50, postId: String!): [User!]!
+  getBookmarksByUser(address: String!, limit: Int = 50): [Post!]!
   getCommentsByPost(limit: Int, postId: String!): [Comment!]!
   getIsBookmarked(postId: String!): Boolean!
-  getIsCommentLiked(commentId: String!): Boolean!
   getIsFollowing(targetAddress: String!): Boolean!
-  getIsPostLiked(postId: String!): Boolean!
+  getIsLiked(targetId: String!): Boolean!
   getPopularPosts(limit: Int): [Post!]!
   getPopularUsers(limit: Int): [User!]!
   getPost(id: String!): Post
+  getPostViews(postId: String!): Int!
   getPosts(limit: Int, query: String!): [Post!]!
   getPostsByAuthor(author: String!, limit: Int): [Post!]!
+  getProfileViews(address: String!): Int!
   getRecentPosts(limit: Int): [Post!]!
   getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
+  getTargetEvents(limit: Int = 50, offset: Int = 0, targetId: String!, targetType: String, type: String): [EventLog!]!
   getUser(input: UserByInput!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!
+  getUserEvents(address: String!, limit: Int = 50, offset: Int = 0, type: String): [EventLog!]!
   getUserFollowers(address: String!, limit: Int): [User!]!
   getUserFollowing(address: String!, limit: Int): [User!]!
   getUserXPHistory(address: String!, limit: Int = 50, offset: Int = 0): [XPEntry!]!
@@ -148,6 +174,11 @@ type SocialLink {
 input SocialLinkInput {
   platform: String!
   url: String!
+}
+
+enum TargetType {
+  COMMENT
+  POST
 }
 
 """Unix epoch in milliseconds (number)."""
@@ -196,6 +227,7 @@ type User {
   username: String!
   verified: Boolean!
   xpBalance: Int!
+  xpTotal: Int!
 }
 
 input UserByInput {
@@ -227,4 +259,6 @@ type XPEntry {
   createdAt: Timestamp!
   description: String!
   id: ID!
+  totalAfter: Int!
+  user: String!
 }

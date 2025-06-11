@@ -1,8 +1,7 @@
-import type { QueryResolvers } from './../../../../schema/types'
+import type { QueryResolvers } from '@/schema/types'
+import { requireAuth }         from '@/graphql/hof/auth'
 
-export const getIsBookmarked: NonNullable<QueryResolvers['getIsBookmarked']> =
-    async (_parent, { postId }, { services, reqUser }) => {
-        const me = reqUser?.address
-        if (!me) throw new Error('Not authenticated')
-        return await services.Bookmarks.isBookmarked(postId, me)
-    }
+export const getIsBookmarked: NonNullable<QueryResolvers['getIsBookmarked']> = requireAuth(
+    (_p, { postId }, { services, user }) =>
+        services.Bookmarks.isBookmarked(user.address, postId)
+)

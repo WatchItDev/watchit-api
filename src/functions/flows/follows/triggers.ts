@@ -1,29 +1,35 @@
 import { onDocumentCreated, onDocumentDeleted } from 'firebase-functions/v2/firestore'
 import { enhanceTrigger }                       from '../../manager'
-import type { ServiceParams }                    from '../../../services/manager'
+import type { ServiceParams }                   from '../../../services/manager'
 
 export const followInc = onDocumentCreated(
-    'users/{target}/followers/{me}',
+    'follows/{relId}',
     enhanceTrigger(async ({ ds }: ServiceParams, event) => {
-        const { target, me } = event.params
-        if (!target || !me) return
+        const snap = event.data
+        if (!snap) return
+        const { follower, following } = snap.data() as { follower?: string; following?: string }
+        if (!follower || !following) return
+
         await Promise.all([
-            ds.Users.updateCounterField( target, 'followersCount', +1),
-            ds.Users.updateCounterField( me,     'followingCount', +1),
+            ds.Users.updateCounterField(following, 'followersCount', +1),
+            ds.Users.updateCounterField(follower,  'followingCount', +1),
         ])
-        console.log(`➕ ${me} now follows ${target}`)
+        console.log(`➕ ${follower} now follows ${following}`)
     })
 )
 
 export const followDec = onDocumentDeleted(
-    'users/{target}/followers/{me}',
+    'follows/{relId}',
     enhanceTrigger(async ({ ds }: ServiceParams, event) => {
-        const { target, me } = event.params
-        if (!target || !me) return
+        const snap = event.data
+        if (!snap) return
+        const { follower, following } = snap.data() as { follower?: string; following?: string }
+        if (!follower || !following) return
+
         await Promise.all([
-            ds.Users.updateCounterField( target, 'followersCount', -1),
-            ds.Users.updateCounterField( me,     'followingCount', -1),
+            ds.Users.updateCounterField(following, 'followersCount', -1),
+            ds.Users.updateCounterField(follower,  'followingCount', -1),
         ])
-        console.log(`➖ ${me} unfollowed ${target}`)
+        console.log(`➖ ${follower} unfollowed ${following}`)
     })
 )

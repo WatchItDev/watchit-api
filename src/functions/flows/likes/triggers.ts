@@ -1,43 +1,49 @@
 import { onDocumentCreated, onDocumentDeleted } from 'firebase-functions/v2/firestore'
 import { enhanceTrigger }                       from '../../manager'
-import type { ServiceParams }                    from '../../../services/manager'
+import type { ServiceParams }                   from '../../../services/manager'
 
-export const postLikeCountInc = onDocumentCreated(
-    'posts/{postId}/likes/{userId}',
+interface LikeDoc {
+    author?:     string
+    targetId?:   string
+    targetType?: 'POST' | 'COMMENT'
+}
+
+export const likeInc = onDocumentCreated(
+    'likes/{likeId}',
     enhanceTrigger(async ({ ds }: ServiceParams, event) => {
-        const { postId, userId } = event.params
-        if (!postId || !userId) return
-        await ds.Posts.updateCounterField(postId, 'likeCount', +1)
-        console.log(`👍 Post ${postId} liked by ${userId}`)
+        const snap = event.data
+        if (!snap) return
+
+        const { targetId, targetType } = snap.data() as LikeDoc
+        if (!targetId || !targetType) return
+
+        if (targetType === 'POST') {
+            await ds.Posts.updateCounterField(targetId, 'likeCount', +1)
+            console.log(`👍  Post ${targetId} liked`)
+        }
+        if (targetType === 'COMMENT') {
+            await ds.Comments.updateCounterField(targetId, 'likeCount', +1)
+            console.log(`👍  Comment ${targetId} liked`)
+        }
     })
 )
 
-export const postLikeCountDec = onDocumentDeleted(
-    'posts/{postId}/likes/{userId}',
+export const likeDec = onDocumentDeleted(
+    'likes/{likeId}',
     enhanceTrigger(async ({ ds }: ServiceParams, event) => {
-        const { postId, userId } = event.params
-        if (!postId || !userId) return
-        await ds.Posts.updateCounterField(postId, 'likeCount', -1)
-        console.log(`👎 Post ${postId} unliked by ${userId}`)
-    })
-)
+        const snap = event.data
+        if (!snap) return
 
-export const commentLikeInc = onDocumentCreated(
-    'comments/{commentId}/likes/{userId}',
-    enhanceTrigger(async ({ ds }: ServiceParams, event) => {
-        const { commentId, userId } = event.params
-        if (!commentId || !userId) return
-        await ds.Comments.updateCounterField(commentId, 'likeCount', +1)
-        console.log(`👍 Comment ${commentId} liked by ${userId}`)
-    })
-)
+        const { targetId, targetType } = snap.data() as LikeDoc
+        if (!targetId || !targetType) return
 
-export const commentLikeDec = onDocumentDeleted(
-    'comments/{commentId}/likes/{userId}',
-    enhanceTrigger(async ({ ds }: ServiceParams, event) => {
-        const { commentId, userId } = event.params
-        if (!commentId || !userId) return
-        await ds.Comments.updateCounterField(commentId, 'likeCount', -1)
-        console.log(`👎 Comment ${commentId} unliked by ${userId}`)
+        if (targetType === 'POST') {
+            await ds.Posts.updateCounterField(targetId, 'likeCount', -1)
+            console.log(`👎  Post ${targetId} unliked`)
+        }
+        if (targetType === 'COMMENT') {
+            await ds.Comments.updateCounterField(targetId, 'likeCount', -1)
+            console.log(`👎  Comment ${targetId} unliked`)
+        }
     })
 )
