@@ -1,3 +1,7 @@
+###########################
+#         FOLLOWS         #
+###########################
+
 input FollowInput {
   targetAddress: String! @constraint(minLength: 1)
 }

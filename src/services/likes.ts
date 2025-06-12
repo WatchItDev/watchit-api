@@ -1,17 +1,14 @@
 import { ServiceManager } from './manager';
+import { toggle } from "@/helpers/toggle";
 
 export class LikesService extends ServiceManager {
-    togglePostLike    = (me: string, postId: string)       =>
-        this.ext.Functions().likes.togglePostLike({ me, postId })
-            .then(r => r.data.success);
+    toggleLike = (address: string, targetId: string, targetType: string) =>
+        toggle(
+            () => this.ds.Likes.isLiked(address, targetId),
+            () => this.ds.Likes.addLike(address, targetId, targetType),
+            () => this.ds.Likes.removeLike(address, targetId),
+        )
 
-    toggleCommentLike = (me: string, commentId: string)    =>
-        this.ext.Functions().likes.toggleCommentLike({ me, commentId })
-            .then(r => r.data.success);
-
-    isPostLiked = (postId: string, me: string) =>
-        this.ds.Likes.isPostLiked(postId, me);
-
-    isCommentLiked = (commentId: string, me: string) =>
-        this.ds.Likes.isCommentLiked(commentId, me);
+    isLiked = (address: string, targetId: string) =>
+        this.ds.Likes.isLiked(address, targetId);
 }

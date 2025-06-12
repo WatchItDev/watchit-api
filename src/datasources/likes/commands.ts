@@ -1,19 +1,15 @@
 import { DataSourceManager } from '../manager';
 
 export class LikesCommands extends DataSourceManager {
-    async togglePostLike(user: string, postId: string): Promise<boolean> {
-        const likes = this.fs('posts').sub(postId, 'likes');
-        const snap  = await (likes as any).ref.doc(user).get();
-
-        if (snap.exists) { await likes.delete(user);  return false; }
-        await likes.create(user, {});                 return true;
+    addLike(addr: string, targetId: string, targetType: string) {
+        return this.fs('likes').create(`${addr}_${targetId}`, {
+            targetId,
+            targetType,
+            author: addr,
+            createdAt: Date.now(),
+        })
     }
-
-    async toggleCommentLike(user: string, commentId: string): Promise<boolean> {
-        const likes = this.fs('comments').sub(commentId, 'likes');
-        const snap  = await (likes as any).ref.doc(user).get();
-
-        if (snap.exists) { await likes.delete(user);  return false; }
-        await likes.create(user, {});                 return true;
+    removeLike(addr: string, targetId: string) {
+        return this.fs('likes').delete(`${addr}_${targetId}`)
     }
 }

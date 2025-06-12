@@ -1,18 +1,22 @@
+import path from 'path'
 import { defineConfig } from 'tsup'
-import TsconfigPathsPlugin from '@esbuild-plugins/tsconfig-paths'
-
-const env = process.env.NODE_ENV;
 
 export default defineConfig({
-    dts: true,
-    entry: ['src/**/*.ts'],
-    minify: env === 'production',
-    bundle: env === 'production',
+    dts: false,
+    entry: ['src/index.ts'],
+    minify: true,
+    bundle: true,
     format: ['esm'],
     target: 'esnext',
-    noExternal: ['*'],
-    outDir: 'dist',
+    platform: "node",
+    outDir: 'build',
+    esbuildOptions(options) {
+        options.alias = {
+            '@': path.resolve(__dirname, 'src')
+        }
+    },
     sourcemap: true,
+    external: ['express'],
     tsconfig: './tsconfig.json',
     clean: true
 })

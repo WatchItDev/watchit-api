@@ -28,19 +28,29 @@ export const commentCreated = onDocumentCreated(
 export const commentHidden = onDocumentUpdated(
     'comments/{commentId}',
     enhanceTrigger(async ({ ds }: ServiceParams, event) => {
-        const before = event?.data?.before.data();
-        const after  = event?.data?.after.data();
+        const change = event.data;
+        if (!change?.before || !change?.after) {
+            console.warn(`commentHidden: without change data for ${event.params.commentId}`);
+            return;
+        }
 
-        if (!before?.hidden && after?.hidden) {
-            const postId = after.postId;
-            if (!postId) {
-                console.warn(`commentHidden without postId on ${event.params.commentId}`);
-                return;
+        const before = change.before.data();
+        const after  = change.after.data();
+
+        if (!before.hidden && after.hidden) {
+            const commentId       = event.params.commentId;
+            const parentCommentId = after.parentCommentId;
+            const postId          = after.postId;
+
+            if (parentCommentId) {
+                await ds.Comments.updateCounterField(parentCommentId, 'repliesCount', -1);
+                console.log(`🔥 replyHidden ${commentId} → parent ${parentCommentId}`);
+            } else if (postId) {
+                await ds.Posts.updateCounterField(postId, 'commentCount', -1);
+                console.log(`🔥 commentHidden ${commentId} → post ${postId}`);
+            } else {
+                console.warn(`commentHidden without parentCommentId and postId on ${commentId}`);
             }
-
-            await ds.Posts.updateCounterField(postId, 'commentCount', -1);
-            console.log(`🔥 commentHidden for ${event.params.commentId}`);
         }
     })
 );
-

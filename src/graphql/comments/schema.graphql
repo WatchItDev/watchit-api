@@ -56,5 +56,5 @@ extend type Query {
 extend type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   updateComment(input: UpdateCommentInput!): Comment!
-  hideComment(commentId: String! @constraint(minLength: 1)): Boolean!
+  hideComment(commentId: String! @constraint(minLength: 1)): Boolean
 }

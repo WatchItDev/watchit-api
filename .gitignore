@@ -2,3 +2,4 @@ node_modules
 .env
 # Sentry Config File
 .sentryclirc
+build/

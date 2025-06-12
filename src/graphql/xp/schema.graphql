@@ -4,11 +4,13 @@
 
 type XPEntry {
   id:            ID!
+  user:          String!
   action:        String!      # e.g. "REGISTER_BONUS" | "POST_CREATED"
   description:   String!
   amount:        Int!         # positive = earn, negative = burn
   balanceBefore: Int!
   balanceAfter:  Int!
+  totalAfter:    Int!
   createdAt:     Timestamp!
 }
 

@@ -3,16 +3,19 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
-import { rateLimit } from 'express-rate-limit'
+import compression from 'compression'
+// import { rateLimit } from 'express-rate-limit'
 
 import { ApolloServer } from '@apollo/server'
+import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
+import { ApolloServerPluginInlineTraceDisabled } from '@apollo/server/plugin/disabled';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
 import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4'
 
 import {
     createApollo4QueryValidationPlugin,
     constraintDirectiveTypeDefsGql
-} from 'graphql-constraint-directive/apollo4'
+} from 'graphql-constraint-directive/apollo4.js'
 
 import { typeDefs } from '@/schema/typeDefs.generated'
 import { resolvers } from '@/schema/resolvers.generated'
@@ -30,7 +33,10 @@ if (!(globalThis as any).crypto) {
     (globalThis as any).crypto = webcrypto;
 }
 
-const startServer = async () => {
+const startServer = async (): Promise<{ url: string, server: http.Server }> => {
+    const fireStore = FireStore();
+    const dataSources = DataSources(fireStore);
+    const services = Services({ ds: dataSources, ext: externals })
 
     const host = process.env.API_HOST || '0.0.0.0';
     const port = (process.env.API_PORT || 4000) as number
@@ -39,9 +45,12 @@ const startServer = async () => {
     const server = new ApolloServer<GQL.ContextType>({
         resolvers,
         typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
+        includeStacktraceInErrorResponses: false,
         plugins: [
             createApollo4QueryValidationPlugin(),
-            ApolloServerPluginDrainHttpServer({ httpServer: httpServer }),
+            ApolloServerPluginInlineTraceDisabled(),
+            ApolloServerPluginLandingPageDisabled(),
+            ApolloServerPluginDrainHttpServer({ httpServer }),
             SentryPlugin()
         ],
     })
@@ -49,10 +58,6 @@ const startServer = async () => {
 
     console.log("Starting server..")
     await server.start();
-
-    const fireStore = FireStore();
-    const dataSources = DataSources(fireStore);
-    const services = Services({ ds: dataSources, ext: externals })
 
     // TODO
     // https://expressjs.com/en/resources/middleware/cors.html
@@ -62,17 +67,18 @@ const startServer = async () => {
     //     }
     // }
 
-    const limiter = rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-        standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
-        legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-    })
+    // const limiter = rateLimit({
+    //     windowMs: 15 * 60 * 1000, // 15 minutes
+    //     limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+    //     standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+    //     legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+    // })
 
     app.disable('x-powered-by');
     app.use(cors())
     app.use(helmet());
-    app.use(limiter);
+    app.use(compression());
+    // app.use(limiter);
     app.use(express.json({ limit: '50mb' }))
     app.use(expressMiddleware<GQL.ContextType>(server, {
         context: async ({ req }: ExpressContextFunctionArgument): Promise<GQL.ContextType> => {
@@ -85,10 +91,10 @@ const startServer = async () => {
         httpServer.listen({ host, port }, resolve);
     });
 
-    return `http://${host}:${port}/`
+    return { url: `http://${host}:${port}/`, server: httpServer }
 }
 
 // The `listen` method launches a web server
-const url = await startServer();
+const { url } = await startServer();
 console.log(`🚀 Server ready at ${url}`)
 

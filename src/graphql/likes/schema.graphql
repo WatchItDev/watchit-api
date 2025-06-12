@@ -1,17 +1,14 @@
-input LikePostInput {
-  postId: String!     @constraint(minLength: 1)
-}
+enum TargetType { POST COMMENT }
 
-input LikeCommentInput {
-  commentId: String!  @constraint(minLength: 1)
+input LikeInput {
+  targetId:   String!     @constraint(minLength: 1)
+  targetType: TargetType!
 }
 
 extend type Mutation {
-  togglePostLike    (input: LikePostInput!):      Boolean!
-  toggleCommentLike (input: LikeCommentInput!):   Boolean!
+  toggleLike(input: LikeInput!): Boolean!
 }
 
 extend type Query {
-  getIsPostLiked(postId: String!): Boolean!
-  getIsCommentLiked(commentId: String!): Boolean!
+  getIsLiked(targetId: String!): Boolean!
 }

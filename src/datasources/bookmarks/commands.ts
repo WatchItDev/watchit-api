@@ -1,18 +1,15 @@
-import { DataSourceManager } from '../manager';
+import { DataSourceManager } from '../manager'
 
 export class BookmarksCommands extends DataSourceManager {
-    async toggleBookmark(user: string, postId: string): Promise<boolean> {
-        const postsBms  = this.fs('posts').sub(postId, 'bookmarks');
-        const userBms   = this.fs('users').sub(user,  'bookmarks');
-        const snap      = await (postsBms as any).ref.doc(user).get();
+    addBookmark(address: string, postId: string) {
+        return this.fs('bookmarks').create(`${address}_${postId}`, {
+            postId,
+            author: address,
+            createdAt: Date.now(),
+        })
+    }
 
-        if (snap.exists) {
-            await postsBms.delete(user);
-            await userBms.delete(postId);
-            return false;
-        }
-        await postsBms.create(user, {});
-        await userBms.create(postId, {});
-        return true;
+    removeBookmark(address: string, postId: string) {
+        return this.fs('bookmarks').delete(`${address}_${postId}`)
     }
 }
