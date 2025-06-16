@@ -83,6 +83,17 @@ export type EventLog = {
   type: Scalars['String']['output'];
 };
 
+export type ExecutionRule = {
+  __typename?: 'ExecutionRule';
+  cooldownSec?: Maybe<Scalars['Int']['output']>;
+  type: Scalars['String']['output'];
+};
+
+export type ExecutionRuleInput = {
+  cooldownSec?: InputMaybe<Scalars['Int']['input']>;
+  type: Scalars['String']['input'];
+};
+
 export type FilterInput = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -90,6 +101,30 @@ export type FilterInput = {
 
 export type FollowInput = {
   targetAddress: Scalars['String']['input'];
+};
+
+export type GameConfig = {
+  __typename?: 'GameConfig';
+  cooldownSec: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  lockedUntilRank: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type GuessMoviePayload = {
+  __typename?: 'GuessMoviePayload';
+  imageBlurUrl: Scalars['String']['output'];
+  nonce: Scalars['String']['output'];
+  options: Array<Scalars['String']['output']>;
+  sessionId: Scalars['String']['output'];
+};
+
+export type GuessMovieResult = {
+  __typename?: 'GuessMovieResult';
+  attemptsLeft: Scalars['Int']['output'];
+  correct: Scalars['Boolean']['output'];
+  finished: Scalars['Boolean']['output'];
+  xpAwarded: Scalars['Int']['output'];
 };
 
 export type LikeInput = {
@@ -125,20 +160,37 @@ export type MediaAttachmentInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  claimPerk: Scalars['Boolean']['output'];
   createComment: Comment;
+  createPerk: Perk;
   createPost: Post;
+  createRank: Rank;
   createUser: User;
+  deletePerk: Scalars['Boolean']['output'];
+  deleteRank: Scalars['Boolean']['output'];
   hideComment?: Maybe<Scalars['Boolean']['output']>;
   hidePost?: Maybe<Scalars['Boolean']['output']>;
   incrementPostView: Post;
   logAnonymousEvent: Scalars['Boolean']['output'];
   logEvent: Scalars['Boolean']['output'];
+  spinDailyWheel: SpinResult;
+  startGuessMovie: GuessMoviePayload;
+  startTrivia: TriviaQuestion;
+  submitGuessMovie: GuessMovieResult;
+  submitTriviaAnswer: TriviaAnswer;
   toggleBookmark: Scalars['Boolean']['output'];
   toggleFollow: Scalars['Boolean']['output'];
   toggleLike: Scalars['Boolean']['output'];
   updateComment: Comment;
+  updatePerk: Perk;
   updatePost: Post;
+  updateRank: Rank;
   updateUser: User;
+};
+
+
+export type MutationclaimPerkArgs = {
+  perkId: Scalars['ID']['input'];
 };
 
 
@@ -147,13 +199,33 @@ export type MutationcreateCommentArgs = {
 };
 
 
+export type MutationcreatePerkArgs = {
+  input: PerkCatalogInput;
+};
+
+
 export type MutationcreatePostArgs = {
   input: CreatePostInput;
 };
 
 
+export type MutationcreateRankArgs = {
+  input: RankInput;
+};
+
+
 export type MutationcreateUserArgs = {
   input: UserInput;
+};
+
+
+export type MutationdeletePerkArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationdeleteRankArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -182,6 +254,24 @@ export type MutationlogEventArgs = {
 };
 
 
+export type MutationstartTriviaArgs = {
+  difficulty?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationsubmitGuessMovieArgs = {
+  answerIndex: Scalars['Int']['input'];
+  sessionId: Scalars['ID']['input'];
+};
+
+
+export type MutationsubmitTriviaAnswerArgs = {
+  answerIndex: Scalars['Int']['input'];
+  questionId: Scalars['ID']['input'];
+  sessionId: Scalars['ID']['input'];
+};
+
+
 export type MutationtoggleBookmarkArgs = {
   input: BookmarkInput;
 };
@@ -202,14 +292,59 @@ export type MutationupdateCommentArgs = {
 };
 
 
+export type MutationupdatePerkArgs = {
+  id: Scalars['ID']['input'];
+  patch: PerkCatalogInput;
+};
+
+
 export type MutationupdatePostArgs = {
   input: UpdatePostInput;
+};
+
+
+export type MutationupdateRankArgs = {
+  id: Scalars['ID']['input'];
+  patch: RankInput;
 };
 
 
 export type MutationupdateUserArgs = {
   input: UpdateUserInput;
 };
+
+export type Perk = {
+  __typename?: 'Perk';
+  availableAt?: Maybe<Scalars['Timestamp']['output']>;
+  category: PerkCategory;
+  collectedAt?: Maybe<Scalars['Timestamp']['output']>;
+  cooldownRemaining: Scalars['Int']['output'];
+  enabled: Scalars['Boolean']['output'];
+  executionRule: ExecutionRule;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  reward: Reward;
+  rewardPreview: Scalars['String']['output'];
+  uiHint?: Maybe<Scalars['String']['output']>;
+  unlockRule: UnlockRule;
+};
+
+export type PerkCatalogInput = {
+  category: PerkCategory;
+  enabled: Scalars['Boolean']['input'];
+  executionRule: ExecutionRuleInput;
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  reward: RewardInput;
+  uiHint?: InputMaybe<Scalars['String']['input']>;
+  unlockRule: UnlockRuleInput;
+};
+
+export type PerkCategory =
+  | 'ACCESS'
+  | 'ECONOMY'
+  | 'GAMIFICATION'
+  | 'SOCIAL';
 
 export type Post = {
   __typename?: 'Post';
@@ -231,11 +366,13 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query';
+  getAchievements: UserAchievements;
   getActiveUsers: Array<User>;
   getAllPosts: Array<Post>;
   getBookmarksByPost: Array<User>;
   getBookmarksByUser: Array<Post>;
   getCommentsByPost: Array<Comment>;
+  getGamesAvailable: Array<GameConfig>;
   getIsBookmarked: Scalars['Boolean']['output'];
   getIsFollowing: Scalars['Boolean']['output'];
   getIsLiked: Scalars['Boolean']['output'];
@@ -246,10 +383,12 @@ export type Query = {
   getPosts: Array<Post>;
   getPostsByAuthor: Array<Post>;
   getProfileViews: Scalars['Int']['output'];
+  getRanksCatalog: Array<Rank>;
   getRecentPosts: Array<Post>;
   getRecentUsers: Array<User>;
   getRepliesByComment: Array<Comment>;
   getTargetEvents: Array<EventLog>;
+  getUnlockedPerks: Array<Perk>;
   getUser?: Maybe<User>;
   getUserBookmarks: Array<Post>;
   getUserEvents: Array<EventLog>;
@@ -257,6 +396,11 @@ export type Query = {
   getUserFollowing: Array<User>;
   getUserXPHistory: Array<XPEntry>;
   getUsers: Array<User>;
+};
+
+
+export type QuerygetAchievementsArgs = {
+  address: Scalars['String']['input'];
 };
 
 
@@ -285,6 +429,11 @@ export type QuerygetBookmarksByUserArgs = {
 export type QuerygetCommentsByPostArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   postId: Scalars['String']['input'];
+};
+
+
+export type QuerygetGamesAvailableArgs = {
+  address: Scalars['String']['input'];
 };
 
 
@@ -365,6 +514,13 @@ export type QuerygetTargetEventsArgs = {
 };
 
 
+export type QuerygetUnlockedPerksArgs = {
+  address: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QuerygetUserArgs = {
   input: UserByInput;
 };
@@ -408,6 +564,38 @@ export type QuerygetUsersArgs = {
   query: Scalars['String']['input'];
 };
 
+export type Rank = {
+  __typename?: 'Rank';
+  badgeUrl: Scalars['String']['output'];
+  colorTheme: Scalars['String']['output'];
+  createdAt: Scalars['Timestamp']['output'];
+  id: Scalars['String']['output'];
+  minXp: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  updatedAt: Scalars['Timestamp']['output'];
+};
+
+export type RankInput = {
+  badgeUrl: Scalars['String']['input'];
+  colorTheme: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+  minXp: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type Reward = {
+  __typename?: 'Reward';
+  action: Scalars['String']['output'];
+  amount?: Maybe<Scalars['Int']['output']>;
+  tokenId?: Maybe<Scalars['String']['output']>;
+};
+
+export type RewardInput = {
+  action: Scalars['String']['input'];
+  amount?: InputMaybe<Scalars['Int']['input']>;
+  tokenId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type SocialLink = {
   __typename?: 'SocialLink';
   platform: Scalars['String']['output'];
@@ -419,9 +607,53 @@ export type SocialLinkInput = {
   url: Scalars['String']['input'];
 };
 
+export type SpinResult = {
+  __typename?: 'SpinResult';
+  cooldownUntil: Scalars['Timestamp']['output'];
+  emoji: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  outcomeId: Scalars['String']['output'];
+  rewardApplied: Scalars['Boolean']['output'];
+};
+
 export type TargetType =
   | 'COMMENT'
   | 'POST';
+
+export type TriviaAnswer = {
+  __typename?: 'TriviaAnswer';
+  correct: Scalars['Boolean']['output'];
+  finished: Scalars['Boolean']['output'];
+  nextQuestion?: Maybe<TriviaQuestion>;
+  xpAwarded: Scalars['Int']['output'];
+};
+
+export type TriviaQuestion = {
+  __typename?: 'TriviaQuestion';
+  image?: Maybe<Scalars['String']['output']>;
+  nonce: Scalars['String']['output'];
+  options: Array<Scalars['String']['output']>;
+  questionId: Scalars['String']['output'];
+  sessionId: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+};
+
+export type UnlockRule = {
+  __typename?: 'UnlockRule';
+  action?: Maybe<Scalars['String']['output']>;
+  on: Scalars['String']['output'];
+  rankId?: Maybe<Scalars['String']['output']>;
+  times?: Maybe<Scalars['Int']['output']>;
+  window?: Maybe<Scalars['String']['output']>;
+};
+
+export type UnlockRuleInput = {
+  action?: InputMaybe<Scalars['String']['input']>;
+  on: Scalars['String']['input'];
+  rankId?: InputMaybe<Scalars['String']['input']>;
+  times?: InputMaybe<Scalars['Int']['input']>;
+  window?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type UpdateCommentInput = {
   commentId: Scalars['String']['input'];
@@ -465,6 +697,16 @@ export type User = {
   username: Scalars['String']['output'];
   verified: Scalars['Boolean']['output'];
   xpBalance: Scalars['Int']['output'];
+  xpTotal: Scalars['Int']['output'];
+};
+
+export type UserAchievements = {
+  __typename?: 'UserAchievements';
+  currentRank: Rank;
+  nextRank?: Maybe<Rank>;
+  progressPct: Scalars['Float']['output'];
+  xpBalance: Scalars['Int']['output'];
+  xpRemaining: Scalars['Int']['output'];
   xpTotal: Scalars['Int']['output'];
 };
 
@@ -584,30 +826,49 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   EventLog: ResolverTypeWrapper<EventLog>;
+  ExecutionRule: ResolverTypeWrapper<ExecutionRule>;
+  ExecutionRuleInput: ExecutionRuleInput;
   FilterInput: FilterInput;
   FollowInput: FollowInput;
+  GameConfig: ResolverTypeWrapper<GameConfig>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  GuessMoviePayload: ResolverTypeWrapper<GuessMoviePayload>;
+  GuessMovieResult: ResolverTypeWrapper<GuessMovieResult>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   LikeInput: LikeInput;
   LogEventInput: LogEventInput;
   MediaAttachment: ResolverTypeWrapper<MediaAttachment>;
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: ResolverTypeWrapper<{}>;
+  Perk: ResolverTypeWrapper<Omit<Perk, 'category'> & { category: ResolversTypes['PerkCategory'] }>;
+  PerkCatalogInput: PerkCatalogInput;
+  PerkCategory: ResolverTypeWrapper<'GAMIFICATION' | 'ECONOMY' | 'SOCIAL' | 'ACCESS'>;
   Post: ResolverTypeWrapper<Omit<Post, 'visibility'> & { visibility: ResolversTypes['VisibilitySetting'] }>;
   Query: ResolverTypeWrapper<{}>;
+  Rank: ResolverTypeWrapper<Rank>;
+  RankInput: RankInput;
+  Reward: ResolverTypeWrapper<Reward>;
+  RewardInput: RewardInput;
   SocialLink: ResolverTypeWrapper<SocialLink>;
   SocialLinkInput: SocialLinkInput;
+  SpinResult: ResolverTypeWrapper<SpinResult>;
   TargetType: ResolverTypeWrapper<'POST' | 'COMMENT'>;
   Timestamp: ResolverTypeWrapper<Scalars['Timestamp']['output']>;
+  TriviaAnswer: ResolverTypeWrapper<TriviaAnswer>;
+  TriviaQuestion: ResolverTypeWrapper<TriviaQuestion>;
+  UnlockRule: ResolverTypeWrapper<UnlockRule>;
+  UnlockRuleInput: UnlockRuleInput;
   UpdateCommentInput: UpdateCommentInput;
   UpdatePostInput: UpdatePostInput;
   UpdateUserInput: UpdateUserInput;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
+  UserAchievements: ResolverTypeWrapper<UserAchievements>;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   UserByInput: UserByInput;
   UserInput: UserInput;
   VisibilitySetting: ResolverTypeWrapper<'PUBLIC' | 'FOLLOWERS_ONLY' | 'PRIVATE'>;
   XPEntry: ResolverTypeWrapper<XPEntry>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -623,28 +884,46 @@ export type ResolversParentTypes = {
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
   EventLog: EventLog;
+  ExecutionRule: ExecutionRule;
+  ExecutionRuleInput: ExecutionRuleInput;
   FilterInput: FilterInput;
   FollowInput: FollowInput;
+  GameConfig: GameConfig;
+  ID: Scalars['ID']['output'];
+  GuessMoviePayload: GuessMoviePayload;
+  GuessMovieResult: GuessMovieResult;
   JSON: Scalars['JSON']['output'];
   LikeInput: LikeInput;
   LogEventInput: LogEventInput;
   MediaAttachment: MediaAttachment;
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: {};
+  Perk: Perk;
+  PerkCatalogInput: PerkCatalogInput;
   Post: Post;
   Query: {};
+  Rank: Rank;
+  RankInput: RankInput;
+  Reward: Reward;
+  RewardInput: RewardInput;
   SocialLink: SocialLink;
   SocialLinkInput: SocialLinkInput;
+  SpinResult: SpinResult;
   Timestamp: Scalars['Timestamp']['output'];
+  TriviaAnswer: TriviaAnswer;
+  TriviaQuestion: TriviaQuestion;
+  UnlockRule: UnlockRule;
+  UnlockRuleInput: UnlockRuleInput;
   UpdateCommentInput: UpdateCommentInput;
   UpdatePostInput: UpdatePostInput;
   UpdateUserInput: UpdateUserInput;
   Upload: Scalars['Upload']['output'];
   User: User;
+  UserAchievements: UserAchievements;
+  Float: Scalars['Float']['output'];
   UserByInput: UserByInput;
   UserInput: UserInput;
   XPEntry: XPEntry;
-  ID: Scalars['ID']['output'];
 };
 
 export type cacheControlDirectiveArgs = {
@@ -693,6 +972,36 @@ export type EventLogResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ExecutionRuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExecutionRule'] = ResolversParentTypes['ExecutionRule']> = {
+  cooldownSec?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GameConfigResolvers<ContextType = any, ParentType extends ResolversParentTypes['GameConfig'] = ResolversParentTypes['GameConfig']> = {
+  cooldownSec?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lockedUntilRank?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  version?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GuessMoviePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['GuessMoviePayload'] = ResolversParentTypes['GuessMoviePayload']> = {
+  imageBlurUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  nonce?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  options?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  sessionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GuessMovieResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['GuessMovieResult'] = ResolversParentTypes['GuessMovieResult']> = {
+  attemptsLeft?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  correct?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  finished?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  xpAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
@@ -707,21 +1016,51 @@ export type MediaAttachmentResolvers<ContextType = any, ParentType extends Resol
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  claimPerk?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationclaimPerkArgs, 'perkId'>>;
   createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationcreateCommentArgs, 'input'>>;
+  createPerk?: Resolver<ResolversTypes['Perk'], ParentType, ContextType, RequireFields<MutationcreatePerkArgs, 'input'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationcreatePostArgs, 'input'>>;
+  createRank?: Resolver<ResolversTypes['Rank'], ParentType, ContextType, RequireFields<MutationcreateRankArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationcreateUserArgs, 'input'>>;
+  deletePerk?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeletePerkArgs, 'id'>>;
+  deleteRank?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeleteRankArgs, 'id'>>;
   hideComment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationhideCommentArgs, 'commentId'>>;
   hidePost?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationhidePostArgs, 'postId'>>;
   incrementPostView?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationincrementPostViewArgs, 'postId'>>;
   logAnonymousEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogAnonymousEventArgs, 'input'>>;
   logEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogEventArgs, 'input'>>;
+  spinDailyWheel?: Resolver<ResolversTypes['SpinResult'], ParentType, ContextType>;
+  startGuessMovie?: Resolver<ResolversTypes['GuessMoviePayload'], ParentType, ContextType>;
+  startTrivia?: Resolver<ResolversTypes['TriviaQuestion'], ParentType, ContextType, RequireFields<MutationstartTriviaArgs, 'difficulty'>>;
+  submitGuessMovie?: Resolver<ResolversTypes['GuessMovieResult'], ParentType, ContextType, RequireFields<MutationsubmitGuessMovieArgs, 'answerIndex' | 'sessionId'>>;
+  submitTriviaAnswer?: Resolver<ResolversTypes['TriviaAnswer'], ParentType, ContextType, RequireFields<MutationsubmitTriviaAnswerArgs, 'answerIndex' | 'questionId' | 'sessionId'>>;
   toggleBookmark?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleBookmarkArgs, 'input'>>;
   toggleFollow?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleFollowArgs, 'input'>>;
   toggleLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleLikeArgs, 'input'>>;
   updateComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationupdateCommentArgs, 'input'>>;
+  updatePerk?: Resolver<ResolversTypes['Perk'], ParentType, ContextType, RequireFields<MutationupdatePerkArgs, 'id' | 'patch'>>;
   updatePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationupdatePostArgs, 'input'>>;
+  updateRank?: Resolver<ResolversTypes['Rank'], ParentType, ContextType, RequireFields<MutationupdateRankArgs, 'id' | 'patch'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationupdateUserArgs, 'input'>>;
 };
+
+export type PerkResolvers<ContextType = any, ParentType extends ResolversParentTypes['Perk'] = ResolversParentTypes['Perk']> = {
+  availableAt?: Resolver<Maybe<ResolversTypes['Timestamp']>, ParentType, ContextType>;
+  category?: Resolver<ResolversTypes['PerkCategory'], ParentType, ContextType>;
+  collectedAt?: Resolver<Maybe<ResolversTypes['Timestamp']>, ParentType, ContextType>;
+  cooldownRemaining?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  enabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  executionRule?: Resolver<ResolversTypes['ExecutionRule'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  reward?: Resolver<ResolversTypes['Reward'], ParentType, ContextType>;
+  rewardPreview?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uiHint?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  unlockRule?: Resolver<ResolversTypes['UnlockRule'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PerkCategoryResolvers = EnumResolverSignature<{ ACCESS?: any, ECONOMY?: any, GAMIFICATION?: any, SOCIAL?: any }, ResolversTypes['PerkCategory']>;
 
 export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
@@ -742,11 +1081,13 @@ export type PostResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getAchievements?: Resolver<ResolversTypes['UserAchievements'], ParentType, ContextType, RequireFields<QuerygetAchievementsArgs, 'address'>>;
   getActiveUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetActiveUsersArgs>>;
   getAllPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetAllPostsArgs>>;
   getBookmarksByPost?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetBookmarksByPostArgs, 'limit' | 'postId'>>;
   getBookmarksByUser?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetBookmarksByUserArgs, 'address' | 'limit'>>;
   getCommentsByPost?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetCommentsByPostArgs, 'postId'>>;
+  getGamesAvailable?: Resolver<Array<ResolversTypes['GameConfig']>, ParentType, ContextType, RequireFields<QuerygetGamesAvailableArgs, 'address'>>;
   getIsBookmarked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsBookmarkedArgs, 'postId'>>;
   getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'targetAddress'>>;
   getIsLiked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsLikedArgs, 'targetId'>>;
@@ -757,10 +1098,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostsArgs, 'query'>>;
   getPostsByAuthor?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostsByAuthorArgs, 'author'>>;
   getProfileViews?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<QuerygetProfileViewsArgs, 'address'>>;
+  getRanksCatalog?: Resolver<Array<ResolversTypes['Rank']>, ParentType, ContextType>;
   getRecentPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetRecentPostsArgs>>;
   getRecentUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetRecentUsersArgs>>;
   getRepliesByComment?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetRepliesByCommentArgs, 'commentId'>>;
   getTargetEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetTargetEventsArgs, 'limit' | 'offset' | 'targetId'>>;
+  getUnlockedPerks?: Resolver<Array<ResolversTypes['Perk']>, ParentType, ContextType, RequireFields<QuerygetUnlockedPerksArgs, 'address' | 'limit' | 'offset'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserArgs, 'input'>>;
   getUserBookmarks?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetUserBookmarksArgs, 'address'>>;
   getUserEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetUserEventsArgs, 'address' | 'limit' | 'offset'>>;
@@ -770,9 +1113,36 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUsersArgs, 'query'>>;
 };
 
+export type RankResolvers<ContextType = any, ParentType extends ResolversParentTypes['Rank'] = ResolversParentTypes['Rank']> = {
+  badgeUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  colorTheme?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  minXp?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RewardResolvers<ContextType = any, ParentType extends ResolversParentTypes['Reward'] = ResolversParentTypes['Reward']> = {
+  action?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  amount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  tokenId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type SocialLinkResolvers<ContextType = any, ParentType extends ResolversParentTypes['SocialLink'] = ResolversParentTypes['SocialLink']> = {
   platform?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SpinResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpinResult'] = ResolversParentTypes['SpinResult']> = {
+  cooldownUntil?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  emoji?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  outcomeId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  rewardApplied?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -781,6 +1151,33 @@ export type TargetTypeResolvers = EnumResolverSignature<{ COMMENT?: any, POST?: 
 export interface TimestampScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Timestamp'], any> {
   name: 'Timestamp';
 }
+
+export type TriviaAnswerResolvers<ContextType = any, ParentType extends ResolversParentTypes['TriviaAnswer'] = ResolversParentTypes['TriviaAnswer']> = {
+  correct?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  finished?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  nextQuestion?: Resolver<Maybe<ResolversTypes['TriviaQuestion']>, ParentType, ContextType>;
+  xpAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TriviaQuestionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TriviaQuestion'] = ResolversParentTypes['TriviaQuestion']> = {
+  image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  nonce?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  options?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  questionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  sessionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UnlockRuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['UnlockRule'] = ResolversParentTypes['UnlockRule']> = {
+  action?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  on?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  rankId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  times?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  window?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
   name: 'Upload';
@@ -808,6 +1205,16 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserAchievementsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserAchievements'] = ResolversParentTypes['UserAchievements']> = {
+  currentRank?: Resolver<ResolversTypes['Rank'], ParentType, ContextType>;
+  nextRank?: Resolver<Maybe<ResolversTypes['Rank']>, ParentType, ContextType>;
+  progressPct?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  xpBalance?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  xpRemaining?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  xpTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type VisibilitySettingResolvers = EnumResolverSignature<{ FOLLOWERS_ONLY?: any, PRIVATE?: any, PUBLIC?: any }, ResolversTypes['VisibilitySetting']>;
 
 export type XPEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['XPEntry'] = ResolversParentTypes['XPEntry']> = {
@@ -829,16 +1236,29 @@ export type Resolvers<ContextType = any> = {
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
   EventLog?: EventLogResolvers<ContextType>;
+  ExecutionRule?: ExecutionRuleResolvers<ContextType>;
+  GameConfig?: GameConfigResolvers<ContextType>;
+  GuessMoviePayload?: GuessMoviePayloadResolvers<ContextType>;
+  GuessMovieResult?: GuessMovieResultResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   MediaAttachment?: MediaAttachmentResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Perk?: PerkResolvers<ContextType>;
+  PerkCategory?: PerkCategoryResolvers;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Rank?: RankResolvers<ContextType>;
+  Reward?: RewardResolvers<ContextType>;
   SocialLink?: SocialLinkResolvers<ContextType>;
+  SpinResult?: SpinResultResolvers<ContextType>;
   TargetType?: TargetTypeResolvers;
   Timestamp?: GraphQLScalarType;
+  TriviaAnswer?: TriviaAnswerResolvers<ContextType>;
+  TriviaQuestion?: TriviaQuestionResolvers<ContextType>;
+  UnlockRule?: UnlockRuleResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
+  UserAchievements?: UserAchievementsResolvers<ContextType>;
   VisibilitySetting?: VisibilitySettingResolvers;
   XPEntry?: XPEntryResolvers<ContextType>;
 };

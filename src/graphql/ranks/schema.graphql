@@ -1,0 +1,41 @@
+###########################
+#          RANKS          #
+###########################
+
+type Rank {
+  id: String!
+  name: String!
+  badgeUrl: String!
+  colorTheme: String!
+  minXp: Int!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+}
+
+input RankInput {
+  id:         String!  @constraint(minLength: 1)
+  name:       String!  @constraint(minLength: 1)
+  badgeUrl:   String!  @constraint(format: "uri")
+  colorTheme: String!  @constraint(minLength: 1)
+  minXp:      Int!     @constraint(min: 0)
+}
+
+type UserAchievements {
+  currentRank:  Rank!
+  nextRank:     Rank
+  xpBalance:    Int!
+  xpTotal:      Int!
+  progressPct:  Float!
+  xpRemaining:  Int!
+}
+
+extend type Query {
+  getRanksCatalog:   [Rank!]!
+  getAchievements(address: String! @constraint(minLength: 1)): UserAchievements!
+}
+
+extend type Mutation {
+  createRank(input: RankInput!): Rank!          # admin
+  updateRank(id: ID!, patch: RankInput!): Rank! # admin
+  deleteRank(id: ID!): Boolean!                 # admin
+}

@@ -1,0 +1,72 @@
+###########################
+#          GAMES          #
+###########################
+
+type GameConfig {
+  id: ID!
+  version: Int!
+  lockedUntilRank: String!
+  cooldownSec: Int!
+}
+
+#–––– DAILY WHEEL ––––
+type SpinResult {
+  outcomeId: String!
+  label: String!
+  emoji: String!
+  rewardApplied: Boolean!
+  cooldownUntil: Timestamp!
+}
+
+#–––– TRIVIA ––––
+type TriviaQuestion {
+  sessionId: String!
+  questionId: String!
+  text: String!
+  options: [String!]!
+  image: String
+  nonce: String!
+}
+
+type TriviaAnswer {
+  correct: Boolean!
+  xpAwarded: Int!
+  nextQuestion: TriviaQuestion
+  finished: Boolean!
+}
+
+#–––– GUESS-THE-MOVIE ––––
+type GuessMoviePayload {
+  sessionId: String!
+  imageBlurUrl: String!
+  options: [String!]!
+  nonce: String!
+}
+
+type GuessMovieResult {
+  correct: Boolean!
+  attemptsLeft: Int!
+  xpAwarded: Int!
+  finished: Boolean!
+}
+
+extend type Query {
+  getGamesAvailable(address: String! @constraint(minLength: 1)): [GameConfig!]!
+}
+
+extend type Mutation {
+  # Daily Wheel
+  spinDailyWheel: SpinResult!
+
+  # Trivia
+  startTrivia(difficulty: Int = 1 @constraint(min: 1, max: 3)): TriviaQuestion!
+  submitTriviaAnswer(
+    sessionId:  ID!
+    questionId: ID!
+    answerIndex:Int! @constraint(min: 0, max: 10)
+  ): TriviaAnswer!
+
+  # Guess the Movie
+  startGuessMovie: GuessMoviePayload!
+  submitGuessMovie(sessionId: ID!, answerIndex: Int! @constraint(min: 0, max: 10)): GuessMovieResult!
+}

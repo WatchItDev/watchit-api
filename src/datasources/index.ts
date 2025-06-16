@@ -9,6 +9,9 @@ import LikesDS   from './likes';
 import XPDS    from './xp';
 import SynapseDS    from './synapse';
 import LogsDS    from './logs';
+import RanksDS  from './ranks';
+import PerksDS  from './perks';
+import GamesDS  from './games';
 
 export const DataSources = (store: FireStore) => ({
     Users:     new UsersDS(store),
@@ -20,7 +23,10 @@ export const DataSources = (store: FireStore) => ({
     Likes:     new LikesDS(store),
     XP:        new XPDS(store),
     SynapseDS: new SynapseDS(store),
-    Logs: new LogsDS(store),
+    Logs:      new LogsDS(store),
+    Ranks:     new RanksDS(store),
+    Perks:     new PerksDS(store),
+    Games:     new GamesDS(store),
 });
 
 export type DataSourcesType = ReturnType<typeof DataSources>;

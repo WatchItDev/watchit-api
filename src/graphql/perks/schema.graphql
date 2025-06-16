@@ -1,0 +1,84 @@
+###########################
+#          PERKS          #
+###########################
+
+enum PerkCategory { GAMIFICATION ECONOMY SOCIAL ACCESS }
+
+type UnlockRule {
+  on:      String!  # "RANK_UP" | "ACTION" | "ACTION_COUNT" | "ALWAYS"
+  rankId:  String
+  action:  String
+  times:   Int
+  window:  String   # "24h" | "7d" | "∞"
+}
+
+type ExecutionRule {
+  type:        String!   # "IMMEDIATE" | "ON_CLAIM" | "ON_COOLDOWN"
+  cooldownSec: Int
+}
+
+type Reward {
+  action: String!        # "ADD_XP" | "ADD_MMC" | "MINT_NFT"
+  amount: Int
+  tokenId: String
+}
+
+type Perk {
+  id: ID!
+  name: String!
+  uiHint: String
+  category: PerkCategory!
+  collectedAt: Timestamp
+  availableAt: Timestamp
+  cooldownRemaining: Int!
+  rewardPreview: String!
+  unlockRule:   UnlockRule!
+  executionRule:ExecutionRule!
+  reward:       Reward!
+  enabled:      Boolean!
+}
+
+input UnlockRuleInput {
+  on:      String!  # "RANK_UP" | "ACTION" | "ACTION_COUNT" | "ALWAYS"
+  rankId:  String
+  action:  String
+  times:   Int
+  window:  String   # "24h" | "7d" | "∞"
+}
+
+input ExecutionRuleInput {
+  type:        String!   # "IMMEDIATE" | "ON_CLAIM" | "ON_COOLDOWN"
+  cooldownSec: Int
+}
+
+input RewardInput {
+  action: String!        # "ADD_XP" | "ADD_MMC" | "MINT_NFT"
+  amount: Int
+  tokenId: String
+}
+
+input PerkCatalogInput {
+  id:           String! @constraint(minLength: 1)
+  name:         String! @constraint(minLength: 1)
+  uiHint:       String
+  category:     PerkCategory!
+  unlockRule:   UnlockRuleInput!
+  executionRule:ExecutionRuleInput!
+  reward:       RewardInput!
+  enabled:      Boolean!
+}
+
+extend type Query {
+  getUnlockedPerks(
+    address: String! @constraint(minLength: 1)
+    limit:   Int = 50 @constraint(min: 1, max: 200)
+    offset:  Int = 0  @constraint(min: 0)
+  ): [Perk!]!
+}
+
+extend type Mutation {
+  claimPerk(perkId: ID!): Boolean!
+  createPerk(input: PerkCatalogInput!): Perk!
+  updatePerk(id: ID!, patch: PerkCatalogInput!): Perk!
+  deletePerk(id: ID!): Boolean!
+}

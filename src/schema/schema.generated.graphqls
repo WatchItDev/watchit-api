@@ -62,6 +62,16 @@ type EventLog {
   type: String!
 }
 
+type ExecutionRule {
+  cooldownSec: Int
+  type: String!
+}
+
+input ExecutionRuleInput {
+  cooldownSec: Int
+  type: String!
+}
+
 input FilterInput {
   limit: Int
   offset: Int
@@ -69,6 +79,27 @@ input FilterInput {
 
 input FollowInput {
   targetAddress: String!
+}
+
+type GameConfig {
+  cooldownSec: Int!
+  id: ID!
+  lockedUntilRank: String!
+  version: Int!
+}
+
+type GuessMoviePayload {
+  imageBlurUrl: String!
+  nonce: String!
+  options: [String!]!
+  sessionId: String!
+}
+
+type GuessMovieResult {
+  attemptsLeft: Int!
+  correct: Boolean!
+  finished: Boolean!
+  xpAwarded: Int!
 }
 
 scalar JSON
@@ -104,20 +135,65 @@ input MediaAttachmentInput {
 }
 
 type Mutation {
+  claimPerk(perkId: ID!): Boolean!
   createComment(input: CreateCommentInput!): Comment!
+  createPerk(input: PerkCatalogInput!): Perk!
   createPost(input: CreatePostInput!): Post!
+  createRank(input: RankInput!): Rank!
   createUser(input: UserInput!): User!
+  deletePerk(id: ID!): Boolean!
+  deleteRank(id: ID!): Boolean!
   hideComment(commentId: String!): Boolean
   hidePost(postId: String!): Boolean
   incrementPostView(postId: String!): Post!
   logAnonymousEvent(input: LogEventInput!): Boolean!
   logEvent(input: LogEventInput!): Boolean!
+  spinDailyWheel: SpinResult!
+  startGuessMovie: GuessMoviePayload!
+  startTrivia(difficulty: Int = 1): TriviaQuestion!
+  submitGuessMovie(answerIndex: Int!, sessionId: ID!): GuessMovieResult!
+  submitTriviaAnswer(answerIndex: Int!, questionId: ID!, sessionId: ID!): TriviaAnswer!
   toggleBookmark(input: BookmarkInput!): Boolean!
   toggleFollow(input: FollowInput!): Boolean!
   toggleLike(input: LikeInput!): Boolean!
   updateComment(input: UpdateCommentInput!): Comment!
+  updatePerk(id: ID!, patch: PerkCatalogInput!): Perk!
   updatePost(input: UpdatePostInput!): Post!
+  updateRank(id: ID!, patch: RankInput!): Rank!
   updateUser(input: UpdateUserInput!): User!
+}
+
+type Perk {
+  availableAt: Timestamp
+  category: PerkCategory!
+  collectedAt: Timestamp
+  cooldownRemaining: Int!
+  enabled: Boolean!
+  executionRule: ExecutionRule!
+  id: ID!
+  name: String!
+  reward: Reward!
+  rewardPreview: String!
+  uiHint: String
+  unlockRule: UnlockRule!
+}
+
+input PerkCatalogInput {
+  category: PerkCategory!
+  enabled: Boolean!
+  executionRule: ExecutionRuleInput!
+  id: String!
+  name: String!
+  reward: RewardInput!
+  uiHint: String
+  unlockRule: UnlockRuleInput!
+}
+
+enum PerkCategory {
+  ACCESS
+  ECONOMY
+  GAMIFICATION
+  SOCIAL
 }
 
 type Post {
@@ -138,11 +214,13 @@ type Post {
 }
 
 type Query {
+  getAchievements(address: String!): UserAchievements!
   getActiveUsers(limit: Int): [User!]!
   getAllPosts(limit: Int): [Post!]!
   getBookmarksByPost(limit: Int = 50, postId: String!): [User!]!
   getBookmarksByUser(address: String!, limit: Int = 50): [Post!]!
   getCommentsByPost(limit: Int, postId: String!): [Comment!]!
+  getGamesAvailable(address: String!): [GameConfig!]!
   getIsBookmarked(postId: String!): Boolean!
   getIsFollowing(targetAddress: String!): Boolean!
   getIsLiked(targetId: String!): Boolean!
@@ -153,10 +231,12 @@ type Query {
   getPosts(limit: Int, query: String!): [Post!]!
   getPostsByAuthor(author: String!, limit: Int): [Post!]!
   getProfileViews(address: String!): Int!
+  getRanksCatalog: [Rank!]!
   getRecentPosts(limit: Int): [Post!]!
   getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
   getTargetEvents(limit: Int = 50, offset: Int = 0, targetId: String!, targetType: String, type: String): [EventLog!]!
+  getUnlockedPerks(address: String!, limit: Int = 50, offset: Int = 0): [Perk!]!
   getUser(input: UserByInput!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!
   getUserEvents(address: String!, limit: Int = 50, offset: Int = 0, type: String): [EventLog!]!
@@ -164,6 +244,36 @@ type Query {
   getUserFollowing(address: String!, limit: Int): [User!]!
   getUserXPHistory(address: String!, limit: Int = 50, offset: Int = 0): [XPEntry!]!
   getUsers(limit: Int, query: String!): [User!]!
+}
+
+type Rank {
+  badgeUrl: String!
+  colorTheme: String!
+  createdAt: Timestamp!
+  id: String!
+  minXp: Int!
+  name: String!
+  updatedAt: Timestamp!
+}
+
+input RankInput {
+  badgeUrl: String!
+  colorTheme: String!
+  id: String!
+  minXp: Int!
+  name: String!
+}
+
+type Reward {
+  action: String!
+  amount: Int
+  tokenId: String
+}
+
+input RewardInput {
+  action: String!
+  amount: Int
+  tokenId: String
 }
 
 type SocialLink {
@@ -176,6 +286,14 @@ input SocialLinkInput {
   url: String!
 }
 
+type SpinResult {
+  cooldownUntil: Timestamp!
+  emoji: String!
+  label: String!
+  outcomeId: String!
+  rewardApplied: Boolean!
+}
+
 enum TargetType {
   COMMENT
   POST
@@ -183,6 +301,38 @@ enum TargetType {
 
 """Unix epoch in milliseconds (number)."""
 scalar Timestamp
+
+type TriviaAnswer {
+  correct: Boolean!
+  finished: Boolean!
+  nextQuestion: TriviaQuestion
+  xpAwarded: Int!
+}
+
+type TriviaQuestion {
+  image: String
+  nonce: String!
+  options: [String!]!
+  questionId: String!
+  sessionId: String!
+  text: String!
+}
+
+type UnlockRule {
+  action: String
+  on: String!
+  rankId: String
+  times: Int
+  window: String
+}
+
+input UnlockRuleInput {
+  action: String
+  on: String!
+  rankId: String
+  times: Int
+  window: String
+}
 
 input UpdateCommentInput {
   commentId: String!
@@ -227,6 +377,15 @@ type User {
   username: String!
   verified: Boolean!
   xpBalance: Int!
+  xpTotal: Int!
+}
+
+type UserAchievements {
+  currentRank: Rank!
+  nextRank: Rank
+  progressPct: Float!
+  xpBalance: Int!
+  xpRemaining: Int!
   xpTotal: Int!
 }
 

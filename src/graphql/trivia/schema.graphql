@@ -1,0 +1,15 @@
+###########################
+#       DAILY WHEEL       #
+###########################
+
+type SpinResult {
+  outcomeId: String!
+  label: String!
+  emoji: String!
+  rewardApplied: Boolean!
+  cooldownUntil: Timestamp!
+}
+
+extend type Mutation {
+  spinDailyWheel: SpinResult!
+}
