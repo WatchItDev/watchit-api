@@ -200,7 +200,7 @@ export type MutationcreateCommentArgs = {
 
 
 export type MutationcreatePerkArgs = {
-  input: PerkCatalogInput;
+  input: PerkInput;
 };
 
 
@@ -294,7 +294,7 @@ export type MutationupdateCommentArgs = {
 
 export type MutationupdatePerkArgs = {
   id: Scalars['ID']['input'];
-  patch: PerkCatalogInput;
+  patch: PerkInput;
 };
 
 
@@ -322,6 +322,7 @@ export type Perk = {
   enabled: Scalars['Boolean']['output'];
   executionRule: ExecutionRule;
   id: Scalars['ID']['output'];
+  minRankId: Scalars['String']['output'];
   name: Scalars['String']['output'];
   reward: Reward;
   rewardPreview: Scalars['String']['output'];
@@ -329,22 +330,23 @@ export type Perk = {
   unlockRule: UnlockRule;
 };
 
-export type PerkCatalogInput = {
-  category: PerkCategory;
-  enabled: Scalars['Boolean']['input'];
-  executionRule: ExecutionRuleInput;
-  id: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  reward: RewardInput;
-  uiHint?: InputMaybe<Scalars['String']['input']>;
-  unlockRule: UnlockRuleInput;
-};
-
 export type PerkCategory =
   | 'ACCESS'
   | 'ECONOMY'
   | 'GAMIFICATION'
   | 'SOCIAL';
+
+export type PerkInput = {
+  category: PerkCategory;
+  enabled: Scalars['Boolean']['input'];
+  executionRule: ExecutionRuleInput;
+  id: Scalars['String']['input'];
+  minRankId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  reward: RewardInput;
+  uiHint?: InputMaybe<Scalars['String']['input']>;
+  unlockRule: UnlockRuleInput;
+};
 
 export type Post = {
   __typename?: 'Post';
@@ -394,6 +396,7 @@ export type Query = {
   getUserEvents: Array<EventLog>;
   getUserFollowers: Array<User>;
   getUserFollowing: Array<User>;
+  getUserRanks: Array<UserRank>;
   getUserXPHistory: Array<XPEntry>;
   getUsers: Array<User>;
 };
@@ -552,6 +555,11 @@ export type QuerygetUserFollowingArgs = {
 };
 
 
+export type QuerygetUserRanksArgs = {
+  address: Scalars['String']['input'];
+};
+
+
 export type QuerygetUserXPHistoryArgs = {
   address: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -572,6 +580,7 @@ export type Rank = {
   id: Scalars['String']['output'];
   minXp: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+  order: Scalars['Int']['output'];
   updatedAt: Scalars['Timestamp']['output'];
 };
 
@@ -581,6 +590,7 @@ export type RankInput = {
   id: Scalars['String']['input'];
   minXp: Scalars['Int']['input'];
   name: Scalars['String']['input'];
+  order: Scalars['Int']['input'];
 };
 
 export type Reward = {
@@ -725,6 +735,13 @@ export type UserInput = {
   username: Scalars['String']['input'];
 };
 
+export type UserRank = {
+  __typename?: 'UserRank';
+  achievedAt: Scalars['Timestamp']['output'];
+  rankId: Scalars['String']['output'];
+  user: Scalars['String']['output'];
+};
+
 export type VisibilitySetting =
   | 'FOLLOWERS_ONLY'
   | 'PRIVATE'
@@ -841,8 +858,8 @@ export type ResolversTypes = {
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: ResolverTypeWrapper<{}>;
   Perk: ResolverTypeWrapper<Omit<Perk, 'category'> & { category: ResolversTypes['PerkCategory'] }>;
-  PerkCatalogInput: PerkCatalogInput;
   PerkCategory: ResolverTypeWrapper<'GAMIFICATION' | 'ECONOMY' | 'SOCIAL' | 'ACCESS'>;
+  PerkInput: PerkInput;
   Post: ResolverTypeWrapper<Omit<Post, 'visibility'> & { visibility: ResolversTypes['VisibilitySetting'] }>;
   Query: ResolverTypeWrapper<{}>;
   Rank: ResolverTypeWrapper<Rank>;
@@ -867,6 +884,7 @@ export type ResolversTypes = {
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   UserByInput: UserByInput;
   UserInput: UserInput;
+  UserRank: ResolverTypeWrapper<UserRank>;
   VisibilitySetting: ResolverTypeWrapper<'PUBLIC' | 'FOLLOWERS_ONLY' | 'PRIVATE'>;
   XPEntry: ResolverTypeWrapper<XPEntry>;
 };
@@ -899,7 +917,7 @@ export type ResolversParentTypes = {
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: {};
   Perk: Perk;
-  PerkCatalogInput: PerkCatalogInput;
+  PerkInput: PerkInput;
   Post: Post;
   Query: {};
   Rank: Rank;
@@ -923,6 +941,7 @@ export type ResolversParentTypes = {
   Float: Scalars['Float']['output'];
   UserByInput: UserByInput;
   UserInput: UserInput;
+  UserRank: UserRank;
   XPEntry: XPEntry;
 };
 
@@ -1052,6 +1071,7 @@ export type PerkResolvers<ContextType = any, ParentType extends ResolversParentT
   enabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   executionRule?: Resolver<ResolversTypes['ExecutionRule'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  minRankId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reward?: Resolver<ResolversTypes['Reward'], ParentType, ContextType>;
   rewardPreview?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1109,6 +1129,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getUserEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetUserEventsArgs, 'address' | 'limit' | 'offset'>>;
   getUserFollowers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserFollowersArgs, 'address'>>;
   getUserFollowing?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserFollowingArgs, 'address'>>;
+  getUserRanks?: Resolver<Array<ResolversTypes['UserRank']>, ParentType, ContextType, RequireFields<QuerygetUserRanksArgs, 'address'>>;
   getUserXPHistory?: Resolver<Array<ResolversTypes['XPEntry']>, ParentType, ContextType, RequireFields<QuerygetUserXPHistoryArgs, 'address' | 'limit' | 'offset'>>;
   getUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUsersArgs, 'query'>>;
 };
@@ -1120,6 +1141,7 @@ export type RankResolvers<ContextType = any, ParentType extends ResolversParentT
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   minXp?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  order?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1215,6 +1237,13 @@ export type UserAchievementsResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserRankResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserRank'] = ResolversParentTypes['UserRank']> = {
+  achievedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  rankId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type VisibilitySettingResolvers = EnumResolverSignature<{ FOLLOWERS_ONLY?: any, PRIVATE?: any, PUBLIC?: any }, ResolversTypes['VisibilitySetting']>;
 
 export type XPEntryResolvers<ContextType = any, ParentType extends ResolversParentTypes['XPEntry'] = ResolversParentTypes['XPEntry']> = {
@@ -1259,6 +1288,7 @@ export type Resolvers<ContextType = any> = {
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
   UserAchievements?: UserAchievementsResolvers<ContextType>;
+  UserRank?: UserRankResolvers<ContextType>;
   VisibilitySetting?: VisibilitySettingResolvers;
   XPEntry?: XPEntryResolvers<ContextType>;
 };

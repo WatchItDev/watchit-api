@@ -1,5 +1,5 @@
 import { DataSourceManager } from '../manager';
-import {Rank} from "@/schema/types";
+import {Rank, UserRank} from "../../schema/types";
 
 export class RanksQuery extends DataSourceManager {
     getRank = (id: string) => this.fs<Rank>('ranks').get(id);
@@ -11,14 +11,14 @@ export class RanksQuery extends DataSourceManager {
     /** Given total XP, return current + next rank */
     async evaluate(totalXp: number) {
         const ranks = await this.catalog();
-        if (!ranks.length)
-            throw new Error('Ranks catalog is empty – cannot evaluate.');
-
         ranks.sort((a, b) => a.minXp - b.minXp);
-
         const current = ranks.filter(r => r.minXp <= totalXp).pop()!;
         const next    = ranks.find(r => r.minXp > current.minXp) ?? null;
 
         return { current, next };
     }
+
+    userRanks = (user: string) =>
+        this.fs<UserRank>('userRanks').query([{ field:'user', op:'==', value: user }],
+                { orderBy:{ field:'achievedAt', direction:'asc' }, limit: 100 });
 }

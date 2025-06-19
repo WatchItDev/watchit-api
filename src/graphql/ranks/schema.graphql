@@ -8,16 +8,24 @@ type Rank {
   badgeUrl: String!
   colorTheme: String!
   minXp: Int!
+  order: Int!
   createdAt: Timestamp!
   updatedAt: Timestamp!
 }
 
+type UserRank {
+  user: String!
+  rankId: String!
+  achievedAt: Timestamp!
+}
+
 input RankInput {
-  id:         String!  @constraint(minLength: 1)
-  name:       String!  @constraint(minLength: 1)
-  badgeUrl:   String!  @constraint(format: "uri")
-  colorTheme: String!  @constraint(minLength: 1)
-  minXp:      Int!     @constraint(min: 0)
+  id: String!
+  name: String!
+  badgeUrl: String!
+  colorTheme: String!
+  minXp: Int!
+  order: Int!
 }
 
 type UserAchievements {
@@ -31,11 +39,12 @@ type UserAchievements {
 
 extend type Query {
   getRanksCatalog:   [Rank!]!
-  getAchievements(address: String! @constraint(minLength: 1)): UserAchievements!
+  getAchievements(address:String!): UserAchievements!
+  getUserRanks(address:String!): [UserRank!]!
 }
 
 extend type Mutation {
-  createRank(input: RankInput!): Rank!          # admin
-  updateRank(id: ID!, patch: RankInput!): Rank! # admin
-  deleteRank(id: ID!): Boolean!                 # admin
+  createRank(input:RankInput!): Rank!
+  updateRank(id:ID!, patch:RankInput!): Rank!
+  deleteRank(id:ID!): Boolean!
 }

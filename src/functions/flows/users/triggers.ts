@@ -26,6 +26,8 @@ export const logUserCreated = onDocumentCreated(
 
         console.log(`✨ 50 XP awarded to ${wallet} for completing user registration (previous balance: ${beforeBalance})`);
 
+        await ds.Ranks.addUserRank(wallet, 'watcher');
+
         try {
             const txHash = await ds.SynapseDS.transfer(wallet, 50)
             console.log(`✨ 50 MMC sent to ${wallet}. TxHash: ${txHash}`)

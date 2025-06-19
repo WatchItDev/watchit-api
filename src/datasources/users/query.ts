@@ -37,4 +37,8 @@ export class UsersQuery extends DataSourceManager {
             .query([{ field: 'id', op: '==', value: id.toLowerCase() }], { limit: 1 });
         return u ?? null;
     };
+
+    async topByXp(limit = 100): Promise<User[]> {
+        return this.fs<User>('users').query([], { orderBy: { field: 'xpTotal', direction: 'desc' }, limit },);
+    }
 }

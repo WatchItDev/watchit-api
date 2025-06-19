@@ -28,6 +28,7 @@ import    { getUserBookmarks as Query_getUserBookmarks } from './../graphql/user
 import    { getUserEvents as Query_getUserEvents } from './../graphql/logs/resolvers/Query/getUserEvents';
 import    { getUserFollowers as Query_getUserFollowers } from './../graphql/users/resolvers/Query/getUserFollowers';
 import    { getUserFollowing as Query_getUserFollowing } from './../graphql/users/resolvers/Query/getUserFollowing';
+import    { getUserRanks as Query_getUserRanks } from './../graphql/ranks/resolvers/Query/getUserRanks';
 import    { getUserXPHistory as Query_getUserXPHistory } from './../graphql/xp/resolvers/Query/getUserXPHistory';
 import    { getUsers as Query_getUsers } from './../graphql/users/resolvers/Query/getUsers';
 import    { claimPerk as Mutation_claimPerk } from './../graphql/perks/resolvers/Mutation/claimPerk';
@@ -74,11 +75,12 @@ import    { TriviaQuestion } from './../graphql/games/resolvers/TriviaQuestion';
 import    { UnlockRule } from './../graphql/perks/resolvers/UnlockRule';
 import    { User } from './../graphql/users/resolvers/User';
 import    { UserAchievements } from './../graphql/ranks/resolvers/UserAchievements';
+import    { UserRank } from './../graphql/ranks/resolvers/UserRank';
 import    { XPEntry } from './../graphql/xp/resolvers/XPEntry';
 import    { Upload } from './../graphql/_base/resolvers/Upload';
 import    { DateResolver,DateTimeResolver,JSONResolver,TimestampResolver } from 'graphql-scalars';
     export const resolvers: Resolvers = {
-      Query: { getAchievements: Query_getAchievements,getActiveUsers: Query_getActiveUsers,getAllPosts: Query_getAllPosts,getBookmarksByPost: Query_getBookmarksByPost,getBookmarksByUser: Query_getBookmarksByUser,getCommentsByPost: Query_getCommentsByPost,getGamesAvailable: Query_getGamesAvailable,getIsBookmarked: Query_getIsBookmarked,getIsFollowing: Query_getIsFollowing,getIsLiked: Query_getIsLiked,getPopularPosts: Query_getPopularPosts,getPopularUsers: Query_getPopularUsers,getPost: Query_getPost,getPostViews: Query_getPostViews,getPosts: Query_getPosts,getPostsByAuthor: Query_getPostsByAuthor,getProfileViews: Query_getProfileViews,getRanksCatalog: Query_getRanksCatalog,getRecentPosts: Query_getRecentPosts,getRecentUsers: Query_getRecentUsers,getRepliesByComment: Query_getRepliesByComment,getTargetEvents: Query_getTargetEvents,getUnlockedPerks: Query_getUnlockedPerks,getUser: Query_getUser,getUserBookmarks: Query_getUserBookmarks,getUserEvents: Query_getUserEvents,getUserFollowers: Query_getUserFollowers,getUserFollowing: Query_getUserFollowing,getUserXPHistory: Query_getUserXPHistory,getUsers: Query_getUsers },
+      Query: { getAchievements: Query_getAchievements,getActiveUsers: Query_getActiveUsers,getAllPosts: Query_getAllPosts,getBookmarksByPost: Query_getBookmarksByPost,getBookmarksByUser: Query_getBookmarksByUser,getCommentsByPost: Query_getCommentsByPost,getGamesAvailable: Query_getGamesAvailable,getIsBookmarked: Query_getIsBookmarked,getIsFollowing: Query_getIsFollowing,getIsLiked: Query_getIsLiked,getPopularPosts: Query_getPopularPosts,getPopularUsers: Query_getPopularUsers,getPost: Query_getPost,getPostViews: Query_getPostViews,getPosts: Query_getPosts,getPostsByAuthor: Query_getPostsByAuthor,getProfileViews: Query_getProfileViews,getRanksCatalog: Query_getRanksCatalog,getRecentPosts: Query_getRecentPosts,getRecentUsers: Query_getRecentUsers,getRepliesByComment: Query_getRepliesByComment,getTargetEvents: Query_getTargetEvents,getUnlockedPerks: Query_getUnlockedPerks,getUser: Query_getUser,getUserBookmarks: Query_getUserBookmarks,getUserEvents: Query_getUserEvents,getUserFollowers: Query_getUserFollowers,getUserFollowing: Query_getUserFollowing,getUserRanks: Query_getUserRanks,getUserXPHistory: Query_getUserXPHistory,getUsers: Query_getUsers },
       Mutation: { claimPerk: Mutation_claimPerk,createComment: Mutation_createComment,createPerk: Mutation_createPerk,createPost: Mutation_createPost,createRank: Mutation_createRank,createUser: Mutation_createUser,deletePerk: Mutation_deletePerk,deleteRank: Mutation_deleteRank,hideComment: Mutation_hideComment,hidePost: Mutation_hidePost,incrementPostView: Mutation_incrementPostView,logAnonymousEvent: Mutation_logAnonymousEvent,logEvent: Mutation_logEvent,spinDailyWheel: Mutation_spinDailyWheel,startGuessMovie: Mutation_startGuessMovie,startTrivia: Mutation_startTrivia,submitGuessMovie: Mutation_submitGuessMovie,submitTriviaAnswer: Mutation_submitTriviaAnswer,toggleBookmark: Mutation_toggleBookmark,toggleFollow: Mutation_toggleFollow,toggleLike: Mutation_toggleLike,updateComment: Mutation_updateComment,updatePerk: Mutation_updatePerk,updatePost: Mutation_updatePost,updateRank: Mutation_updateRank,updateUser: Mutation_updateUser },
       
       Comment: Comment,
@@ -99,6 +101,7 @@ TriviaQuestion: TriviaQuestion,
 UnlockRule: UnlockRule,
 User: User,
 UserAchievements: UserAchievements,
+UserRank: UserRank,
 XPEntry: XPEntry,
 Upload: Upload,
 Date: DateResolver,

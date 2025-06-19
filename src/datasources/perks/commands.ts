@@ -1,6 +1,6 @@
 import { DataSourceManager }  from '../manager';
-import { makeUnlockedPerk, UnlockedPerk } from '@/models/unlockedPerk';
-import {PerkCatalogInput, Perk} from "@/schema/types";
+import { makeUnlockedPerk, UnlockedPerk } from '../../models/unlockedPerk';
+import {PerkInput, Perk} from "../../schema/types";
 
 export class PerksCommands extends DataSourceManager {
     async createUnlockedPerk(p: {
@@ -32,10 +32,12 @@ export class PerksCommands extends DataSourceManager {
         await this.fs('unlockedPerks').update(uPerkId, { availableAt: nextAvailableAt, collectedAt: null });
     }
 
-    createPerk  = (i: PerkCatalogInput)                   =>
+    createPerk  = (i: PerkInput)                   =>
         this.fs<Perk>('perksCatalog').create(i.id, i);
-    updatePerk  = (id:string,p:Partial<PerkCatalogInput>) =>
+
+    updatePerk  = (id:string,p:Partial<PerkInput>) =>
         this.fs('perksCatalog').update(id,p).then(() => this.fs<Perk>('perksCatalog').get(id)!);
+
     deletePerk  = (id:string)                            =>
         this.fs('perksCatalog').delete(id).then(()=>true);
 }

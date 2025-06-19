@@ -137,7 +137,7 @@ input MediaAttachmentInput {
 type Mutation {
   claimPerk(perkId: ID!): Boolean!
   createComment(input: CreateCommentInput!): Comment!
-  createPerk(input: PerkCatalogInput!): Perk!
+  createPerk(input: PerkInput!): Perk!
   createPost(input: CreatePostInput!): Post!
   createRank(input: RankInput!): Rank!
   createUser(input: UserInput!): User!
@@ -157,7 +157,7 @@ type Mutation {
   toggleFollow(input: FollowInput!): Boolean!
   toggleLike(input: LikeInput!): Boolean!
   updateComment(input: UpdateCommentInput!): Comment!
-  updatePerk(id: ID!, patch: PerkCatalogInput!): Perk!
+  updatePerk(id: ID!, patch: PerkInput!): Perk!
   updatePost(input: UpdatePostInput!): Post!
   updateRank(id: ID!, patch: RankInput!): Rank!
   updateUser(input: UpdateUserInput!): User!
@@ -171,6 +171,7 @@ type Perk {
   enabled: Boolean!
   executionRule: ExecutionRule!
   id: ID!
+  minRankId: String!
   name: String!
   reward: Reward!
   rewardPreview: String!
@@ -178,22 +179,23 @@ type Perk {
   unlockRule: UnlockRule!
 }
 
-input PerkCatalogInput {
-  category: PerkCategory!
-  enabled: Boolean!
-  executionRule: ExecutionRuleInput!
-  id: String!
-  name: String!
-  reward: RewardInput!
-  uiHint: String
-  unlockRule: UnlockRuleInput!
-}
-
 enum PerkCategory {
   ACCESS
   ECONOMY
   GAMIFICATION
   SOCIAL
+}
+
+input PerkInput {
+  category: PerkCategory!
+  enabled: Boolean!
+  executionRule: ExecutionRuleInput!
+  id: String!
+  minRankId: String!
+  name: String!
+  reward: RewardInput!
+  uiHint: String
+  unlockRule: UnlockRuleInput!
 }
 
 type Post {
@@ -242,6 +244,7 @@ type Query {
   getUserEvents(address: String!, limit: Int = 50, offset: Int = 0, type: String): [EventLog!]!
   getUserFollowers(address: String!, limit: Int): [User!]!
   getUserFollowing(address: String!, limit: Int): [User!]!
+  getUserRanks(address: String!): [UserRank!]!
   getUserXPHistory(address: String!, limit: Int = 50, offset: Int = 0): [XPEntry!]!
   getUsers(limit: Int, query: String!): [User!]!
 }
@@ -253,6 +256,7 @@ type Rank {
   id: String!
   minXp: Int!
   name: String!
+  order: Int!
   updatedAt: Timestamp!
 }
 
@@ -262,6 +266,7 @@ input RankInput {
   id: String!
   minXp: Int!
   name: String!
+  order: Int!
 }
 
 type Reward {
@@ -402,6 +407,12 @@ input UserInput {
   profilePicture: String
   socialLinks: [SocialLinkInput!]
   username: String!
+}
+
+type UserRank {
+  achievedAt: Timestamp!
+  rankId: String!
+  user: String!
 }
 
 enum VisibilitySetting {

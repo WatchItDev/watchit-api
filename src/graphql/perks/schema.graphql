@@ -5,20 +5,20 @@
 enum PerkCategory { GAMIFICATION ECONOMY SOCIAL ACCESS }
 
 type UnlockRule {
-  on:      String!  # "RANK_UP" | "ACTION" | "ACTION_COUNT" | "ALWAYS"
+  on:      String!
   rankId:  String
   action:  String
   times:   Int
-  window:  String   # "24h" | "7d" | "∞"
+  window:  String
 }
 
 type ExecutionRule {
-  type:        String!   # "IMMEDIATE" | "ON_CLAIM" | "ON_COOLDOWN"
+  type:        String!
   cooldownSec: Int
 }
 
 type Reward {
-  action: String!        # "ADD_XP" | "ADD_MMC" | "MINT_NFT"
+  action: String!
   amount: Int
   tokenId: String
 }
@@ -26,6 +26,7 @@ type Reward {
 type Perk {
   id: ID!
   name: String!
+  minRankId: String!
   uiHint: String
   category: PerkCategory!
   collectedAt: Timestamp
@@ -39,27 +40,28 @@ type Perk {
 }
 
 input UnlockRuleInput {
-  on:      String!  # "RANK_UP" | "ACTION" | "ACTION_COUNT" | "ALWAYS"
-  rankId:  String
-  action:  String
-  times:   Int
-  window:  String   # "24h" | "7d" | "∞"
+  on:String!,
+  rankId:String,
+  action:String,
+  times:Int,
+  window:String
 }
 
 input ExecutionRuleInput {
-  type:        String!   # "IMMEDIATE" | "ON_CLAIM" | "ON_COOLDOWN"
-  cooldownSec: Int
+  type:String!,
+  cooldownSec:Int
 }
 
 input RewardInput {
-  action: String!        # "ADD_XP" | "ADD_MMC" | "MINT_NFT"
-  amount: Int
-  tokenId: String
+  action:String!,
+  amount:Int,
+  tokenId:String
 }
 
-input PerkCatalogInput {
-  id:           String! @constraint(minLength: 1)
-  name:         String! @constraint(minLength: 1)
+input PerkInput {
+  id:           String!
+  name:         String!
+  minRankId:    String!
   uiHint:       String
   category:     PerkCategory!
   unlockRule:   UnlockRuleInput!
@@ -69,16 +71,12 @@ input PerkCatalogInput {
 }
 
 extend type Query {
-  getUnlockedPerks(
-    address: String! @constraint(minLength: 1)
-    limit:   Int = 50 @constraint(min: 1, max: 200)
-    offset:  Int = 0  @constraint(min: 0)
-  ): [Perk!]!
+  getUnlockedPerks(address:String!, limit:Int = 50, offset:Int = 0): [Perk!]!
 }
 
 extend type Mutation {
-  claimPerk(perkId: ID!): Boolean!
-  createPerk(input: PerkCatalogInput!): Perk!
-  updatePerk(id: ID!, patch: PerkCatalogInput!): Perk!
-  deletePerk(id: ID!): Boolean!
+  claimPerk(perkId:ID!): Boolean!
+  createPerk(input:PerkInput!): Perk!
+  updatePerk(id:ID!, patch:PerkInput!): Perk!
+  deletePerk(id:ID!): Boolean!
 }

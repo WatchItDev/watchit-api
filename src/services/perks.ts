@@ -1,10 +1,10 @@
 import { ServiceManager }       from './manager';
-import {PerkCatalogInput} from "@/schema/types";
+import {PerkInput} from "@/schema/types";
 
 export class PerksService extends ServiceManager {
     catalog       = ()                              => this.ds.Perks.getCatalog();
-    createPerk    = (i: PerkCatalogInput)           => this.ds.Perks.createPerk(i);
-    updatePerk    = (id:string,p:Partial<PerkCatalogInput>) =>
+    createPerk    = (i: PerkInput)           => this.ds.Perks.createPerk(i);
+    updatePerk    = (id:string,p:Partial<PerkInput>) =>
         this.ds.Perks.updatePerk(id,p);
     deletePerk    = (id:string)                     => this.ds.Perks.deletePerk(id);
 

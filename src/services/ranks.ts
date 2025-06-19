@@ -6,6 +6,7 @@ export class RanksService extends ServiceManager {
     catalog = () => this.ds.Ranks.catalog();
     getRank = (id: string) => this.ds.Ranks.getRank(id);
     evaluate = (xpTotal: number) => this.ds.Ranks.evaluate(xpTotal);
+    userRanks = (addr:string) => this.ds.Ranks.userRanks(addr);
 
     async achievements(address: string) {
         const user = await this.ds.Users.getUser(address);

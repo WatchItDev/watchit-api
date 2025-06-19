@@ -1,5 +1,5 @@
 import { DataSourceManager } from '../manager';
-import { GameSession, makeGameSession } from '@/models/gameSession';
+import { GameSession, makeGameSession } from '../../models/gameSession';
 
 export class GamesCommands extends DataSourceManager {
     createSession<T>(p: {

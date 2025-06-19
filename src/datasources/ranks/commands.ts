@@ -1,27 +1,20 @@
 import { DataSourceManager } from '../manager';
-import {Rank, RankInput} from "@/schema/types";
-import {makeRank} from "@/models/rank";
+import { Rank, RankInput }   from '../../schema/types';
+import { makeRank }          from '../../models/rank';
+import {makeUserRank} from "../../models/userRank";
 
 export class RanksCommands extends DataSourceManager {
-    /** Bulk import or upsert – used only by CI / content pipelines */
-    async upsertRanks(list: Rank[]): Promise<void> {
-        const dao = this.fs<Rank>('ranks') as any;
-        const batch = list.map(r => dao.ref.doc(r.id).set(r, { merge: true }));
-        await Promise.all(batch);
-    }
+    createRank = (i: RankInput) =>
+        this.fs<Rank>('ranks').create(i.id, makeRank(i)).then(() => this.fs<Rank>('ranks').get(i.id)!);
 
-    createRank(input: RankInput): Promise<Rank> {
-        const rec = makeRank(input);
-        return this.fs<Rank>('ranks').create(rec.id, rec).then(() => rec);
-    }
+    updateRank = (id: string, p: Partial<RankInput>) =>
+        this.fs('ranks').update(id, { ...p, updatedAt: Date.now() })
+            .then(() => this.fs<Rank>('ranks').get(id)!);
 
-    updateRank(id: string, patch: Partial<RankInput>): Promise<Rank> {
-        return this.fs('ranks')
-            .update(id, { ...patch, updatedAt: Date.now() })
-            .then(() => this.fs<Rank>('ranks').get(id) as Promise<Rank>);
-    }
+    deleteRank = (id: string) =>
+        this.fs('ranks').delete(id).then(() => true);
 
-    deleteRank(id: string) {
-        return this.fs('ranks').delete(id).then(() => true);
-    }
+    addUserRank = (user: string, rankId: string) =>
+        this.fs('userRanks')
+            .create(`${user}_${rankId}`, makeUserRank(user, rankId));
 }

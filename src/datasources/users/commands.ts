@@ -48,4 +48,8 @@ export class UsersCommands extends DataSourceManager {
         await dao.ref.doc(address)
             .update({ [field]: FieldValue.increment(delta) });
     }
+
+    async setLeaderboard(addr: string, rank: number, xpTotal: number) {
+        await this.fs('leaderboard').create(addr, { rank, xpTotal });
+    }
 }
