@@ -85,12 +85,12 @@ export type EventLog = {
 
 export type ExecutionRule = {
   __typename?: 'ExecutionRule';
-  cooldownSec?: Maybe<Scalars['Int']['output']>;
+  cooldownSec: Scalars['Int']['output'];
   type: Scalars['String']['output'];
 };
 
 export type ExecutionRuleInput = {
-  cooldownSec?: InputMaybe<Scalars['Int']['input']>;
+  cooldownSec: Scalars['Int']['input'];
   type: Scalars['String']['input'];
 };
 
@@ -125,6 +125,13 @@ export type GuessMovieResult = {
   correct: Scalars['Boolean']['output'];
   finished: Scalars['Boolean']['output'];
   xpAwarded: Scalars['Int']['output'];
+};
+
+export type LeaderboardRow = {
+  __typename?: 'LeaderboardRow';
+  rank: Scalars['Int']['output'];
+  user: User;
+  xpTotal: Scalars['Int']['output'];
 };
 
 export type LikeInput = {
@@ -321,7 +328,7 @@ export type Perk = {
   cooldownRemaining: Scalars['Int']['output'];
   enabled: Scalars['Boolean']['output'];
   executionRule: ExecutionRule;
-  id: Scalars['ID']['output'];
+  id: Scalars['String']['output'];
   minRankId: Scalars['String']['output'];
   name: Scalars['String']['output'];
   reward: Reward;
@@ -378,6 +385,8 @@ export type Query = {
   getIsBookmarked: Scalars['Boolean']['output'];
   getIsFollowing: Scalars['Boolean']['output'];
   getIsLiked: Scalars['Boolean']['output'];
+  getLeaderboard: Array<LeaderboardRow>;
+  getPerks: Array<Perk>;
   getPopularPosts: Array<Post>;
   getPopularUsers: Array<User>;
   getPost?: Maybe<Post>;
@@ -452,6 +461,11 @@ export type QuerygetIsFollowingArgs = {
 
 export type QuerygetIsLikedArgs = {
   targetId: Scalars['String']['input'];
+};
+
+
+export type QuerygetLeaderboardArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -695,6 +709,7 @@ export type User = {
   bookmarksCount: Scalars['Int']['output'];
   coverPicture: Scalars['String']['output'];
   createdAt: Scalars['Timestamp']['output'];
+  currentRank: Scalars['String']['output'];
   displayName: Scalars['String']['output'];
   email: Scalars['String']['output'];
   followersCount: Scalars['Int']['output'];
@@ -852,6 +867,7 @@ export type ResolversTypes = {
   GuessMoviePayload: ResolverTypeWrapper<GuessMoviePayload>;
   GuessMovieResult: ResolverTypeWrapper<GuessMovieResult>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
+  LeaderboardRow: ResolverTypeWrapper<LeaderboardRow>;
   LikeInput: LikeInput;
   LogEventInput: LogEventInput;
   MediaAttachment: ResolverTypeWrapper<MediaAttachment>;
@@ -911,6 +927,7 @@ export type ResolversParentTypes = {
   GuessMoviePayload: GuessMoviePayload;
   GuessMovieResult: GuessMovieResult;
   JSON: Scalars['JSON']['output'];
+  LeaderboardRow: LeaderboardRow;
   LikeInput: LikeInput;
   LogEventInput: LogEventInput;
   MediaAttachment: MediaAttachment;
@@ -992,7 +1009,7 @@ export type EventLogResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type ExecutionRuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExecutionRule'] = ResolversParentTypes['ExecutionRule']> = {
-  cooldownSec?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  cooldownSec?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1024,6 +1041,13 @@ export type GuessMovieResultResolvers<ContextType = any, ParentType extends Reso
 export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
+
+export type LeaderboardRowResolvers<ContextType = any, ParentType extends ResolversParentTypes['LeaderboardRow'] = ResolversParentTypes['LeaderboardRow']> = {
+  rank?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  xpTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type MediaAttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaAttachment'] = ResolversParentTypes['MediaAttachment']> = {
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1070,7 +1094,7 @@ export type PerkResolvers<ContextType = any, ParentType extends ResolversParentT
   cooldownRemaining?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   enabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   executionRule?: Resolver<ResolversTypes['ExecutionRule'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   minRankId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reward?: Resolver<ResolversTypes['Reward'], ParentType, ContextType>;
@@ -1111,6 +1135,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getIsBookmarked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsBookmarkedArgs, 'postId'>>;
   getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'targetAddress'>>;
   getIsLiked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsLikedArgs, 'targetId'>>;
+  getLeaderboard?: Resolver<Array<ResolversTypes['LeaderboardRow']>, ParentType, ContextType, RequireFields<QuerygetLeaderboardArgs, 'limit'>>;
+  getPerks?: Resolver<Array<ResolversTypes['Perk']>, ParentType, ContextType>;
   getPopularPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetPopularPostsArgs>>;
   getPopularUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetPopularUsersArgs>>;
   getPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostArgs, 'id'>>;
@@ -1211,6 +1237,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   bookmarksCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   coverPicture?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  currentRank?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   followersCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -1270,6 +1297,7 @@ export type Resolvers<ContextType = any> = {
   GuessMoviePayload?: GuessMoviePayloadResolvers<ContextType>;
   GuessMovieResult?: GuessMovieResultResolvers<ContextType>;
   JSON?: GraphQLScalarType;
+  LeaderboardRow?: LeaderboardRowResolvers<ContextType>;
   MediaAttachment?: MediaAttachmentResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Perk?: PerkResolvers<ContextType>;

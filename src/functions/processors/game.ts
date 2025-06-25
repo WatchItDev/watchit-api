@@ -1,10 +1,11 @@
 import { economy } from './economy';
+import {Ctx} from "@/functions/manager";
 
 /**
  * Rewards coming from mini-games.
  */
-export const gameEngine = ({ ds, ext }: { ds: any; ext: any }) => {
-    const eco = economy({ ds, ext });
+export const gameEngine = ({ ds, ext, activity }: Pick<Ctx,'ds' | 'ext' | 'activity'>) => {
+    const eco = economy({ ds, ext, activity });
 
     const genericReward = (r: any, addr: string) => {
         switch (r.action) {

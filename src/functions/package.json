@@ -11,6 +11,7 @@
     "ts-mixer": "^6.0.4"
   },
   "devDependencies": {
+    "@google-cloud/pubsub": "^5.1.0",
     "@types/node": "^24.0.0",
     "firebase-tools": "^14.3.0",
     "typescript": "^5.8.3"

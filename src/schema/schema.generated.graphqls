@@ -63,12 +63,12 @@ type EventLog {
 }
 
 type ExecutionRule {
-  cooldownSec: Int
+  cooldownSec: Int!
   type: String!
 }
 
 input ExecutionRuleInput {
-  cooldownSec: Int
+  cooldownSec: Int!
   type: String!
 }
 
@@ -103,6 +103,12 @@ type GuessMovieResult {
 }
 
 scalar JSON
+
+type LeaderboardRow {
+  rank: Int!
+  user: User!
+  xpTotal: Int!
+}
 
 input LikeInput {
   targetId: String!
@@ -170,7 +176,7 @@ type Perk {
   cooldownRemaining: Int!
   enabled: Boolean!
   executionRule: ExecutionRule!
-  id: ID!
+  id: String!
   minRankId: String!
   name: String!
   reward: Reward!
@@ -226,6 +232,8 @@ type Query {
   getIsBookmarked(postId: String!): Boolean!
   getIsFollowing(targetAddress: String!): Boolean!
   getIsLiked(targetId: String!): Boolean!
+  getLeaderboard(limit: Int = 100): [LeaderboardRow!]!
+  getPerks: [Perk!]!
   getPopularPosts(limit: Int): [Post!]!
   getPopularUsers(limit: Int): [User!]!
   getPost(id: String!): Post
@@ -370,6 +378,7 @@ type User {
   bookmarksCount: Int!
   coverPicture: String!
   createdAt: Timestamp!
+  currentRank: String!
   displayName: String!
   email: String!
   followersCount: Int!

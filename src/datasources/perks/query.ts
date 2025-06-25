@@ -1,20 +1,14 @@
-import { DataSourceManager }  from '../manager';
-import type { UnlockedPerk }  from '../../models/unlockedPerk';
-import type { PerkCatalog }   from '../../models/perk';
+import { DataSourceManager } from '../manager';
+import { UnlockedPerk } from '../../models/unlockedPerk';
+import {Perk} from "@/schema/types";
 
 export class PerksQuery extends DataSourceManager {
-    getCatalog = () => this.fs<PerkCatalog>('perksCatalog').list(500);
-
-    async unlockedByUser(user: string, limit = 50, offset = 0) {
-        return this.fs<UnlockedPerk>('unlockedPerks')
-            .query([{ field: 'user', op: '==', value: user }],
-                { orderBy: { field: 'createdAt', direction: 'desc' }, limit })
-            .then(l => l.slice(offset));
-    }
-
-    progressOf(user: string, perkId: string) {
-        // dailyProgress may have multiple windows (today, week)
-        return this.fs('dailyProgress')
-            .get(`${perkId}-${user}`); // windowKey resolved por servicio
-    }
+    getCatalog = () => this.fs<Perk>('perks').list(500);
+    statesByUser = (u: string, l=50, o=0) =>
+        this.fs<UnlockedPerk>('userPerkState')
+            .query([{ field:'user', op:'==', value:u }],
+                { orderBy:{ field:'createdAt', direction:'desc' }, limit:l })
+            .then(r => r.slice(o));
+    getState = (u: string, p: string) =>
+        this.fs<UnlockedPerk>('userPerkState').get(`${u}-${p}`);
 }

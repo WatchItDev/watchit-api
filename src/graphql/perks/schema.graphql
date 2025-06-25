@@ -14,7 +14,7 @@ type UnlockRule {
 
 type ExecutionRule {
   type:        String!
-  cooldownSec: Int
+  cooldownSec: Int!
 }
 
 type Reward {
@@ -24,7 +24,7 @@ type Reward {
 }
 
 type Perk {
-  id: ID!
+  id: String!
   name: String!
   minRankId: String!
   uiHint: String
@@ -49,7 +49,7 @@ input UnlockRuleInput {
 
 input ExecutionRuleInput {
   type:String!,
-  cooldownSec:Int
+  cooldownSec:Int!
 }
 
 input RewardInput {
@@ -71,6 +71,7 @@ input PerkInput {
 }
 
 extend type Query {
+  getPerks: [Perk!]!
   getUnlockedPerks(address:String!, limit:Int = 50, offset:Int = 0): [Perk!]!
 }
 

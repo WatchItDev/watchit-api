@@ -1,4 +1,4 @@
-import {InputMaybe, Scalars} from "@/schema/types";
+import { Perk, PerkInput} from "@/schema/types";
 
 export type UnlockRule =
     | { on: 'RANK_UP';        rankId: string }  // it is dispatched when the user reaches a new rank
@@ -16,13 +16,27 @@ export type Reward =
     | { action: 'ADD_MMC'; amount: number }
     | { action: 'MINT_NFT'; tokenId: string };
 
-export interface PerkCatalog {
-    id:        string;
-    name:      string;
-    uiHint:    InputMaybe<Scalars['String']['input']>;
-    category:  'GAMIFICATION'|'ECONOMY'|'SOCIAL'|'ACCESS';
-    unlockRule:   UnlockRule;
-    executionRule:ExecutionRule;
-    reward:       Reward;
-    enabled:   boolean;
+export function rewardPreviewFrom(reward: Perk['reward']): string {
+    switch (reward.action) {
+        case 'ADD_XP':  return `+${reward.amount ?? 0} XP`
+        case 'ADD_MMC': return `+${reward.amount ?? 0} MMC`
+        case 'MINT_NFT':return `NFT #${reward.tokenId ?? ''}`
+        default:        return ''
+    }
+}
+
+export function makePerk(input: PerkInput): Perk {
+    const now = Date.now()
+
+    return {
+        ...input,
+        uiHint        : input.uiHint       ?? '',
+        rewardPreview : rewardPreviewFrom(input.reward),
+        enabled       : input.enabled      ?? true,
+        collectedAt   : null,
+        availableAt   : 0,
+        cooldownRemaining: 0,
+        createdAt     : now as any,
+        updatedAt     : now as any,
+    } as unknown as Perk
 }

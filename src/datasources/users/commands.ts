@@ -20,7 +20,7 @@ export class UsersCommands extends DataSourceManager {
 
     async updateUser(
         address: string,
-        patch: Partial<Omit<UpdateUserInput, 'address' | 'createdAt'>>,
+        patch: Partial<Omit<UpdateUserInput, 'address' | 'createdAt'>> & { currentRank?: string },
     ): Promise<User> {
         const dao = this.fs<FirestoreUser>('users');
         const current = await dao.get(address);
@@ -47,9 +47,5 @@ export class UsersCommands extends DataSourceManager {
         const dao = this.fs<User>('users') as any;
         await dao.ref.doc(address)
             .update({ [field]: FieldValue.increment(delta) });
-    }
-
-    async setLeaderboard(addr: string, rank: number, xpTotal: number) {
-        await this.fs('leaderboard').create(addr, { rank, xpTotal });
     }
 }

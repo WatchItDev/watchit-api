@@ -12,21 +12,23 @@ import LogsDS    from './logs';
 import RanksDS  from './ranks';
 import PerksDS  from './perks';
 import GamesDS  from './games';
+import LeaderboardDS  from './leaderboard';
 
 export const DataSources = (store: FireStore) => ({
-    Users:     new UsersDS(store),
-    Posts:     new PostsDS(store),
-    Comments:  new CommentsDS(store),
-    Feeds:     new FeedsDS(store),
-    Bookmarks: new BookmarksDS(store),
-    Follows:   new FollowsDS(store),
-    Likes:     new LikesDS(store),
-    XP:        new XPDS(store),
-    SynapseDS: new SynapseDS(store),
-    Logs:      new LogsDS(store),
-    Ranks:     new RanksDS(store),
-    Perks:     new PerksDS(store),
-    Games:     new GamesDS(store),
+    Users:          new UsersDS(store),
+    Posts:          new PostsDS(store),
+    Comments:       new CommentsDS(store),
+    Feeds:          new FeedsDS(store),
+    Bookmarks:      new BookmarksDS(store),
+    Follows:        new FollowsDS(store),
+    Likes:          new LikesDS(store),
+    XP:             new XPDS(store),
+    SynapseDS:      new SynapseDS(store),
+    Logs:           new LogsDS(store),
+    Ranks:          new RanksDS(store),
+    Perks:          new PerksDS(store),
+    Games:          new GamesDS(store),
+    LeaderboardDS:  new LeaderboardDS(store),
 });
 
 export type DataSourcesType = ReturnType<typeof DataSources>;

@@ -23,6 +23,7 @@ type User {
   socialLinks: [SocialLink!]
   xpBalance: Int!
   xpTotal:   Int!
+  currentRank: String!
 
   followersCount: Int!
   followingCount: Int!

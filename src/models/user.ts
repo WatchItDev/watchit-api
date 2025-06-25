@@ -14,6 +14,7 @@ export function defaultUserData(): Omit<
         bookmarksCount: 0,
         xpBalance: 0,
         xpTotal:   0,
+        currentRank: '',
         verified: false,
     };
 }

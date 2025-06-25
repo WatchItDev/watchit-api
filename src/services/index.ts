@@ -10,20 +10,22 @@ import { LogService }   from './logs';
 import { RanksService } from './ranks';
 import { PerksService } from './perks';
 import { GamesService } from './games';
+import { LeaderboardService } from './leaderboard';
 
 export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
-    Profile:    new ProfileService({ ds, ext }),
-    Posts:      new PostService({ ds, ext }),
-    Comments:   new CommentService({ ds, ext }),
-    Feeds:      new FeedsService({ ds, ext }),
-    Likes:      new LikesService({ ds, ext }),
-    Bookmarks:  new BookmarkService({ ds, ext }),
-    Follows:    new FollowService({ ds, ext }),
-    XP:         new XPService({ ds, ext }),
-    Logs:       new LogService({ ds, ext }),
-    Ranks:      new RanksService({ ds, ext }),
-    Perks:      new PerksService({ ds, ext }),
-    Games:      new GamesService({ ds, ext }),
+    Profile:      new ProfileService({ ds, ext }),
+    Posts:        new PostService({ ds, ext }),
+    Comments:     new CommentService({ ds, ext }),
+    Feeds:        new FeedsService({ ds, ext }),
+    Likes:        new LikesService({ ds, ext }),
+    Bookmarks:    new BookmarkService({ ds, ext }),
+    Follows:      new FollowService({ ds, ext }),
+    XP:           new XPService({ ds, ext }),
+    Logs:         new LogService({ ds, ext }),
+    Ranks:        new RanksService({ ds, ext }),
+    Perks:        new PerksService({ ds, ext }),
+    Games:        new GamesService({ ds, ext }),
+    Leaderboard:  new LeaderboardService({ ds, ext }),
 });
 
 export type ServicesType = ReturnType<typeof Services>;

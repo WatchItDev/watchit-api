@@ -1,6 +1,6 @@
 import { ServiceManager } from './manager'
-import { toggle }         from '@/helpers/toggle'
-import type { Post, User } from '@/schema/types'
+import { toggle }         from '../helpers/toggle'
+import type { Post, User } from '../schema/types'
 
 export class BookmarkService extends ServiceManager {
     toggleBookmark = (addr: string, postId: string) =>
