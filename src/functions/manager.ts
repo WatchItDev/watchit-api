@@ -8,9 +8,6 @@ import { perkEngine } from './processors/perk';
 import { progressEngine } from './processors/progress';
 import { activityLogger } from './processors/activity';
 
-/* ------------------------------------------------------------------
-   1. Build the canonical context ONE time per module load
-   ------------------------------------------------------------------ */
 export interface Ctx {
     ds:  ReturnType<typeof DataSources>;
     ext: typeof externals;
@@ -42,9 +39,8 @@ function buildCtx(): Ctx {
 
 const singletonCtx = buildCtx();
 
-/* ------------------------------------------------------------------
-   2. Generic wrappers
-   ------------------------------------------------------------------ */
+/* ----------------------------------------------------------------- */
+
 export function enhanceTrigger<
     E = any,
     R = void
