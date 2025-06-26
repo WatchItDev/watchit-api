@@ -5,7 +5,6 @@ import { Services, ServicesType } from '../services';
 import { economy } from './processors/economy';
 import { rankEngine } from './processors/rank';
 import { perkEngine } from './processors/perk';
-import { gameEngine } from './processors/game';
 import { progressEngine } from './processors/progress';
 import { activityLogger } from './processors/activity';
 
@@ -19,7 +18,6 @@ export interface Ctx {
     eco: ReturnType<typeof economy>;
     rank: ReturnType<typeof rankEngine>;
     perk: ReturnType<typeof perkEngine>;
-    game: ReturnType<typeof gameEngine>;
     progress: ReturnType<typeof progressEngine>;
     activity: ReturnType<typeof activityLogger>;
 }
@@ -37,7 +35,6 @@ function buildCtx(): Ctx {
         eco:  economy({ ds, ext, activity }),
         rank: rankEngine({ ds, ext, activity }),
         perk: perkEngine({ ds, ext, activity }),
-        game: gameEngine({ ds, ext, activity }),
         progress: progressEngine({ ds }),
         activity: activityLogger({ ds }),
     };

@@ -1,7 +1,7 @@
 import { DataSourceManager } from '../manager';
 import { UnlockedPerk, makeUnlockedPerk } from '../../models/unlockedPerk';
-import {PerkInput, Perk, Maybe} from '../../schema/types';
-import {makePerk} from "../../models/perk";
+import { PerkInput, Perk } from '../../schema/types';
+import { makePerk } from "../../models/perk";
 
 export class PerksCommands extends DataSourceManager {
     createPerk = (i: PerkInput) =>

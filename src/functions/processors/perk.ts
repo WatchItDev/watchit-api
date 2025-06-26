@@ -23,12 +23,13 @@ export const perkEngine = ({ ds, ext, activity }: Pick<Ctx,'ds' | 'ext' | 'activ
 
     return {
         maybeAutoApply: async (perkId: string, addr: string) => {
-            const meta = (await ds.Perks.getCatalog())
-                .find((p: any) => p.id === perkId)
+            const meta   = (await ds.Perks.getCatalog()).find((p: any) => p.id === perkId)
             if (!meta || meta.executionRule.type !== 'IMMEDIATE') return
 
-            await applyReward(meta, addr)               // paga
-            await ds.Perks.claimPerk(addr, perkId)      // marca CLAIMED
+            const state  = await ds.Perks.getState(addr, perkId)
+            if (!state || state.status !== 'AVAILABLE') return
+            await applyReward(meta, addr)
+            await ds.Perks.claimPerk(addr, perkId)
         },
 
         claim: async (perkId: string, addr: string) => {

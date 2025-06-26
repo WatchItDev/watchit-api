@@ -9,7 +9,6 @@ import { XPService }   from './xp';
 import { LogService }   from './logs';
 import { RanksService } from './ranks';
 import { PerksService } from './perks';
-import { GamesService } from './games';
 import { LeaderboardService } from './leaderboard';
 
 export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
@@ -24,7 +23,6 @@ export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
     Logs:         new LogService({ ds, ext }),
     Ranks:        new RanksService({ ds, ext }),
     Perks:        new PerksService({ ds, ext }),
-    Games:        new GamesService({ ds, ext }),
     Leaderboard:  new LeaderboardService({ ds, ext }),
 });
 

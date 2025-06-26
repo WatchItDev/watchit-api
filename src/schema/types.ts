@@ -103,30 +103,6 @@ export type FollowInput = {
   targetAddress: Scalars['String']['input'];
 };
 
-export type GameConfig = {
-  __typename?: 'GameConfig';
-  cooldownSec: Scalars['Int']['output'];
-  id: Scalars['ID']['output'];
-  lockedUntilRank: Scalars['String']['output'];
-  version: Scalars['Int']['output'];
-};
-
-export type GuessMoviePayload = {
-  __typename?: 'GuessMoviePayload';
-  imageBlurUrl: Scalars['String']['output'];
-  nonce: Scalars['String']['output'];
-  options: Array<Scalars['String']['output']>;
-  sessionId: Scalars['String']['output'];
-};
-
-export type GuessMovieResult = {
-  __typename?: 'GuessMovieResult';
-  attemptsLeft: Scalars['Int']['output'];
-  correct: Scalars['Boolean']['output'];
-  finished: Scalars['Boolean']['output'];
-  xpAwarded: Scalars['Int']['output'];
-};
-
 export type LeaderboardRow = {
   __typename?: 'LeaderboardRow';
   rank: Scalars['Int']['output'];
@@ -181,10 +157,6 @@ export type Mutation = {
   logAnonymousEvent: Scalars['Boolean']['output'];
   logEvent: Scalars['Boolean']['output'];
   spinDailyWheel: SpinResult;
-  startGuessMovie: GuessMoviePayload;
-  startTrivia: TriviaQuestion;
-  submitGuessMovie: GuessMovieResult;
-  submitTriviaAnswer: TriviaAnswer;
   toggleBookmark: Scalars['Boolean']['output'];
   toggleFollow: Scalars['Boolean']['output'];
   toggleLike: Scalars['Boolean']['output'];
@@ -258,24 +230,6 @@ export type MutationlogAnonymousEventArgs = {
 
 export type MutationlogEventArgs = {
   input: LogEventInput;
-};
-
-
-export type MutationstartTriviaArgs = {
-  difficulty?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type MutationsubmitGuessMovieArgs = {
-  answerIndex: Scalars['Int']['input'];
-  sessionId: Scalars['ID']['input'];
-};
-
-
-export type MutationsubmitTriviaAnswerArgs = {
-  answerIndex: Scalars['Int']['input'];
-  questionId: Scalars['ID']['input'];
-  sessionId: Scalars['ID']['input'];
 };
 
 
@@ -381,7 +335,6 @@ export type Query = {
   getBookmarksByPost: Array<User>;
   getBookmarksByUser: Array<Post>;
   getCommentsByPost: Array<Comment>;
-  getGamesAvailable: Array<GameConfig>;
   getIsBookmarked: Scalars['Boolean']['output'];
   getIsFollowing: Scalars['Boolean']['output'];
   getIsLiked: Scalars['Boolean']['output'];
@@ -441,11 +394,6 @@ export type QuerygetBookmarksByUserArgs = {
 export type QuerygetCommentsByPostArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   postId: Scalars['String']['input'];
-};
-
-
-export type QuerygetGamesAvailableArgs = {
-  address: Scalars['String']['input'];
 };
 
 
@@ -643,24 +591,6 @@ export type SpinResult = {
 export type TargetType =
   | 'COMMENT'
   | 'POST';
-
-export type TriviaAnswer = {
-  __typename?: 'TriviaAnswer';
-  correct: Scalars['Boolean']['output'];
-  finished: Scalars['Boolean']['output'];
-  nextQuestion?: Maybe<TriviaQuestion>;
-  xpAwarded: Scalars['Int']['output'];
-};
-
-export type TriviaQuestion = {
-  __typename?: 'TriviaQuestion';
-  image?: Maybe<Scalars['String']['output']>;
-  nonce: Scalars['String']['output'];
-  options: Array<Scalars['String']['output']>;
-  questionId: Scalars['String']['output'];
-  sessionId: Scalars['String']['output'];
-  text: Scalars['String']['output'];
-};
 
 export type UnlockRule = {
   __typename?: 'UnlockRule';
@@ -862,10 +792,6 @@ export type ResolversTypes = {
   ExecutionRuleInput: ExecutionRuleInput;
   FilterInput: FilterInput;
   FollowInput: FollowInput;
-  GameConfig: ResolverTypeWrapper<GameConfig>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  GuessMoviePayload: ResolverTypeWrapper<GuessMoviePayload>;
-  GuessMovieResult: ResolverTypeWrapper<GuessMovieResult>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   LeaderboardRow: ResolverTypeWrapper<LeaderboardRow>;
   LikeInput: LikeInput;
@@ -873,6 +799,7 @@ export type ResolversTypes = {
   MediaAttachment: ResolverTypeWrapper<MediaAttachment>;
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: ResolverTypeWrapper<{}>;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Perk: ResolverTypeWrapper<Omit<Perk, 'category'> & { category: ResolversTypes['PerkCategory'] }>;
   PerkCategory: ResolverTypeWrapper<'GAMIFICATION' | 'ECONOMY' | 'SOCIAL' | 'ACCESS'>;
   PerkInput: PerkInput;
@@ -887,8 +814,6 @@ export type ResolversTypes = {
   SpinResult: ResolverTypeWrapper<SpinResult>;
   TargetType: ResolverTypeWrapper<'POST' | 'COMMENT'>;
   Timestamp: ResolverTypeWrapper<Scalars['Timestamp']['output']>;
-  TriviaAnswer: ResolverTypeWrapper<TriviaAnswer>;
-  TriviaQuestion: ResolverTypeWrapper<TriviaQuestion>;
   UnlockRule: ResolverTypeWrapper<UnlockRule>;
   UnlockRuleInput: UnlockRuleInput;
   UpdateCommentInput: UpdateCommentInput;
@@ -922,10 +847,6 @@ export type ResolversParentTypes = {
   ExecutionRuleInput: ExecutionRuleInput;
   FilterInput: FilterInput;
   FollowInput: FollowInput;
-  GameConfig: GameConfig;
-  ID: Scalars['ID']['output'];
-  GuessMoviePayload: GuessMoviePayload;
-  GuessMovieResult: GuessMovieResult;
   JSON: Scalars['JSON']['output'];
   LeaderboardRow: LeaderboardRow;
   LikeInput: LikeInput;
@@ -933,6 +854,7 @@ export type ResolversParentTypes = {
   MediaAttachment: MediaAttachment;
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: {};
+  ID: Scalars['ID']['output'];
   Perk: Perk;
   PerkInput: PerkInput;
   Post: Post;
@@ -945,8 +867,6 @@ export type ResolversParentTypes = {
   SocialLinkInput: SocialLinkInput;
   SpinResult: SpinResult;
   Timestamp: Scalars['Timestamp']['output'];
-  TriviaAnswer: TriviaAnswer;
-  TriviaQuestion: TriviaQuestion;
   UnlockRule: UnlockRule;
   UnlockRuleInput: UnlockRuleInput;
   UpdateCommentInput: UpdateCommentInput;
@@ -1014,30 +934,6 @@ export type ExecutionRuleResolvers<ContextType = any, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type GameConfigResolvers<ContextType = any, ParentType extends ResolversParentTypes['GameConfig'] = ResolversParentTypes['GameConfig']> = {
-  cooldownSec?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  lockedUntilRank?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  version?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GuessMoviePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['GuessMoviePayload'] = ResolversParentTypes['GuessMoviePayload']> = {
-  imageBlurUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  nonce?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  options?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  sessionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GuessMovieResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['GuessMovieResult'] = ResolversParentTypes['GuessMovieResult']> = {
-  attemptsLeft?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  correct?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  finished?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  xpAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
@@ -1073,10 +969,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   logAnonymousEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogAnonymousEventArgs, 'input'>>;
   logEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogEventArgs, 'input'>>;
   spinDailyWheel?: Resolver<ResolversTypes['SpinResult'], ParentType, ContextType>;
-  startGuessMovie?: Resolver<ResolversTypes['GuessMoviePayload'], ParentType, ContextType>;
-  startTrivia?: Resolver<ResolversTypes['TriviaQuestion'], ParentType, ContextType, RequireFields<MutationstartTriviaArgs, 'difficulty'>>;
-  submitGuessMovie?: Resolver<ResolversTypes['GuessMovieResult'], ParentType, ContextType, RequireFields<MutationsubmitGuessMovieArgs, 'answerIndex' | 'sessionId'>>;
-  submitTriviaAnswer?: Resolver<ResolversTypes['TriviaAnswer'], ParentType, ContextType, RequireFields<MutationsubmitTriviaAnswerArgs, 'answerIndex' | 'questionId' | 'sessionId'>>;
   toggleBookmark?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleBookmarkArgs, 'input'>>;
   toggleFollow?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleFollowArgs, 'input'>>;
   toggleLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleLikeArgs, 'input'>>;
@@ -1131,7 +1023,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getBookmarksByPost?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetBookmarksByPostArgs, 'limit' | 'postId'>>;
   getBookmarksByUser?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetBookmarksByUserArgs, 'address' | 'limit'>>;
   getCommentsByPost?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetCommentsByPostArgs, 'postId'>>;
-  getGamesAvailable?: Resolver<Array<ResolversTypes['GameConfig']>, ParentType, ContextType, RequireFields<QuerygetGamesAvailableArgs, 'address'>>;
   getIsBookmarked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsBookmarkedArgs, 'postId'>>;
   getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'targetAddress'>>;
   getIsLiked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsLikedArgs, 'targetId'>>;
@@ -1199,24 +1090,6 @@ export type TargetTypeResolvers = EnumResolverSignature<{ COMMENT?: any, POST?: 
 export interface TimestampScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Timestamp'], any> {
   name: 'Timestamp';
 }
-
-export type TriviaAnswerResolvers<ContextType = any, ParentType extends ResolversParentTypes['TriviaAnswer'] = ResolversParentTypes['TriviaAnswer']> = {
-  correct?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  finished?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  nextQuestion?: Resolver<Maybe<ResolversTypes['TriviaQuestion']>, ParentType, ContextType>;
-  xpAwarded?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type TriviaQuestionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TriviaQuestion'] = ResolversParentTypes['TriviaQuestion']> = {
-  image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  nonce?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  options?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-  questionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  sessionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
 
 export type UnlockRuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['UnlockRule'] = ResolversParentTypes['UnlockRule']> = {
   action?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1293,9 +1166,6 @@ export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   EventLog?: EventLogResolvers<ContextType>;
   ExecutionRule?: ExecutionRuleResolvers<ContextType>;
-  GameConfig?: GameConfigResolvers<ContextType>;
-  GuessMoviePayload?: GuessMoviePayloadResolvers<ContextType>;
-  GuessMovieResult?: GuessMovieResultResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   LeaderboardRow?: LeaderboardRowResolvers<ContextType>;
   MediaAttachment?: MediaAttachmentResolvers<ContextType>;
@@ -1310,8 +1180,6 @@ export type Resolvers<ContextType = any> = {
   SpinResult?: SpinResultResolvers<ContextType>;
   TargetType?: TargetTypeResolvers;
   Timestamp?: GraphQLScalarType;
-  TriviaAnswer?: TriviaAnswerResolvers<ContextType>;
-  TriviaQuestion?: TriviaQuestionResolvers<ContextType>;
   UnlockRule?: UnlockRuleResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;

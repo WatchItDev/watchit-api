@@ -90,7 +90,7 @@ export const rankEngine = (
             }
 
             const idx = ranks.findIndex(r => r.id === u.currentRank)
-            if (idx < 0 || idx >= ranks.length - 1) return   // tope o inconsistente
+            if (idx < 0 || idx >= ranks.length - 1) return
 
             const next = ranks[idx + 1]
             if (u.xpTotal < next.minXp) return

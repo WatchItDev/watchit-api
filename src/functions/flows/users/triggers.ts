@@ -6,7 +6,6 @@ export const logUserCreated = onDocumentCreated(
     'users/{wallet}',
     enhanceTrigger(async ({ rank, activity }, event) => {
         const { wallet } = event.params;
-        // Get the payload of the newly created user
         const newUser = event.data!.data() as FirestoreUser;
 
         console.log(`👤  New user ${wallet} created (email: ${newUser.email ?? 'n/a'})`);

@@ -8,7 +8,6 @@ export class RanksQuery extends DataSourceManager {
         return this.fs<Rank>('ranks').list(100);
     }
 
-    /** Given total XP, return current + next rank */
     async evaluate(totalXp: number) {
         const ranks = await this.catalog();
         ranks.sort((a, b) => a.minXp - b.minXp);

@@ -81,27 +81,6 @@ input FollowInput {
   targetAddress: String!
 }
 
-type GameConfig {
-  cooldownSec: Int!
-  id: ID!
-  lockedUntilRank: String!
-  version: Int!
-}
-
-type GuessMoviePayload {
-  imageBlurUrl: String!
-  nonce: String!
-  options: [String!]!
-  sessionId: String!
-}
-
-type GuessMovieResult {
-  attemptsLeft: Int!
-  correct: Boolean!
-  finished: Boolean!
-  xpAwarded: Int!
-}
-
 scalar JSON
 
 type LeaderboardRow {
@@ -155,10 +134,6 @@ type Mutation {
   logAnonymousEvent(input: LogEventInput!): Boolean!
   logEvent(input: LogEventInput!): Boolean!
   spinDailyWheel: SpinResult!
-  startGuessMovie: GuessMoviePayload!
-  startTrivia(difficulty: Int = 1): TriviaQuestion!
-  submitGuessMovie(answerIndex: Int!, sessionId: ID!): GuessMovieResult!
-  submitTriviaAnswer(answerIndex: Int!, questionId: ID!, sessionId: ID!): TriviaAnswer!
   toggleBookmark(input: BookmarkInput!): Boolean!
   toggleFollow(input: FollowInput!): Boolean!
   toggleLike(input: LikeInput!): Boolean!
@@ -228,7 +203,6 @@ type Query {
   getBookmarksByPost(limit: Int = 50, postId: String!): [User!]!
   getBookmarksByUser(address: String!, limit: Int = 50): [Post!]!
   getCommentsByPost(limit: Int, postId: String!): [Comment!]!
-  getGamesAvailable(address: String!): [GameConfig!]!
   getIsBookmarked(postId: String!): Boolean!
   getIsFollowing(targetAddress: String!): Boolean!
   getIsLiked(targetId: String!): Boolean!
@@ -314,22 +288,6 @@ enum TargetType {
 
 """Unix epoch in milliseconds (number)."""
 scalar Timestamp
-
-type TriviaAnswer {
-  correct: Boolean!
-  finished: Boolean!
-  nextQuestion: TriviaQuestion
-  xpAwarded: Int!
-}
-
-type TriviaQuestion {
-  image: String
-  nonce: String!
-  options: [String!]!
-  questionId: String!
-  sessionId: String!
-  text: String!
-}
 
 type UnlockRule {
   action: String

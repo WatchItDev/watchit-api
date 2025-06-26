@@ -2,7 +2,7 @@ import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { enhanceTrigger }    from '../../manager';
 
 /**
- * Balances & Rank-up when a new XP entry is inserted.
+ * Rank-up when a new XP entry is inserted.
  */
 export const xpEntryCreated = onDocumentCreated(
     'xpEntries/{id}',

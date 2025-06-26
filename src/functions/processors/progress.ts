@@ -1,9 +1,9 @@
 import type { Ctx } from '../manager';
+import { perkEngine } from './perk';
 
 export const progressEngine = ({ ds }: Pick<Ctx, 'ds'>) => {
     const cache: Record<string, any[]> = {};
 
-    /* -------------------------------------------------------- */
     const load = async () => {
         if (Object.keys(cache).length) return;
 
@@ -20,7 +20,6 @@ export const progressEngine = ({ ds }: Pick<Ctx, 'ds'>) => {
         });
     };
 
-    /* -------------------------------------------------------- */
     const consume = async (log: any) => {
         await load();
 
@@ -35,21 +34,31 @@ export const progressEngine = ({ ds }: Pick<Ctx, 'ds'>) => {
 
             const state = await ds.Perks.getState(user.address, meta.id);
 
-            /* -------- ACTION (primera vez) ----------------------- */
-            if (meta.unlockRule.on === 'ACTION' && !state) {
+            if (meta.unlockRule.on === 'ACTION') {
+                const s = !state
+                    ? { status:'AVAILABLE', progress:1 }
+                    : state.status === 'LOCKED'
+                        ? { status:'AVAILABLE', progress:1 }
+                        : null;
+                if (!s) continue;
+
                 await ds.Perks.upsertState({
                     user        : user.address,
                     perkId      : meta.id,
-                    progress    : 1,
+                    progress    : s.progress,
                     target      : 1,
-                    status      : 'AVAILABLE',
+                    status      : s.status as ('AVAILABLE' | 'LOCKED' | 'CLAIMED'),
                     availableAt : Date.now(),
                     cooldownSec : meta.executionRule.cooldownSec ?? 0,
                 });
+
+                if (meta.executionRule.type === 'IMMEDIATE') {
+                    await perkEngine({ ds } as any).maybeAutoApply(meta.id, user.address);
+                }
+
                 continue;
             }
 
-            /* -------- ACTION_COUNT ------------------------------- */
             if (meta.unlockRule.on === 'ACTION_COUNT') {
                 const next    = (state?.progress ?? 0) + 1;
                 const target  = meta.unlockRule.times;

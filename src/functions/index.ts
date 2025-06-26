@@ -16,8 +16,6 @@ export * as xpTrigger         from './flows/xp/triggers';
 
 export * as perksTrigger      from './flows/perks/triggers';
 
-export * as gamesTrigger      from './flows/games/triggers';
-
 export * as logsTrigger       from './flows/logs/triggers';
 
 export * as perksCooldown     from './flows/coldowns/triggers';

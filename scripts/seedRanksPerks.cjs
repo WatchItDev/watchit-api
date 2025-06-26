@@ -1,12 +1,4 @@
-/**
- * scripts/seedRanksPerks.cjs
- * ------------------------------------------------------------------
- *  Ranks : 8   (Watcher → Guardian)
- *  Perks : 38  (24 originales + 8 rank-up + 1 MMC + 5 boosts Watcher)
- *
- *  node scripts/seedRanksPerks.cjs
- * -----------------------------------------------------------------*/
-
+// IGNORE THIS SCRIPT
 const { db, batchWrite } = require('./_init.cjs')
 const now = Date.now()
 
@@ -98,7 +90,7 @@ const watcherBoosts = [
         name:'First like given',
         category:'GAMIFICATION',  minRankId:'watcher',
         unlockRule:{ on:'ACTION', action:'LIKE_CREATED' },
-        executionRule:{ type:'IMMEDIATE' },
+        executionRule:{ type:'ON_CLAIM' },
         reward:{ action:'ADD_XP', amount:2 },
         uiHint:'+2 XP',
     }),
@@ -107,7 +99,7 @@ const watcherBoosts = [
         name:'First comment',
         category:'GAMIFICATION',  minRankId:'watcher',
         unlockRule:{ on:'ACTION', action:'COMMENT_CREATED' },
-        executionRule:{ type:'IMMEDIATE' },
+        executionRule:{ type:'ON_CLAIM' },
         reward:{ action:'ADD_XP', amount:5 },
         uiHint:'+5 XP',
     }),
@@ -116,7 +108,7 @@ const watcherBoosts = [
         name:'First bookmark',
         category:'GAMIFICATION',  minRankId:'watcher',
         unlockRule:{ on:'ACTION', action:'BOOKMARK_CREATED' },
-        executionRule:{ type:'IMMEDIATE' },
+        executionRule:{ type:'ON_CLAIM' },
         reward:{ action:'ADD_XP', amount:3 },
         uiHint:'+3 XP',
     }),
@@ -125,7 +117,7 @@ const watcherBoosts = [
         name:'First follow',
         category:'GAMIFICATION',  minRankId:'watcher',
         unlockRule:{ on:'ACTION', action:'FOLLOW_CREATED' },
-        executionRule:{ type:'IMMEDIATE' },
+        executionRule:{ type:'ON_CLAIM' },
         reward:{ action:'ADD_XP', amount:3 },
         uiHint:'+3 XP',
     }),
@@ -138,7 +130,7 @@ const watcherBoosts = [
             action:'VIDEO_WATCH_FULL',
             times:5, window:'∞',
         },
-        executionRule:{ type:'IMMEDIATE' },
+        executionRule:{ type:'ON_CLAIM' },
         reward:{ action:'ADD_XP', amount:10 },
         uiHint:'+10 XP',
     }),
@@ -152,7 +144,7 @@ const previousPerks = [
         name:'Profile completed',
         category:'GAMIFICATION',  minRankId:'watcher',
         unlockRule:{ on:'ACTION', action:'PROFILE_COMPLETED' },
-        executionRule:{ type:'IMMEDIATE' },
+        executionRule:{ type:'ON_CLAIM' },
         reward:{ action:'ADD_XP', amount:20 },
         uiHint:'+20 XP',
     }),
@@ -163,7 +155,7 @@ const previousPerks = [
         name:'First full video',
         category:'GAMIFICATION',  minRankId:'watcher',
         unlockRule:{ on:'ACTION', action:'VIDEO_WATCH_FULL' },
-        executionRule:{ type:'IMMEDIATE' },
+        executionRule:{ type:'ON_CLAIM' },
         reward:{ action:'ADD_XP', amount:10 },
         uiHint:'+10 XP',
     }),

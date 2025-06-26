@@ -11,7 +11,6 @@ import SynapseDS    from './synapse';
 import LogsDS    from './logs';
 import RanksDS  from './ranks';
 import PerksDS  from './perks';
-import GamesDS  from './games';
 import LeaderboardDS  from './leaderboard';
 
 export const DataSources = (store: FireStore) => ({
@@ -27,7 +26,6 @@ export const DataSources = (store: FireStore) => ({
     Logs:           new LogsDS(store),
     Ranks:          new RanksDS(store),
     Perks:          new PerksDS(store),
-    Games:          new GamesDS(store),
     LeaderboardDS:  new LeaderboardDS(store),
 });
 
