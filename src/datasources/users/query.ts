@@ -1,5 +1,5 @@
 import { DataSourceManager } from '../manager'
-import type {Post, User} from '../../schema/types'
+import type { User } from '../../schema/types'
 
 export class UsersQuery extends DataSourceManager {
     getUser = async (addr: string): Promise<User | null> =>
@@ -10,31 +10,13 @@ export class UsersQuery extends DataSourceManager {
         return this.fs<User>('users').search(q, limit, false);
     }
 
-    async getFollowers(address: string, limit = 50): Promise<User[]> {
-        const ids = await this.fs('users').sub(address, 'followers').ids(limit);
-        return Promise.all(ids.map(id => this.getUser(id))).then(u => u.filter(Boolean) as User[]);
-    }
-
-    async getFollowing(address: string, limit = 50): Promise<User[]> {
-        const ids = await this.fs('users').sub(address, 'following').ids(limit);
-        return Promise.all(ids.map(id => this.getUser(id))).then(u => u.filter(Boolean) as User[]);
-    }
-
-    async getPublications(address: string, limit = 20): Promise<Post[]> {
-        return this.fs<Post>('publications')
-            .query([{ field: 'address', op: '==', value: address }], { limit });
-    }
-
-    async getBookmarks(address: string, limit = 50): Promise<Post[]> {
-        const ids = await this.fs('users').sub(address, 'bookmarks').ids(limit);
-        if (!ids.length) return [];
-        const posts = await Promise.all(ids.map(id => this.fs<Post>('posts').get(id)));
-        return posts.filter(Boolean) as Post[];
-    }
-
     async getUserById(id: string): Promise<User | null> {
         const [u] = await this.fs<User>('users')
             .query([{ field: 'id', op: '==', value: id.toLowerCase() }], { limit: 1 });
         return u ?? null;
     };
+
+    async topByXp(limit = 100): Promise<User[]> {
+        return this.fs<User>('users').query([], { orderBy: { field: 'xpTotal', direction: 'desc' }, limit },);
+    }
 }

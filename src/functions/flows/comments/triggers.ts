@@ -1,10 +1,9 @@
-import {onDocumentCreated, onDocumentUpdated} from 'firebase-functions/v2/firestore'
-import { enhanceTrigger } from '../../manager'
-import {ServiceParams} from "../../../services/manager";
+import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore'
+import { type Ctx, enhanceTrigger } from '../../manager'
 
 export const commentCreated = onDocumentCreated(
     'comments/{commentId}',
-    enhanceTrigger(async ({ ds }: ServiceParams, event) => {
+    enhanceTrigger(async ({ ds, activity }: Pick<Ctx,'ds' | 'activity'>, event) => {
         const commentId = event.params.commentId;
         const c = await ds.Comments.getComment(commentId);
         if (!c) return;
@@ -21,13 +20,14 @@ export const commentCreated = onDocumentCreated(
             return;
         }
         await ds.Posts.updateCounterField(postId, 'commentCount', +1);
+        await activity.commentCreated(c.author.address, commentId)
         console.log(`🔥 commentCreated ${commentId} → post ${postId}`);
     }),
 );
 
 export const commentHidden = onDocumentUpdated(
     'comments/{commentId}',
-    enhanceTrigger(async ({ ds }: ServiceParams, event) => {
+    enhanceTrigger(async ({ ds, activity }: Pick<Ctx,'ds' | 'activity'>, event) => {
         const change = event.data;
         if (!change?.before || !change?.after) {
             console.warn(`commentHidden: without change data for ${event.params.commentId}`);
@@ -36,6 +36,7 @@ export const commentHidden = onDocumentUpdated(
 
         const before = change.before.data();
         const after  = change.after.data();
+        const auth = after.author?.address;
 
         if (!before.hidden && after.hidden) {
             const commentId       = event.params.commentId;
@@ -44,13 +45,17 @@ export const commentHidden = onDocumentUpdated(
 
             if (parentCommentId) {
                 await ds.Comments.updateCounterField(parentCommentId, 'repliesCount', -1);
+                await activity.commentHidden(auth, commentId)
                 console.log(`🔥 replyHidden ${commentId} → parent ${parentCommentId}`);
             } else if (postId) {
                 await ds.Posts.updateCounterField(postId, 'commentCount', -1);
+                await activity.commentHidden(auth, commentId)
                 console.log(`🔥 commentHidden ${commentId} → post ${postId}`);
             } else {
                 console.warn(`commentHidden without parentCommentId and postId on ${commentId}`);
             }
         }
+
+        await activity.commentUpdated(auth ?? '', event.params.commentId);
     })
 );

@@ -20,7 +20,7 @@ export class UsersCommands extends DataSourceManager {
 
     async updateUser(
         address: string,
-        patch: Partial<Omit<UpdateUserInput, 'address' | 'createdAt'>>,
+        patch: Partial<Omit<UpdateUserInput, 'address' | 'createdAt'>> & { currentRank?: string },
     ): Promise<User> {
         const dao = this.fs<FirestoreUser>('users');
         const current = await dao.get(address);
