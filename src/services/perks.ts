@@ -7,20 +7,24 @@ export class PerksService extends ServiceManager {
     updatePerk = (id:string,p:Partial<PerkInput>) => this.ds.Perks.updatePerk(id,p);
     deletePerk = (id:string)                  => this.ds.Perks.deletePerk(id);
     async unlockedByUser(addr: string, limit = 50, offset = 0) {
-        const [user, states, catalog] = await Promise.all([
+        const [user, states, catalog, ranks] = await Promise.all([
             this.ds.Users.getUser(addr),
             this.ds.Perks.statesByUser(addr, limit, offset),
             this.ds.Perks.getCatalog(),
-        ]);
-        if (!user) return [];
+            this.ds.Ranks.catalog(),
+        ])
+        if (!user) return []
 
-        const meta = Object.fromEntries(catalog.map(p => [p.id, p]));
+        const order = Object.fromEntries(ranks.map(r => [r.id, r.order]))
+        const meta  = Object.fromEntries(catalog.map(p => [p.id, p]))
 
         return states
-            .map((s) => {
-                const p = meta[s.perkId];
-                if (!p) return null;
-
+            .filter(s => {
+                const p = meta[s.perkId]
+                return p && (order[p.minRankId] ?? 0) <= (order[user.currentRank] ?? 0)
+            })
+            .map(s => {
+                const p = meta[s.perkId]!
                 return {
                     ...s,
                     perk: {
@@ -31,12 +35,12 @@ export class PerksService extends ServiceManager {
                                 : 0,
                         executionRule: {
                             ...p.executionRule,
-                            cooldownSec: p.executionRule.cooldownSec ?? 0,   // ← default
+                            cooldownSec: p.executionRule.cooldownSec ?? 0,
                         },
                     },
-                };
+                }
             })
-            .filter(Boolean);
+            .slice(offset, offset + limit)
     }
     async claim(addr: string, perkId: string) {
         const ok = await this.ds.Perks.claimPerk(addr, perkId);
