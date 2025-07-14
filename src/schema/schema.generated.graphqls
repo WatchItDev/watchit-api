@@ -83,12 +83,6 @@ input FollowInput {
 
 scalar JSON
 
-type LeaderboardRow {
-  rank: Int!
-  user: User!
-  xpTotal: Int!
-}
-
 input LikeInput {
   targetId: String!
   targetType: TargetType!
@@ -133,7 +127,6 @@ type Mutation {
   incrementPostView(postId: String!): Post!
   logAnonymousEvent(input: LogEventInput!): Boolean!
   logEvent(input: LogEventInput!): Boolean!
-  spinDailyWheel: SpinResult!
   toggleBookmark(input: BookmarkInput!): Boolean!
   toggleFollow(input: FollowInput!): Boolean!
   toggleLike(input: LikeInput!): Boolean!
@@ -206,7 +199,7 @@ type Query {
   getIsBookmarked(postId: String!): Boolean!
   getIsFollowing(targetAddress: String!): Boolean!
   getIsLiked(targetId: String!): Boolean!
-  getLeaderboard(limit: Int = 100): [LeaderboardRow!]!
+  getLeaderboard(limit: Int = 100): [User!]!
   getPerks: [Perk!]!
   getPopularPosts(limit: Int): [Post!]!
   getPopularUsers(limit: Int): [User!]!
@@ -220,7 +213,7 @@ type Query {
   getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
   getTargetEvents(limit: Int = 50, offset: Int = 0, targetId: String!, targetType: String, type: String): [EventLog!]!
-  getUnlockedPerks(address: String!, limit: Int = 50, offset: Int = 0): [Perk!]!
+  getUnlockedPerks(address: String!, limit: Int = 50, offset: Int = 0): [UnlockedPerkState!]!
   getUser(input: UserByInput!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!
   getUserEvents(address: String!, limit: Int = 50, offset: Int = 0, type: String): [EventLog!]!
@@ -273,14 +266,6 @@ input SocialLinkInput {
   url: String!
 }
 
-type SpinResult {
-  cooldownUntil: Timestamp!
-  emoji: String!
-  label: String!
-  outcomeId: String!
-  rewardApplied: Boolean!
-}
-
 enum TargetType {
   COMMENT
   POST
@@ -303,6 +288,20 @@ input UnlockRuleInput {
   rankId: String
   times: Int
   window: String
+}
+
+type UnlockedPerkState {
+  availableAt: Timestamp!
+  collectedAt: Timestamp
+  cooldownSec: Int!
+  createdAt: Timestamp!
+  id: String!
+  perk: Perk!
+  perkId: String!
+  progress: Int!
+  status: String!
+  target: Int!
+  user: String!
 }
 
 input UpdateCommentInput {

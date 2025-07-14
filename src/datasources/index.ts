@@ -11,7 +11,6 @@ import SynapseDS    from './synapse';
 import LogsDS    from './logs';
 import RanksDS  from './ranks';
 import PerksDS  from './perks';
-import LeaderboardDS  from './leaderboard';
 
 export const DataSources = (store: FireStore) => ({
     Users:          new UsersDS(store),
@@ -26,7 +25,6 @@ export const DataSources = (store: FireStore) => ({
     Logs:           new LogsDS(store),
     Ranks:          new RanksDS(store),
     Perks:          new PerksDS(store),
-    LeaderboardDS:  new LeaderboardDS(store),
 });
 
 export type DataSourcesType = ReturnType<typeof DataSources>;

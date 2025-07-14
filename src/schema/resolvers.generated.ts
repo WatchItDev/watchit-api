@@ -45,7 +45,6 @@ import    { hidePost as Mutation_hidePost } from './../graphql/posts/resolvers/M
 import    { incrementPostView as Mutation_incrementPostView } from './../graphql/posts/resolvers/Mutation/incrementPostView';
 import    { logAnonymousEvent as Mutation_logAnonymousEvent } from './../graphql/logs/resolvers/Mutation/logAnonymousEvent';
 import    { logEvent as Mutation_logEvent } from './../graphql/logs/resolvers/Mutation/logEvent';
-import    { spinDailyWheel as Mutation_spinDailyWheel } from './../graphql/trivia/resolvers/Mutation/spinDailyWheel';
 import    { toggleBookmark as Mutation_toggleBookmark } from './../graphql/bookmarks/resolvers/Mutation/toggleBookmark';
 import    { toggleFollow as Mutation_toggleFollow } from './../graphql/follows/resolvers/Mutation/toggleFollow';
 import    { toggleLike as Mutation_toggleLike } from './../graphql/likes/resolvers/Mutation/toggleLike';
@@ -57,15 +56,14 @@ import    { updateUser as Mutation_updateUser } from './../graphql/users/resolve
 import    { Comment } from './../graphql/comments/resolvers/Comment';
 import    { EventLog } from './../graphql/logs/resolvers/EventLog';
 import    { ExecutionRule } from './../graphql/perks/resolvers/ExecutionRule';
-import    { LeaderboardRow } from './../graphql/leaderboard/resolvers/LeaderboardRow';
 import    { MediaAttachment } from './../graphql/posts/resolvers/MediaAttachment';
 import    { Perk } from './../graphql/perks/resolvers/Perk';
 import    { Post } from './../graphql/posts/resolvers/Post';
 import    { Rank } from './../graphql/ranks/resolvers/Rank';
 import    { Reward } from './../graphql/perks/resolvers/Reward';
 import    { SocialLink } from './../graphql/users/resolvers/SocialLink';
-import    { SpinResult } from './../graphql/trivia/resolvers/SpinResult';
 import    { UnlockRule } from './../graphql/perks/resolvers/UnlockRule';
+import    { UnlockedPerkState } from './../graphql/perks/resolvers/UnlockedPerkState';
 import    { User } from './../graphql/users/resolvers/User';
 import    { UserAchievements } from './../graphql/ranks/resolvers/UserAchievements';
 import    { UserRank } from './../graphql/ranks/resolvers/UserRank';
@@ -74,20 +72,19 @@ import    { Upload } from './../graphql/_base/resolvers/Upload';
 import    { DateResolver,DateTimeResolver,JSONResolver,TimestampResolver } from 'graphql-scalars';
     export const resolvers: Resolvers = {
       Query: { getAchievements: Query_getAchievements,getActiveUsers: Query_getActiveUsers,getAllPosts: Query_getAllPosts,getBookmarksByPost: Query_getBookmarksByPost,getBookmarksByUser: Query_getBookmarksByUser,getCommentsByPost: Query_getCommentsByPost,getIsBookmarked: Query_getIsBookmarked,getIsFollowing: Query_getIsFollowing,getIsLiked: Query_getIsLiked,getLeaderboard: Query_getLeaderboard,getPerks: Query_getPerks,getPopularPosts: Query_getPopularPosts,getPopularUsers: Query_getPopularUsers,getPost: Query_getPost,getPostViews: Query_getPostViews,getPosts: Query_getPosts,getPostsByAuthor: Query_getPostsByAuthor,getProfileViews: Query_getProfileViews,getRanksCatalog: Query_getRanksCatalog,getRecentPosts: Query_getRecentPosts,getRecentUsers: Query_getRecentUsers,getRepliesByComment: Query_getRepliesByComment,getTargetEvents: Query_getTargetEvents,getUnlockedPerks: Query_getUnlockedPerks,getUser: Query_getUser,getUserBookmarks: Query_getUserBookmarks,getUserEvents: Query_getUserEvents,getUserFollowers: Query_getUserFollowers,getUserFollowing: Query_getUserFollowing,getUserRanks: Query_getUserRanks,getUserXPHistory: Query_getUserXPHistory,getUsers: Query_getUsers },
-      Mutation: { claimPerk: Mutation_claimPerk,createComment: Mutation_createComment,createPerk: Mutation_createPerk,createPost: Mutation_createPost,createRank: Mutation_createRank,createUser: Mutation_createUser,deletePerk: Mutation_deletePerk,deleteRank: Mutation_deleteRank,hideComment: Mutation_hideComment,hidePost: Mutation_hidePost,incrementPostView: Mutation_incrementPostView,logAnonymousEvent: Mutation_logAnonymousEvent,logEvent: Mutation_logEvent,spinDailyWheel: Mutation_spinDailyWheel,toggleBookmark: Mutation_toggleBookmark,toggleFollow: Mutation_toggleFollow,toggleLike: Mutation_toggleLike,updateComment: Mutation_updateComment,updatePerk: Mutation_updatePerk,updatePost: Mutation_updatePost,updateRank: Mutation_updateRank,updateUser: Mutation_updateUser },
+      Mutation: { claimPerk: Mutation_claimPerk,createComment: Mutation_createComment,createPerk: Mutation_createPerk,createPost: Mutation_createPost,createRank: Mutation_createRank,createUser: Mutation_createUser,deletePerk: Mutation_deletePerk,deleteRank: Mutation_deleteRank,hideComment: Mutation_hideComment,hidePost: Mutation_hidePost,incrementPostView: Mutation_incrementPostView,logAnonymousEvent: Mutation_logAnonymousEvent,logEvent: Mutation_logEvent,toggleBookmark: Mutation_toggleBookmark,toggleFollow: Mutation_toggleFollow,toggleLike: Mutation_toggleLike,updateComment: Mutation_updateComment,updatePerk: Mutation_updatePerk,updatePost: Mutation_updatePost,updateRank: Mutation_updateRank,updateUser: Mutation_updateUser },
       
       Comment: Comment,
 EventLog: EventLog,
 ExecutionRule: ExecutionRule,
-LeaderboardRow: LeaderboardRow,
 MediaAttachment: MediaAttachment,
 Perk: Perk,
 Post: Post,
 Rank: Rank,
 Reward: Reward,
 SocialLink: SocialLink,
-SpinResult: SpinResult,
 UnlockRule: UnlockRule,
+UnlockedPerkState: UnlockedPerkState,
 User: User,
 UserAchievements: UserAchievements,
 UserRank: UserRank,

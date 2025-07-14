@@ -103,13 +103,6 @@ export type FollowInput = {
   targetAddress: Scalars['String']['input'];
 };
 
-export type LeaderboardRow = {
-  __typename?: 'LeaderboardRow';
-  rank: Scalars['Int']['output'];
-  user: User;
-  xpTotal: Scalars['Int']['output'];
-};
-
 export type LikeInput = {
   targetId: Scalars['String']['input'];
   targetType: TargetType;
@@ -156,7 +149,6 @@ export type Mutation = {
   incrementPostView: Post;
   logAnonymousEvent: Scalars['Boolean']['output'];
   logEvent: Scalars['Boolean']['output'];
-  spinDailyWheel: SpinResult;
   toggleBookmark: Scalars['Boolean']['output'];
   toggleFollow: Scalars['Boolean']['output'];
   toggleLike: Scalars['Boolean']['output'];
@@ -338,7 +330,7 @@ export type Query = {
   getIsBookmarked: Scalars['Boolean']['output'];
   getIsFollowing: Scalars['Boolean']['output'];
   getIsLiked: Scalars['Boolean']['output'];
-  getLeaderboard: Array<LeaderboardRow>;
+  getLeaderboard: Array<User>;
   getPerks: Array<Perk>;
   getPopularPosts: Array<Post>;
   getPopularUsers: Array<User>;
@@ -352,7 +344,7 @@ export type Query = {
   getRecentUsers: Array<User>;
   getRepliesByComment: Array<Comment>;
   getTargetEvents: Array<EventLog>;
-  getUnlockedPerks: Array<Perk>;
+  getUnlockedPerks: Array<UnlockedPerkState>;
   getUser?: Maybe<User>;
   getUserBookmarks: Array<Post>;
   getUserEvents: Array<EventLog>;
@@ -579,15 +571,6 @@ export type SocialLinkInput = {
   url: Scalars['String']['input'];
 };
 
-export type SpinResult = {
-  __typename?: 'SpinResult';
-  cooldownUntil: Scalars['Timestamp']['output'];
-  emoji: Scalars['String']['output'];
-  label: Scalars['String']['output'];
-  outcomeId: Scalars['String']['output'];
-  rewardApplied: Scalars['Boolean']['output'];
-};
-
 export type TargetType =
   | 'COMMENT'
   | 'POST';
@@ -607,6 +590,21 @@ export type UnlockRuleInput = {
   rankId?: InputMaybe<Scalars['String']['input']>;
   times?: InputMaybe<Scalars['Int']['input']>;
   window?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UnlockedPerkState = {
+  __typename?: 'UnlockedPerkState';
+  availableAt: Scalars['Timestamp']['output'];
+  collectedAt?: Maybe<Scalars['Timestamp']['output']>;
+  cooldownSec: Scalars['Int']['output'];
+  createdAt: Scalars['Timestamp']['output'];
+  id: Scalars['String']['output'];
+  perk: Perk;
+  perkId: Scalars['String']['output'];
+  progress: Scalars['Int']['output'];
+  status: Scalars['String']['output'];
+  target: Scalars['Int']['output'];
+  user: Scalars['String']['output'];
 };
 
 export type UpdateCommentInput = {
@@ -793,7 +791,6 @@ export type ResolversTypes = {
   FilterInput: FilterInput;
   FollowInput: FollowInput;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
-  LeaderboardRow: ResolverTypeWrapper<LeaderboardRow>;
   LikeInput: LikeInput;
   LogEventInput: LogEventInput;
   MediaAttachment: ResolverTypeWrapper<MediaAttachment>;
@@ -811,11 +808,11 @@ export type ResolversTypes = {
   RewardInput: RewardInput;
   SocialLink: ResolverTypeWrapper<SocialLink>;
   SocialLinkInput: SocialLinkInput;
-  SpinResult: ResolverTypeWrapper<SpinResult>;
   TargetType: ResolverTypeWrapper<'POST' | 'COMMENT'>;
   Timestamp: ResolverTypeWrapper<Scalars['Timestamp']['output']>;
   UnlockRule: ResolverTypeWrapper<UnlockRule>;
   UnlockRuleInput: UnlockRuleInput;
+  UnlockedPerkState: ResolverTypeWrapper<Omit<UnlockedPerkState, 'perk'> & { perk: ResolversTypes['Perk'] }>;
   UpdateCommentInput: UpdateCommentInput;
   UpdatePostInput: UpdatePostInput;
   UpdateUserInput: UpdateUserInput;
@@ -848,7 +845,6 @@ export type ResolversParentTypes = {
   FilterInput: FilterInput;
   FollowInput: FollowInput;
   JSON: Scalars['JSON']['output'];
-  LeaderboardRow: LeaderboardRow;
   LikeInput: LikeInput;
   LogEventInput: LogEventInput;
   MediaAttachment: MediaAttachment;
@@ -865,10 +861,10 @@ export type ResolversParentTypes = {
   RewardInput: RewardInput;
   SocialLink: SocialLink;
   SocialLinkInput: SocialLinkInput;
-  SpinResult: SpinResult;
   Timestamp: Scalars['Timestamp']['output'];
   UnlockRule: UnlockRule;
   UnlockRuleInput: UnlockRuleInput;
+  UnlockedPerkState: Omit<UnlockedPerkState, 'perk'> & { perk: ResolversParentTypes['Perk'] };
   UpdateCommentInput: UpdateCommentInput;
   UpdatePostInput: UpdatePostInput;
   UpdateUserInput: UpdateUserInput;
@@ -938,13 +934,6 @@ export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
-export type LeaderboardRowResolvers<ContextType = any, ParentType extends ResolversParentTypes['LeaderboardRow'] = ResolversParentTypes['LeaderboardRow']> = {
-  rank?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  xpTotal?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MediaAttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaAttachment'] = ResolversParentTypes['MediaAttachment']> = {
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -968,7 +957,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   incrementPostView?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationincrementPostViewArgs, 'postId'>>;
   logAnonymousEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogAnonymousEventArgs, 'input'>>;
   logEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogEventArgs, 'input'>>;
-  spinDailyWheel?: Resolver<ResolversTypes['SpinResult'], ParentType, ContextType>;
   toggleBookmark?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleBookmarkArgs, 'input'>>;
   toggleFollow?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleFollowArgs, 'input'>>;
   toggleLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleLikeArgs, 'input'>>;
@@ -1026,7 +1014,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getIsBookmarked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsBookmarkedArgs, 'postId'>>;
   getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'targetAddress'>>;
   getIsLiked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsLikedArgs, 'targetId'>>;
-  getLeaderboard?: Resolver<Array<ResolversTypes['LeaderboardRow']>, ParentType, ContextType, RequireFields<QuerygetLeaderboardArgs, 'limit'>>;
+  getLeaderboard?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetLeaderboardArgs, 'limit'>>;
   getPerks?: Resolver<Array<ResolversTypes['Perk']>, ParentType, ContextType>;
   getPopularPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, Partial<QuerygetPopularPostsArgs>>;
   getPopularUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetPopularUsersArgs>>;
@@ -1040,7 +1028,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getRecentUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetRecentUsersArgs>>;
   getRepliesByComment?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetRepliesByCommentArgs, 'commentId'>>;
   getTargetEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetTargetEventsArgs, 'limit' | 'offset' | 'targetId'>>;
-  getUnlockedPerks?: Resolver<Array<ResolversTypes['Perk']>, ParentType, ContextType, RequireFields<QuerygetUnlockedPerksArgs, 'address' | 'limit' | 'offset'>>;
+  getUnlockedPerks?: Resolver<Array<ResolversTypes['UnlockedPerkState']>, ParentType, ContextType, RequireFields<QuerygetUnlockedPerksArgs, 'address' | 'limit' | 'offset'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserArgs, 'input'>>;
   getUserBookmarks?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetUserBookmarksArgs, 'address'>>;
   getUserEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetUserEventsArgs, 'address' | 'limit' | 'offset'>>;
@@ -1076,15 +1064,6 @@ export type SocialLinkResolvers<ContextType = any, ParentType extends ResolversP
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SpinResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['SpinResult'] = ResolversParentTypes['SpinResult']> = {
-  cooldownUntil?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
-  emoji?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  outcomeId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  rewardApplied?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type TargetTypeResolvers = EnumResolverSignature<{ COMMENT?: any, POST?: any }, ResolversTypes['TargetType']>;
 
 export interface TimestampScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Timestamp'], any> {
@@ -1097,6 +1076,21 @@ export type UnlockRuleResolvers<ContextType = any, ParentType extends ResolversP
   rankId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   times?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   window?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UnlockedPerkStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['UnlockedPerkState'] = ResolversParentTypes['UnlockedPerkState']> = {
+  availableAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  collectedAt?: Resolver<Maybe<ResolversTypes['Timestamp']>, ParentType, ContextType>;
+  cooldownSec?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  perk?: Resolver<ResolversTypes['Perk'], ParentType, ContextType>;
+  perkId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  progress?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  target?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1167,7 +1161,6 @@ export type Resolvers<ContextType = any> = {
   EventLog?: EventLogResolvers<ContextType>;
   ExecutionRule?: ExecutionRuleResolvers<ContextType>;
   JSON?: GraphQLScalarType;
-  LeaderboardRow?: LeaderboardRowResolvers<ContextType>;
   MediaAttachment?: MediaAttachmentResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Perk?: PerkResolvers<ContextType>;
@@ -1177,10 +1170,10 @@ export type Resolvers<ContextType = any> = {
   Rank?: RankResolvers<ContextType>;
   Reward?: RewardResolvers<ContextType>;
   SocialLink?: SocialLinkResolvers<ContextType>;
-  SpinResult?: SpinResultResolvers<ContextType>;
   TargetType?: TargetTypeResolvers;
   Timestamp?: GraphQLScalarType;
   UnlockRule?: UnlockRuleResolvers<ContextType>;
+  UnlockedPerkState?: UnlockedPerkStateResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
   UserAchievements?: UserAchievementsResolvers<ContextType>;

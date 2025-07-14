@@ -2,12 +2,6 @@
 #          LEADERBOARD             #
 ####################################
 
-type LeaderboardRow {
-  rank:    Int!
-  xpTotal: Int!
-  user:    User!
-}
-
 extend type Query {
-  getLeaderboard(limit:Int = 100): [LeaderboardRow!]!
+  getLeaderboard(limit: Int = 100): [User!]!
 }

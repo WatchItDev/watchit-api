@@ -36,6 +36,10 @@ export function makePerk(input: PerkInput): Perk {
         collectedAt   : null,
         availableAt   : 0,
         cooldownRemaining: 0,
+        executionRule: {
+            ...input.executionRule,
+            cooldownSec: input.executionRule.cooldownSec ?? 0,   // fallback
+        },
         createdAt     : now as any,
         updatedAt     : now as any,
     } as unknown as Perk
