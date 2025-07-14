@@ -19,5 +19,3 @@ export * as perksTrigger      from './flows/perks/triggers';
 export * as logsTrigger       from './flows/logs/triggers';
 
 export * as perksCooldown     from './flows/coldowns/triggers';
-
-export * as leaderboardSched  from './flows/leaderboard/triggers';
