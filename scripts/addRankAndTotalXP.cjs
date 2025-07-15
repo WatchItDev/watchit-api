@@ -1,18 +1,7 @@
-#!/usr/bin/env node
-/* scripts/addRankAndSeedPerks.cjs
- * ------------------------------------------------------------------
- * ▸ Para TODOS los usuarios:
- *    - Crea (si no existe) el doc rankUser con su rango actual
- *    - Crea estados iniciales de todos los perks aplicables
- * ▸ No modifica currentRank ni xpTotal (ya están correctos)
- * -----------------------------------------------------------------*/
-
 const path = require('node:path');
 const { db } = require(path.resolve(__dirname, './_init.cjs'));
 
-/* ─────────────  IMPORTACIONES DINÁMICAS (ESM)  ───────────── */
 async function main () {
-    /* DAO oficial (compilado) */
     const { FireStore } = await import(
         path.resolve(
             __dirname,
@@ -20,7 +9,6 @@ async function main () {
         )
         );
 
-    /* Data‑sources y processors */
     const { DataSources } = await import(
         path.resolve(__dirname, '../src/functions/lib/src/datasources/index.js')
         );
@@ -37,40 +25,29 @@ async function main () {
         )
         );
 
-    /* --------- Desactivamos cualquier emulador --------- */
     delete process.env.FIRESTORE_EMULATOR_HOST;
     delete process.env.FIRESTORE_EMULATOR_HOST_PATH;
 
-    /* ---------- Store y singletons para los data‑sources ---------- */
-    const { fs } = FireStore({ emulator: false }); // fuerza producción
+    const { fs } = FireStore({ emulator: false });
     const store  = { fs };
     const ds     = DataSources(store);
 
-    const activity = activityLogger({ ds });
-    const ext      = { SynapseDS: { transfer: async () => {/* no‑op */} } };
-    const rank     = rankEngine({ ds, ext, activity });   // (no se usa pero deja las deps satisfechas)
-
-    /* ------------------------- MIGRACIÓN -------------------------- */
     const USERS = 'users';
     console.log('🔎  recuperando usuarios…');
     const snap  = await db.collection(USERS).get();
     const total = snap.size;
     console.log(`→ ${total} usuarios encontrados.`);
 
-    /* helpers ---------------------------------------------------- */
-    const allRanks = await ds.Ranks.catalog();               // lista de rangos
+    const allRanks = await ds.Ranks.catalog();
     const orderIdx = Object.fromEntries(allRanks.map(r => [r.id, r.order]));
 
-    /* ----------- función que siembra perks para 1 usuario ----------- */
     const seedPerksForUser = async addr => {
-        const u           = await ds.Users.getUser(addr);   // ya tiene currentRank
+        const u           = await ds.Users.getUser(addr);
         const currentRank = u.currentRank;
-        if (!currentRank) return;                           // safety‑net
+        if (!currentRank) return;
 
-        /* 1 · rankUser doc (idempotente) ------------------------------ */
         await ds.Ranks.addUserRank(addr, currentRank);
 
-        /* 2 · perks --------------------------------------------------- */
         const catalog  = await ds.Perks.getCatalog();
 
         const instant = catalog.filter(
@@ -85,7 +62,6 @@ async function main () {
 
         const now = Date.now();
 
-        /* 2‑A ▸ instantáneos → AVAILABLE ------------------------------ */
         await Promise.all(
             instant.map(p =>
                 ds.Perks.upsertState({
@@ -102,7 +78,6 @@ async function main () {
             ),
         );
 
-        /* 2‑B ▸ semilla LOCKED para el resto ------------------------- */
         await Promise.all(
             seedable.map(async p => {
                 const exists = await ds.Perks.getState(addr, p.id);
@@ -124,10 +99,9 @@ async function main () {
         );
     };
 
-    /* 3 ▸ Siembra para TODOS los usuarios -------------------------- */
     console.log('\n⚙️  sembrando estados de perks/ranks…');
     const CHUNK = 50;
-    const uids  = snap.docs.map(d => d.id);          // todos los UID
+    const uids  = snap.docs.map(d => d.id);
 
     for (let i = 0; i < uids.length; i += CHUNK) {
         await Promise.all(
