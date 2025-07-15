@@ -1,351 +1,585 @@
-// IGNORE THIS SCRIPT
 const { db, batchWrite } = require('./_init.cjs')
 const now = Date.now()
 
-/* ───────────────────────── helpers ────────────────────────────── */
 const preview = r => ({
     ADD_XP : `+${r.amount ?? 0} XP`,
     ADD_MMC: `+${r.amount ?? 0} MMC`,
-    MINT_NFT: `NFT #${r.tokenId ?? ''}`,
 }[r.action] ?? '')
 
 const perk = cfg => ({
     id      : cfg.id,
     name    : cfg.name,
     uiHint  : cfg.uiHint ?? '',
-    category: cfg.category,
-    minRankId   : cfg.minRankId,
-    unlockRule  : cfg.unlockRule,
-    executionRule: cfg.executionRule,
-    cooldownRemaining: cfg.cooldownRemaining ?? 0,
-    reward       : cfg.reward,
+    category: cfg.category ?? 'GAMIFICATION',
+    minRankId : cfg.minRankId,
+    unlockRule: cfg.unlockRule,
+    executionRule: cfg.executionRule ?? { type:'IMMEDIATE' },
+    reward  : cfg.reward,
     rewardPreview: cfg.rewardPreview ?? preview(cfg.reward),
-    enabled      : true,
+    enabled : true,
     createdAt: now,
     updatedAt: now,
 })
 
-const xpDrip = (id, name, action, amt, cdSec, hint, min='watcher') =>
-    perk({
-        id, name, uiHint: hint,
-        category:'GAMIFICATION', minRankId:min,
-        unlockRule:{ on:'ACTION', action },
-        executionRule:{ type:'ON_COOLDOWN', cooldownSec:cdSec },
-        reward:{ action:'ADD_XP', amount:amt },
-    })
+const ranksConfig = {
+    watcher: {
+        theme:'water', minXp:0,
+        perks:[
+            perk({
+                id:'rankup-watcher',
+                name:'Welcome Watcher – 50 XP',
+                minRankId:'watcher',
+                unlockRule:{ on:'RANK_UP', rankId:'watcher' },
+                reward:{ action:'ADD_XP', amount:50 },
+                uiHint:'+50 XP',
+            }),
+            perk({
+                id:'rankup-watcher-mmc',
+                name:'Welcome Watcher – 50 MMC',
+                category:'ECONOMY',
+                minRankId:'watcher',
+                unlockRule:{ on:'RANK_UP', rankId:'watcher' },
+                reward:{ action:'ADD_MMC', amount:50 },
+                uiHint:'+50 MMC',
+            }),
+            perk({
+                id:'like-1-watcher',
+                name:'First like',
+                minRankId:'watcher',
+                unlockRule:{ on:'ACTION', action:'LIKE_CREATED' },
+                executionRule:{ type:'ON_CLAIM' },
+                reward:{ action:'ADD_XP', amount:2 },
+                uiHint:'+2 XP',
+            }),
+            perk({
+                id:'comment-1-watcher',
+                name:'First comment',
+                minRankId:'watcher',
+                unlockRule:{ on:'ACTION', action:'COMMENT_CREATED' },
+                executionRule:{ type:'ON_CLAIM' },
+                reward:{ action:'ADD_XP', amount:5 },
+                uiHint:'+5 XP',
+            }),
+            perk({
+                id:'bookmark-1-watcher',
+                name:'First bookmark',
+                minRankId:'watcher',
+                unlockRule:{ on:'ACTION', action:'BOOKMARK_CREATED' },
+                executionRule:{ type:'ON_CLAIM' },
+                reward:{ action:'ADD_XP', amount:3 },
+                uiHint:'+3 XP',
+            }),
+            perk({
+                id:'video-5-watcher',
+                name:'Watch 5 full videos',
+                minRankId:'watcher',
+                unlockRule:{ on:'ACTION_COUNT', action:'VIDEO_WATCH_FULL', times:5, window:'∞' },
+                executionRule:{ type:'ON_CLAIM' },
+                reward:{ action:'ADD_XP', amount:10 },
+                uiHint:'+10 XP',
+            }),
+            perk({
+                id:'follow-1-watcher',
+                name:'First follow',
+                minRankId:'watcher',
+                unlockRule:{ on:'ACTION', action:'FOLLOW_CREATED' },
+                executionRule:{ type:'ON_CLAIM' },
+                reward:{ action:'ADD_XP', amount:3 },
+                uiHint:'+3 XP',
+            }),
+        ],
+    },
 
-/* ───────────────────────────── 1 · RANKS ──────────────────────── */
-const ranksRaw = [
-    ['watcher','Watcher','water',0],
-    ['fan','Fan','fire',150],
-    ['engager','Engager','wind',500],
-    ['supporter','Supporter','amethyst',1200],
-    ['spotlighter','Spotlighter','ruby',2500],
-    ['scout','Scout','topaz',5000],
-    ['storykeeper','Storykeeper','silver',13000],
-    ['guardian','Guardian','gold',20000],
-]
+    fan: {
+        theme:'fire', minXp:150,
+        perks:[
+            perk({
+                id:'rankup-fan',
+                name:'Welcome Fan – 75 XP',
+                minRankId:'fan',
+                unlockRule:{ on:'RANK_UP', rankId:'fan' },
+                reward:{ action:'ADD_XP', amount:75 },
+                uiHint:'+75 XP',
+            }),
+            perk({
+                id:'rankup-fan-mmc',
+                name:'Welcome Fan – 10 MMC',
+                category:'ECONOMY',
+                minRankId:'fan',
+                unlockRule:{ on:'RANK_UP', rankId:'fan' },
+                reward:{ action:'ADD_MMC', amount:10 },
+                uiHint:'+10 MMC',
+            }),
+            perk({
+                id:'like-10-fan',
+                name:'Give 10 likes',
+                minRankId:'fan',
+                unlockRule:{ on:'ACTION_COUNT', action:'LIKE_CREATED', times:10, window:'∞' },
+                reward:{ action:'ADD_XP', amount:10 },
+                uiHint:'+10 XP',
+            }),
+            perk({
+                id:'comment-10-fan',
+                name:'Write 10 comments',
+                minRankId:'fan',
+                unlockRule:{ on:'ACTION_COUNT', action:'COMMENT_CREATED', times:10, window:'∞' },
+                reward:{ action:'ADD_XP', amount:10 },
+                uiHint:'+10 XP',
+            }),
+            perk({
+                id:'bookmark-5-fan',
+                name:'Save 5 bookmarks',
+                minRankId:'fan',
+                unlockRule:{ on:'ACTION_COUNT', action:'BOOKMARK_CREATED', times:5, window:'∞' },
+                reward:{ action:'ADD_XP', amount:8 },
+                uiHint:'+8 XP',
+            }),
+            perk({
+                id:'video-20-fan',
+                name:'Watch 20 full videos',
+                minRankId:'fan',
+                unlockRule:{ on:'ACTION_COUNT', action:'VIDEO_WATCH_FULL', times:20, window:'∞' },
+                reward:{ action:'ADD_XP', amount:25 },
+                uiHint:'+25 XP',
+            }),
+            perk({
+                id:'follow-5-fan',
+                name:'Follow 5 profiles',
+                minRankId:'fan',
+                unlockRule:{ on:'ACTION_COUNT', action:'FOLLOW_CREATED', times:5, window:'∞' },
+                reward:{ action:'ADD_XP', amount:15 },
+                uiHint:'+15 XP',
+            }),
+        ],
+    },
 
-const ranks = ranksRaw.map(([id,name,theme,xp],i)=>({
-    id,name,
-    badgeUrl:`https://cdn.watchit/badges/${theme}.png`,
-    colorTheme:theme,
-    minXp:xp,
-    order:i+1,
-    createdAt:now,
-    updatedAt:now,
-}))
+    engager: {
+        theme:'wind', minXp:500,
+        perks:[
+            perk({
+                id:'rankup-engager',
+                name:'Welcome Engager – 100 XP',
+                minRankId:'engager',
+                unlockRule:{ on:'RANK_UP', rankId:'engager' },
+                reward:{ action:'ADD_XP', amount:100 },
+                uiHint:'+100 XP',
+            }),
+            perk({
+                id:'rankup-engager-mmc',
+                name:'Welcome Engager – 25 MMC',
+                category:'ECONOMY',
+                minRankId:'engager',
+                unlockRule:{ on:'RANK_UP', rankId:'engager' },
+                reward:{ action:'ADD_MMC', amount:25 },
+                uiHint:'+25 MMC',
+            }),
+            /* acciones */
+            perk({
+                id:'like-25-engager',
+                name:'Give 25 likes',
+                minRankId:'engager',
+                unlockRule:{ on:'ACTION_COUNT', action:'LIKE_CREATED', times:25, window:'∞' },
+                reward:{ action:'ADD_XP', amount:20 },
+                uiHint:'+20 XP',
+            }),
+            perk({
+                id:'comment-25-engager',
+                name:'Write 25 comments',
+                minRankId:'engager',
+                unlockRule:{ on:'ACTION_COUNT', action:'COMMENT_CREATED', times:25, window:'∞' },
+                reward:{ action:'ADD_XP', amount:20 },
+                uiHint:'+20 XP',
+            }),
+            perk({
+                id:'bookmark-15-engager',
+                name:'Save 15 bookmarks',
+                minRankId:'engager',
+                unlockRule:{ on:'ACTION_COUNT', action:'BOOKMARK_CREATED', times:15, window:'∞' },
+                reward:{ action:'ADD_XP', amount:20 },
+                uiHint:'+20 XP',
+            }),
+            perk({
+                id:'video-50-engager',
+                name:'Watch 50 full videos',
+                minRankId:'engager',
+                unlockRule:{ on:'ACTION_COUNT', action:'VIDEO_WATCH_FULL', times:50, window:'∞' },
+                reward:{ action:'ADD_XP', amount:40 },
+                uiHint:'+40 XP',
+            }),
+            perk({
+                id:'follow-15-engager',
+                name:'Follow 15 profiles',
+                minRankId:'engager',
+                unlockRule:{ on:'ACTION_COUNT', action:'FOLLOW_CREATED', times:15, window:'∞' },
+                reward:{ action:'ADD_XP', amount:25 },
+                uiHint:'+25 XP',
+            }),
+        ],
+    },
 
-/* ───────────────────────────── 2 · PERKS ──────────────────────── */
-/* 2-A · rank-up (cosméticos)  */
-const rankPerks = ranks.map(r => perk({
-    id : `rankup-${r.id}`,
-    name : r.id==='watcher'
-        ? 'Welcome watcher – Bonus 50 XP'
-        : `Welcome to ${r.name}`,
-    uiHint : r.id==='watcher'? '+50 XP':'New badge unlocked',
-    category:'GAMIFICATION',
-    minRankId:r.id,
-    unlockRule:{ on:'RANK_UP', rankId:r.id },
-    executionRule:{ type:'IMMEDIATE' },
-    reward:{ action:'ADD_XP', amount:r.id==='watcher'?50:0 },
-}))
+    supporter: {
+        theme:'amethyst', minXp:1200,
+        perks:[
+            perk({
+                id:'rankup-supporter',
+                name:'Welcome Supporter – 125 XP',
+                minRankId:'supporter',
+                unlockRule:{ on:'RANK_UP', rankId:'supporter' },
+                reward:{ action:'ADD_XP', amount:125 },
+                uiHint:'+125 XP',
+            }),
+            perk({
+                id:'rankup-supporter-mmc',
+                name:'Welcome Supporter – 30 MMC',
+                category:'ECONOMY',
+                minRankId:'supporter',
+                unlockRule:{ on:'RANK_UP', rankId:'supporter' },
+                reward:{ action:'ADD_MMC', amount:30 },
+                uiHint:'+30 MMC',
+            }),
+            perk({
+                id:'like-50-supporter',
+                name:'Give 50 likes',
+                minRankId:'supporter',
+                unlockRule:{ on:'ACTION_COUNT', action:'LIKE_CREATED', times:50, window:'∞' },
+                reward:{ action:'ADD_XP', amount:30 },
+                uiHint:'+30 XP',
+            }),
+            perk({
+                id:'comment-50-supporter',
+                name:'Write 50 comments',
+                minRankId:'supporter',
+                unlockRule:{ on:'ACTION_COUNT', action:'COMMENT_CREATED', times:50, window:'∞' },
+                reward:{ action:'ADD_XP', amount:30 },
+                uiHint:'+30 XP',
+            }),
+            perk({
+                id:'bookmark-50-supporter',
+                name:'Save 50 bookmarks',
+                minRankId:'supporter',
+                unlockRule:{ on:'ACTION_COUNT', action:'BOOKMARK_CREATED', times:50, window:'∞' },
+                reward:{ action:'ADD_XP', amount:30 },
+                uiHint:'+30 XP',
+            }),
+            perk({
+                id:'video-100-supporter',
+                name:'Watch 100 full videos',
+                minRankId:'supporter',
+                unlockRule:{ on:'ACTION_COUNT', action:'VIDEO_WATCH_FULL', times:100, window:'∞' },
+                reward:{ action:'ADD_XP', amount:75 },
+                uiHint:'+75 XP',
+            }),
+            perk({
+                id:'follow-25-supporter',
+                name:'Follow 25 profiles',
+                minRankId:'supporter',
+                unlockRule:{ on:'ACTION_COUNT', action:'FOLLOW_CREATED', times:25, window:'∞' },
+                reward:{ action:'ADD_XP', amount:30 },
+                uiHint:'+30 XP',
+            }),
+        ],
+    },
 
-/* 2-B · Bonus 50 MMC al crear la cuenta (Watcher) */
-const watcherMmcPerk = perk({
-    id:'rankup-watcher-mmc',
-    name:'Welcome watcher – 50 MMC',
-    category:'ECONOMY',
-    minRankId:'watcher',
-    unlockRule:{ on:'RANK_UP', rankId:'watcher' },
-    executionRule:{ type:'IMMEDIATE' },
-    reward:{ action:'ADD_MMC', amount:50 },
-    uiHint:'+50 MMC',
-})
+    spotlighter: {
+        theme:'ruby', minXp:2500,
+        perks:[
+            perk({
+                id:'rankup-spotlighter',
+                name:'Welcome Spotlighter – 150 XP',
+                minRankId:'spotlighter',
+                unlockRule:{ on:'RANK_UP', rankId:'spotlighter' },
+                reward:{ action:'ADD_XP', amount:150 },
+                uiHint:'+150 XP',
+            }),
+            perk({
+                id:'rankup-spotlighter-mmc',
+                name:'Welcome Spotlighter – 35 MMC',
+                category:'ECONOMY',
+                minRankId:'spotlighter',
+                unlockRule:{ on:'RANK_UP', rankId:'spotlighter' },
+                reward:{ action:'ADD_MMC', amount:35 },
+                uiHint:'+35 MMC',
+            }),
+            perk({
+                id:'like-100-spotlighter',
+                name:'Give 100 likes',
+                minRankId:'spotlighter',
+                unlockRule:{ on:'ACTION_COUNT', action:'LIKE_CREATED', times:100, window:'∞' },
+                reward:{ action:'ADD_XP', amount:40 },
+                uiHint:'+40 XP',
+            }),
+            perk({
+                id:'comment-100-spotlighter',
+                name:'Write 100 comments',
+                minRankId:'spotlighter',
+                unlockRule:{ on:'ACTION_COUNT', action:'COMMENT_CREATED', times:100, window:'∞' },
+                reward:{ action:'ADD_XP', amount:44 },
+                uiHint:'+44 XP',
+            }),
+            perk({
+                id:'bookmark-100-spotlighter',
+                name:'Save 100 bookmarks',
+                minRankId:'spotlighter',
+                unlockRule:{ on:'ACTION_COUNT', action:'BOOKMARK_CREATED', times:100, window:'∞' },
+                reward:{ action:'ADD_XP', amount:42 },
+                uiHint:'+42 XP',
+            }),
+            perk({
+                id:'video-200-spotlighter',
+                name:'Watch 200 full videos',
+                minRankId:'spotlighter',
+                unlockRule:{ on:'ACTION_COUNT', action:'VIDEO_WATCH_FULL', times:200, window:'∞' },
+                reward:{ action:'ADD_XP', amount:75 },
+                uiHint:'+75 XP',
+            }),
+            perk({
+                id:'follow-40-spotlighter',
+                name:'Follow 40 profiles',
+                minRankId:'spotlighter',
+                unlockRule:{ on:'ACTION_COUNT', action:'FOLLOW_CREATED', times:40, window:'∞' },
+                reward:{ action:'ADD_XP', amount:19 },
+                uiHint:'+19 XP',
+            }),
+        ],
+    },
 
-/* 2-C · Boosts iniciales para Watcher (5) */
-const watcherBoosts = [
-    perk({
-        id:'first-like-given',
-        name:'First like given',
-        category:'GAMIFICATION',  minRankId:'watcher',
-        unlockRule:{ on:'ACTION', action:'LIKE_CREATED' },
-        executionRule:{ type:'ON_CLAIM' },
-        reward:{ action:'ADD_XP', amount:2 },
-        uiHint:'+2 XP',
+    scout: {
+        theme:'topaz', minXp:5000,
+        perks:[
+            perk({
+                id:'rankup-scout',
+                name:'Welcome Scout – 175 XP',
+                minRankId:'scout',
+                unlockRule:{ on:'RANK_UP', rankId:'scout' },
+                reward:{ action:'ADD_XP', amount:175 },
+                uiHint:'+175 XP',
+            }),
+            perk({
+                id:'rankup-scout-mmc',
+                name:'Welcome Scout – 40 MMC',
+                category:'ECONOMY',
+                minRankId:'scout',
+                unlockRule:{ on:'RANK_UP', rankId:'scout' },
+                reward:{ action:'ADD_MMC', amount:40 },
+                uiHint:'+40 MMC',
+            }),
+            perk({
+                id:'like-150-scout',
+                name:'Give 150 likes',
+                minRankId:'scout',
+                unlockRule:{ on:'ACTION_COUNT', action:'LIKE_CREATED', times:150, window:'∞' },
+                reward:{ action:'ADD_XP', amount:55 },
+                uiHint:'+55 XP',
+            }),
+            perk({
+                id:'comment-150-scout',
+                name:'Write 150 comments',
+                minRankId:'scout',
+                unlockRule:{ on:'ACTION_COUNT', action:'COMMENT_CREATED', times:150, window:'∞' },
+                reward:{ action:'ADD_XP', amount:59 },
+                uiHint:'+59 XP',
+            }),
+            perk({
+                id:'bookmark-150-scout',
+                name:'Save 150 bookmarks',
+                minRankId:'scout',
+                unlockRule:{ on:'ACTION_COUNT', action:'BOOKMARK_CREATED', times:150, window:'∞' },
+                reward:{ action:'ADD_XP', amount:57 },
+                uiHint:'+57 XP',
+            }),
+            perk({
+                id:'video-300-scout',
+                name:'Watch 300 full videos',
+                minRankId:'scout',
+                unlockRule:{ on:'ACTION_COUNT', action:'VIDEO_WATCH_FULL', times:300, window:'∞' },
+                reward:{ action:'ADD_XP', amount:102 },
+                uiHint:'+102 XP',
+            }),
+            perk({
+                id:'follow-60-scout',
+                name:'Follow 60 profiles',
+                minRankId:'scout',
+                unlockRule:{ on:'ACTION_COUNT', action:'FOLLOW_CREATED', times:60, window:'∞' },
+                reward:{ action:'ADD_XP', amount:28 },
+                uiHint:'+28 XP',
+            }),
+            perk({
+                id:'post-1-scout',
+                name:'First post',
+                minRankId:'scout',
+                unlockRule:{ on:'ACTION', action:'POST_CREATED' },
+                reward:{ action:'ADD_XP', amount:6 },
+                uiHint:'+6 XP',
+            }),
+            perk({
+                id:'post-10-scout',
+                name:'Publish 10 posts',
+                minRankId:'scout',
+                unlockRule:{ on:'ACTION_COUNT', action:'POST_CREATED', times:10, window:'∞' },
+                reward:{ action:'ADD_XP', amount:11 },
+                uiHint:'+11 XP',
+            }),
+        ],
+    },
+
+    storykeeper: {
+        theme:'silver', minXp:13000,
+        perks:[
+            perk({
+                id:'rankup-storykeeper',
+                name:'Welcome Storykeeper – 200 XP',
+                minRankId:'storykeeper',
+                unlockRule:{ on:'RANK_UP', rankId:'storykeeper' },
+                reward:{ action:'ADD_XP', amount:200 },
+                uiHint:'+200 XP',
+            }),
+            perk({
+                id:'rankup-storykeeper-mmc',
+                name:'Welcome Storykeeper – 45 MMC',
+                category:'ECONOMY',
+                minRankId:'storykeeper',
+                unlockRule:{ on:'RANK_UP', rankId:'storykeeper' },
+                reward:{ action:'ADD_MMC', amount:45 },
+                uiHint:'+45 MMC',
+            }),
+            perk({
+                id:'like-200-storykeeper',
+                name:'Give 200 likes',
+                minRankId:'storykeeper',
+                unlockRule:{ on:'ACTION_COUNT', action:'LIKE_CREATED', times:200, window:'∞' },
+                reward:{ action:'ADD_XP', amount:69 },
+                uiHint:'+69 XP',
+            }),
+            perk({
+                id:'comment-200-storykeeper',
+                name:'Write 200 comments',
+                minRankId:'storykeeper',
+                unlockRule:{ on:'ACTION_COUNT', action:'COMMENT_CREATED', times:200, window:'∞' },
+                reward:{ action:'ADD_XP', amount:73 },
+                uiHint:'+73 XP',
+            }),
+            perk({
+                id:'bookmark-200-storykeeper',
+                name:'Save 200 bookmarks',
+                minRankId:'storykeeper',
+                unlockRule:{ on:'ACTION_COUNT', action:'BOOKMARK_CREATED', times:200, window:'∞' },
+                reward:{ action:'ADD_XP', amount:71 },
+                uiHint:'+71 XP',
+            }),
+            perk({
+                id:'video-400-storykeeper',
+                name:'Watch 400 full videos',
+                minRankId:'storykeeper',
+                unlockRule:{ on:'ACTION_COUNT', action:'VIDEO_WATCH_FULL', times:400, window:'∞' },
+                reward:{ action:'ADD_XP', amount:127 },
+                uiHint:'+127 XP',
+            }),
+            perk({
+                id:'follow-80-storykeeper',
+                name:'Follow 80 profiles',
+                minRankId:'storykeeper',
+                unlockRule:{ on:'ACTION_COUNT', action:'FOLLOW_CREATED', times:80, window:'∞' },
+                reward:{ action:'ADD_XP', amount:35 },
+                uiHint:'+35 XP',
+            }),
+            perk({
+                id:'post-25-storykeeper',
+                name:'Publish 25 posts',
+                minRankId:'storykeeper',
+                unlockRule:{ on:'ACTION_COUNT', action:'POST_CREATED', times:25, window:'∞' },
+                reward:{ action:'ADD_XP', amount:18 },
+                uiHint:'+18 XP',
+            }),
+        ],
+    },
+
+    guardian: {
+        theme:'gold', minXp:20000,
+        perks:[
+            perk({
+                id:'rankup-guardian',
+                name:'Welcome Guardian – 250 XP',
+                minRankId:'guardian',
+                unlockRule:{ on:'RANK_UP', rankId:'guardian' },
+                reward:{ action:'ADD_XP', amount:250 },
+                uiHint:'+250 XP',
+            }),
+            perk({
+                id:'rankup-guardian-mmc',
+                name:'Welcome Guardian – 50 MMC',
+                category:'ECONOMY',
+                minRankId:'guardian',
+                unlockRule:{ on:'RANK_UP', rankId:'guardian' },
+                reward:{ action:'ADD_MMC', amount:50 },
+                uiHint:'+50 MMC',
+            }),
+            perk({
+                id:'like-300-guardian',
+                name:'Give 300 likes',
+                minRankId:'guardian',
+                unlockRule:{ on:'ACTION_COUNT', action:'LIKE_CREATED', times:300, window:'∞' },
+                reward:{ action:'ADD_XP', amount:96 },
+                uiHint:'+96 XP',
+            }),
+            perk({
+                id:'comment-300-guardian',
+                name:'Write 300 comments',
+                minRankId:'guardian',
+                unlockRule:{ on:'ACTION_COUNT', action:'COMMENT_CREATED', times:300, window:'∞' },
+                reward:{ action:'ADD_XP', amount:100 },
+                uiHint:'+100 XP',
+            }),
+            perk({
+                id:'bookmark-300-guardian',
+                name:'Save 300 bookmarks',
+                minRankId:'guardian',
+                unlockRule:{ on:'ACTION_COUNT', action:'BOOKMARK_CREATED', times:300, window:'∞' },
+                reward:{ action:'ADD_XP', amount:98 },
+                uiHint:'+98 XP',
+            }),
+            perk({
+                id:'video-600-guardian',
+                name:'Watch 600 full videos',
+                minRankId:'guardian',
+                unlockRule:{ on:'ACTION_COUNT', action:'VIDEO_WATCH_FULL', times:600, window:'∞' },
+                reward:{ action:'ADD_XP', amount:173 },
+                uiHint:'+173 XP',
+            }),
+            perk({
+                id:'follow-120-guardian',
+                name:'Follow 120 profiles',
+                minRankId:'guardian',
+                unlockRule:{ on:'ACTION_COUNT', action:'FOLLOW_CREATED', times:120, window:'∞' },
+                reward:{ action:'ADD_XP', amount:44 },
+                uiHint:'+44 XP',
+            }),
+            perk({
+                id:'post-50-guardian',
+                name:'Publish 50 posts',
+                minRankId:'guardian',
+                unlockRule:{ on:'ACTION_COUNT', action:'POST_CREATED', times:50, window:'∞' },
+                reward:{ action:'ADD_XP', amount:28 },
+                uiHint:'+28 XP',
+            }),
+        ],
+    },
+}
+
+const ranks = Object.entries(ranksConfig).map(
+    ([id,cfg], order) => ({
+        id,
+        name: id.replace(/^\w/, c => c.toUpperCase()),
+        badgeUrl:`https://cdn.watchit/badges/${cfg.theme}.png`,
+        colorTheme: cfg.theme,
+        minXp : cfg.minXp,
+        order : order+1,
+        createdAt: now,
+        updatedAt: now,
     }),
-    perk({
-        id:'first-comment-posted',
-        name:'First comment',
-        category:'GAMIFICATION',  minRankId:'watcher',
-        unlockRule:{ on:'ACTION', action:'COMMENT_CREATED' },
-        executionRule:{ type:'ON_CLAIM' },
-        reward:{ action:'ADD_XP', amount:5 },
-        uiHint:'+5 XP',
-    }),
-    perk({
-        id:'bookmark-first-post',
-        name:'First bookmark',
-        category:'GAMIFICATION',  minRankId:'watcher',
-        unlockRule:{ on:'ACTION', action:'BOOKMARK_CREATED' },
-        executionRule:{ type:'ON_CLAIM' },
-        reward:{ action:'ADD_XP', amount:3 },
-        uiHint:'+3 XP',
-    }),
-    perk({
-        id:'follow-first-user',
-        name:'First follow',
-        category:'GAMIFICATION',  minRankId:'watcher',
-        unlockRule:{ on:'ACTION', action:'FOLLOW_CREATED' },
-        executionRule:{ type:'ON_CLAIM' },
-        reward:{ action:'ADD_XP', amount:3 },
-        uiHint:'+3 XP',
-    }),
-    perk({
-        id:'watch-5-videos',
-        name:'Watch 5 full videos',
-        category:'GAMIFICATION',  minRankId:'watcher',
-        unlockRule:{
-            on:'ACTION_COUNT',
-            action:'VIDEO_WATCH_FULL',
-            times:5, window:'∞',
-        },
-        executionRule:{ type:'ON_CLAIM' },
-        reward:{ action:'ADD_XP', amount:10 },
-        uiHint:'+10 XP',
-    }),
-]
+)
 
-/* 2-D · Perks “históricos” (24) – actualizados a los nuevos action-types */
-const previousPerks = [
-    /* Profile completed */
-    perk({
-        id:'profile-complete',
-        name:'Profile completed',
-        category:'GAMIFICATION',  minRankId:'watcher',
-        unlockRule:{ on:'ACTION', action:'PROFILE_COMPLETED' },
-        executionRule:{ type:'ON_CLAIM' },
-        reward:{ action:'ADD_XP', amount:20 },
-        uiHint:'+20 XP',
-    }),
+const perks = Object.values(ranksConfig).flatMap(cfg => cfg.perks)
 
-    /* First full video */
-    perk({
-        id:'first-full-video',
-        name:'First full video',
-        category:'GAMIFICATION',  minRankId:'watcher',
-        unlockRule:{ on:'ACTION', action:'VIDEO_WATCH_FULL' },
-        executionRule:{ type:'ON_CLAIM' },
-        reward:{ action:'ADD_XP', amount:10 },
-        uiHint:'+10 XP',
-    }),
-
-    /* Daily login (24 h) */
-    xpDrip('daily-login','Daily login','DAILY_LOGIN',5,24*3600,'+5 XP / day'),
-
-    /* +1 XP por like recibido en comentario */
-    perk({
-        id:'comment-like-received',
-        name:'+1 XP per like',
-        category:'GAMIFICATION',  minRankId:'watcher',
-        unlockRule:{
-            on:'ACTION_COUNT',
-            action:'COMMENT_LIKE_RECEIVED',
-            times:1, window:'∞',
-        },
-        executionRule:{ type:'ON_COOLDOWN', cooldownSec:0 },
-        reward:{ action:'ADD_XP', amount:1 },
-    }),
-
-    /* 100 seguidores  → 20 MMC */
-    perk({
-        id:'followers-100',
-        name:'100 Followers!',
-        category:'ECONOMY',   minRankId:'fan',
-        unlockRule:{
-            on:'ACTION_COUNT',
-            action:'FOLLOW_CREATED',
-            times:100, window:'∞',
-        },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_MMC', amount:20 },
-        uiHint:'+20 MMC',
-    }),
-
-    /* Trivia perfect run */
-    perk({
-        id:'trivia-perfect',
-        name:'Trivia Master',
-        category:'GAMIFICATION',  minRankId:'engager',
-        unlockRule:{ on:'ACTION', action:'TRIVIA_PERFECT' },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_XP', amount:30 },
-        uiHint:'+30 XP',
-    }),
-
-    /* Guess-movie first win */
-    perk({
-        id:'guessmovie-first-win',
-        name:'First Movie Guessed',
-        category:'ECONOMY',   minRankId:'engager',
-        unlockRule:{ on:'ACTION', action:'GUESS_MOVIE_WIN' },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_MMC', amount:5 },
-        uiHint:'+5 MMC',
-    }),
-
-    /* Creator mode (Scout) */
-    perk({
-        id:'creator-mode',
-        name:'Creator mode',
-        category:'ACCESS',   minRankId:'scout',
-        unlockRule:{ on:'RANK_UP', rankId:'scout' },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_XP', amount:0 },
-        uiHint:'New posting tools',
-    }),
-
-    /* Wheel consolation */
-    perk({
-        id:'wheel-consolation',
-        name:'Wheel Consolation',
-        category:'GAMIFICATION',  minRankId:'watcher',
-        unlockRule:{ on:'ACTION', action:'WHEEL_SPIN_LOSE' },
-        executionRule:{ type:'ON_COOLDOWN', cooldownSec:1_200 },
-        reward:{ action:'ADD_XP', amount:1 },
-        uiHint:'+1 XP',
-    }),
-
-    /* Referral bonus */
-    perk({
-        id:'refer-friend',
-        name:'Refer a friend',
-        category:'ECONOMY',   minRankId:'watcher',
-        unlockRule:{ on:'ACTION', action:'FRIEND_REFERRED' },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_MMC', amount:10 },
-        uiHint:'+10 MMC',
-    }),
-
-    /* 10 bookmarks (recursivo, 1 h cd) */
-    perk({
-        id:'bookmark-10',
-        name:'10 Bookmarks',
-        category:'GAMIFICATION',  minRankId:'fan',
-        unlockRule:{
-            on:'ACTION_COUNT',
-            action:'BOOKMARK_CREATED',
-            times:10, window:'∞',
-        },
-        executionRule:{ type:'ON_COOLDOWN', cooldownSec:3_600 },
-        reward:{ action:'ADD_XP', amount:8 },
-        uiHint:'+8 XP',
-    }),
-
-    /* Live-stream access (Guardian) */
-    perk({
-        id:'livestream-access',
-        name:'Live-stream Access',
-        category:'ACCESS',   minRankId:'guardian',
-        unlockRule:{ on:'RANK_UP', rankId:'guardian' },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_XP', amount:0 },
-        uiHint:'Join live events',
-    }),
-
-    /* XP burn voucher */
-    perk({
-        id:'xp-burn-1k',
-        name:'Convert 1 000 XP → 50 MMC',
-        category:'ECONOMY',   minRankId:'supporter',
-        unlockRule:{ on:'ACTION', action:'XP_BURN_1000' },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_MMC', amount:50 },
-        uiHint:'+50 MMC',
-    }),
-
-    /* 7-day watch streak */
-    perk({
-        id:'watch-streak-7',
-        name:'7-Day Watching Streak',
-        category:'GAMIFICATION',  minRankId:'engager',
-        unlockRule:{
-            on:'ACTION_COUNT',
-            action:'VIDEO_WATCH_FULL',
-            times:7, window:'7d',
-        },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_XP', amount:25 },
-        uiHint:'+25 XP',
-    }),
-
-    /* Creator first post */
-    perk({
-        id:'creator-first-post',
-        name:'First Post Published',
-        category:'GAMIFICATION',  minRankId:'scout',
-        unlockRule:{ on:'ACTION', action:'POST_CREATED' },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_XP', amount:15 },
-        uiHint:'+15 XP',
-    }),
-
-    /* Wheel jackpot */
-    perk({
-        id:'wheel-jackpot',
-        name:'Wheel Jackpot!',
-        category:'ECONOMY',   minRankId:'watcher',
-        unlockRule:{ on:'ACTION', action:'WHEEL_JACKPOT' },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_MMC', amount:100 },
-        uiHint:'+100 MMC',
-    }),
-
-    /* VIP chat (7 daily-login) */
-    perk({
-        id:'vip-chat-access',
-        name:'VIP Chat Access',
-        category:'ACCESS',   minRankId:'fan',
-        unlockRule:{
-            on:'ACTION_COUNT',
-            action:'DAILY_LOGIN',
-            times:7, window:'∞',
-        },
-        executionRule:{ type:'IMMEDIATE' },
-        reward:{ action:'ADD_XP', amount:0 },
-        uiHint:'VIP Chat unlocked',
-    }),
-]
-
-/* ───────────────────────── 3 · UNION FINAL ───────────────────── */
-const perks = [
-    ...previousPerks,
-    ...rankPerks,
-    watcherMmcPerk,
-    ...watcherBoosts,
-]
-
-/* ──────────────────────── 4 · BATCH WRITE ────────────────────── */
 console.log(`→ Seeding ${ranks.length} ranks & ${perks.length} perks…`)
 ;(async () => {
     const docs = [
