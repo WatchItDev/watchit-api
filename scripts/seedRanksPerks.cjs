@@ -25,6 +25,7 @@ const ranksConfig = {
     watcher: {
         theme:'water', minXp:0,
         perks:[
+            /* rank‑up */
             perk({
                 id:'rankup-watcher',
                 name:'Welcome Watcher – 50 XP',
@@ -42,6 +43,8 @@ const ranksConfig = {
                 reward:{ action:'ADD_MMC', amount:50 },
                 uiHint:'+50 MMC',
             }),
+
+            /* primeras acciones */
             perk({
                 id:'like-1-watcher',
                 name:'First like',
@@ -78,11 +81,59 @@ const ranksConfig = {
                 reward:{ action:'ADD_XP', amount:3 },
                 uiHint:'+3 XP',
             }),
-            // TODO add a perk to complete profile pictures (+7xp)
-            // TODO add a perk to add a social urls on profile (+3 xp)
+
+            /* completar perfil */
+            perk({
+                id:'profile-picture',
+                name:'Add profile picture',
+                minRankId:'watcher',
+                unlockRule:{ on:'ACTION', action:'PROFILE_PICTURE_ADDED' },
+                executionRule:{ type:'ON_CLAIM' },
+                reward:{ action:'ADD_XP', amount:7 },
+                uiHint:'+7 XP',
+            }),
+            perk({
+                id:'social-link',
+                name:'Add social link',
+                minRankId:'watcher',
+                unlockRule:{ on:'ACTION', action:'SOCIAL_LINK_ADDED' },
+                executionRule:{ type:'ON_CLAIM' },
+                reward:{ action:'ADD_XP', amount:3 },
+                uiHint:'+3 XP',
+            }),
+
+            /* daily claim */
+            perk({
+                id:'daily-claim-xp',
+                name:'Daily claim (+10 XP)',
+                minRankId:'watcher',
+                unlockRule:{ on:'ALWAYS' },
+                executionRule:{ type:'ON_COOLDOWN', cooldownSec:86400 },
+                reward:{ action:'ADD_XP', amount:10 },
+                uiHint:'+10 XP / day',
+            }),
+            //
+            // /* loop 5 likes */
+            // perk({
+            //     id:'like-5-loop',
+            //     name:'Give 5 likes (∞)',
+            //     minRankId:'watcher',
+            //     unlockRule:{
+            //         on:'ACTION_COUNT',
+            //         action:'LIKE_CREATED',
+            //         times:5,
+            //         window:'∞',
+            //         distinctBy:'TARGET',
+            //     },
+            //     executionRule:{ type:'ON_CLAIM' },
+            //     reward:{ action:'ADD_XP', amount:7 },
+            //     uiHint:'+7 XP / 5 likes',
+            //     hooks:[ { when:'AFTER', type:'RESET_PROGRESS' } ],
+            // }),
         ],
     },
 
+    /* =====================  FAN  =================================== */
     fan: {
         theme:'fire', minXp:150,
         perks:[
@@ -96,14 +147,42 @@ const ranksConfig = {
                 uiHint:'+10 MMC',
             }),
 
-            // TODO aqui en fan hay que poner un perk de que su rango ya esta visible publicamente (no tiene reward de xp es solo que desbloquea que se puedan ver los ranks den su perfil, en la app solo hay que verificar si se tiene ese perk y mostrar el rank)
-            // TODO agregar un perk que por cada video que mire gana 10xp (aca hay que tener cuidado porque los videos no se pueden repetir)
+            /* visibilidad de rango */
+            perk({
+                id:'public-rank',
+                name:'Public rank visibility',
+                category:'ACCESS',
+                minRankId:'fan',
+                unlockRule:{ on:'RANK_UP', rankId:'fan' },
+                executionRule:{ type:'IMMEDIATE' },
+                reward:{ action:'ADD_XP', amount:0 },
+                uiHint:'Rank visible on profile',
+            }),
 
+            /* video repeatable */
+            perk({
+                id:'video-1-loop-fan',
+                name:'Watch a video (repeatable)',
+                minRankId:'fan',
+                unlockRule:{ on:'ACTION', action:'VIDEO_WATCH_FULL' },
+                executionRule:{ type:'IMMEDIATE' },
+                reward:{ action:'ADD_XP', amount:10 },
+                uiHint:'+10 XP / video',
+                hooks:[ { when:'AFTER', type:'RELOCK' } ],
+            }),
+
+            /* contadores */
             perk({
                 id:'like-10-fan',
                 name:'Give 10 likes',
                 minRankId:'fan',
-                unlockRule:{ on:'ACTION_COUNT', action:'LIKE_CREATED', times:10, window:'∞' },
+                unlockRule:{
+                    on:'ACTION_COUNT',
+                    action:'LIKE_CREATED',
+                    times:10,
+                    window:'∞',
+                    distinctBy:'TARGET',
+                },
                 reward:{ action:'ADD_XP', amount:10 },
                 uiHint:'+10 XP',
             }),
@@ -111,7 +190,13 @@ const ranksConfig = {
                 id:'bookmark-5-fan',
                 name:'Save 5 bookmarks',
                 minRankId:'fan',
-                unlockRule:{ on:'ACTION_COUNT', action:'BOOKMARK_CREATED', times:5, window:'∞' },
+                unlockRule:{
+                    on:'ACTION_COUNT',
+                    action:'BOOKMARK_CREATED',
+                    times:5,
+                    window:'∞',
+                    distinctBy:'TARGET',
+                },
                 reward:{ action:'ADD_XP', amount:8 },
                 uiHint:'+8 XP',
             }),
@@ -127,13 +212,20 @@ const ranksConfig = {
                 id:'follow-5-fan',
                 name:'Follow 5 profiles',
                 minRankId:'fan',
-                unlockRule:{ on:'ACTION_COUNT', action:'FOLLOW_CREATED', times:5, window:'∞' },
+                unlockRule:{
+                    on:'ACTION_COUNT',
+                    action:'FOLLOW_CREATED',
+                    times:5,
+                    window:'∞',
+                    distinctBy:'TARGET',
+                },
                 reward:{ action:'ADD_XP', amount:15 },
                 uiHint:'+15 XP',
             }),
         ],
     },
 
+    /* =====================  ENGAGER  =============================== */
     engager: {
         theme:'wind', minXp:500,
         perks:[
@@ -146,10 +238,35 @@ const ranksConfig = {
                 reward:{ action:'ADD_MMC', amount:25 },
                 uiHint:'+25 MMC',
             }),
-            // TODO hay que agregar en los perks quizas una manera de definir si las acciones son dadas o recibidas
-            // TODO agregar un perk para que los likes que dan en mis comentarios / posts me den xp, ej: 1px por like
 
-            // TODO agregar un perk que haga unlock mini games (desde la app solo hay que verificar si tiene el perk y mostrar el mini game)
+            /* earn XP for likes received */
+            perk({
+                id:'incoming-like-engager',
+                name:'Earn 1 XP per like received',
+                minRankId:'engager',
+                unlockRule:{
+                    on:'ACTION',
+                    action:'LIKE_CREATED',
+                    actor:'OWNER',
+                    distinctBy:'TARGET',
+                },
+                executionRule:{ type:'IMMEDIATE' },
+                reward:{ action:'ADD_XP', amount:1 },
+                uiHint:'+1 XP / incoming like',
+                hooks:[ { when:'AFTER', type:'RELOCK' } ],
+            }),
+
+            /* unlock mini‑games */
+            perk({
+                id:'minigame-unlock',
+                name:'Unlock mini‑games',
+                category:'ACCESS',
+                minRankId:'engager',
+                unlockRule:{ on:'RANK_UP', rankId:'engager' },
+                executionRule:{ type:'IMMEDIATE' },
+                reward:{ action:'ADD_XP', amount:0 },
+                uiHint:'Mini‑games available',
+            }),
 
             perk({
                 id:'video-50-engager',
@@ -163,13 +280,18 @@ const ranksConfig = {
                 id:'follow-15-engager',
                 name:'Follow 15 profiles',
                 minRankId:'engager',
-                unlockRule:{ on:'ACTION_COUNT', action:'FOLLOW_CREATED', times:15, window:'∞' },
+                unlockRule:{
+                    on:'ACTION_COUNT',
+                    action:'FOLLOW_CREATED',
+                    times:15,
+                    window:'∞',
+                    distinctBy:'TARGET',
+                },
                 reward:{ action:'ADD_XP', amount:25 },
                 uiHint:'+25 XP',
             }),
         ],
     },
-
     supporter: {
         theme:'amethyst', minXp:1200,
         perks:[
@@ -230,10 +352,8 @@ const ranksConfig = {
                 reward:{ action:'ADD_XP', amount:19 },
                 uiHint:'+19 XP',
             }),
-
         ],
     },
-
     scout: {
         theme:'topaz', minXp:5000,
         perks:[

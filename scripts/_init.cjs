@@ -4,7 +4,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const admin  = require('firebase-admin');
 
-// process.env.FIRESTORE_EMULATOR_HOST ??= 'localhost:8080';
+process.env.FIRESTORE_EMULATOR_HOST ??= 'localhost:8080';
 
 function cleanKey(k) { return k ? k.replace(/\\n/g, '\n') : undefined; }
 

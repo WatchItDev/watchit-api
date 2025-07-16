@@ -20,6 +20,7 @@ export class PerksCommands extends DataSourceManager {
         progress: number; target: number;
         status: 'LOCKED'|'AVAILABLE'|'CLAIMED';
         availableAt: number; cooldownSec: number;
+        seen?: string[];
     }) {
         const dao = this.fs<UnlockedPerk>('userPerkState');
         const id  = `${s.user}-${s.perkId}`;
@@ -34,6 +35,9 @@ export class PerksCommands extends DataSourceManager {
                 { field:'status',      op:'==', value:'CLAIMED' },
                 { field:'availableAt', op:'<=', value: now },
             ], { limit: 500 });
+
+    updatePerkState = (id: string, patch: Partial<UnlockedPerk>) =>
+        this.fs('userPerkState').update(id, patch);
 
     async claimPerk(user: string, perkId: string): Promise<boolean> {
         const dao = this.fs<UnlockedPerk>('userPerkState');

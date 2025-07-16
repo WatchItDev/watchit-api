@@ -25,7 +25,7 @@ export const economy = ({ ds, activity }: Pick<Ctx,'ds' | 'ext' | 'activity'>) =
                 totalBefore: u.xpTotal,
             }),
         );
-        await activity.xpGained(addr, amount)
+        await activity?.xpGained?.(addr, amount)
     },
 
     transferMMC: async (addr: string, amount: number) => {

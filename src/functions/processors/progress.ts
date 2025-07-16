@@ -1,7 +1,26 @@
 import type { Ctx } from '../manager';
 import { perkEngine } from './perk';
+import { Actor, DistinctBy } from '../../models/perk';
 
-export const progressEngine = ({ ds }: Pick<Ctx, 'ds'>) => {
+export interface LogEvt {
+    type: string;
+    author: string;
+    targetId?: string;
+    targetType?: string;
+    meta?: Record<string, any>;
+}
+
+const fingerprint = (
+    log: LogEvt,
+    distinctBy: DistinctBy | undefined,
+): string | null =>
+    distinctBy === 'TARGET'
+        ? log.targetId ?? null
+        : distinctBy === 'USER'
+            ? log.author
+            : null;
+
+export const progressEngine = ({ ds, activity }: Pick<Ctx, 'ds' | 'activity'>) => {
     const cache: Record<string, any[]> = {};
 
     const load = async () => {
@@ -11,8 +30,10 @@ export const progressEngine = ({ ds }: Pick<Ctx, 'ds'>) => {
 
         catalog.forEach((p) => {
             if (
-                (p.unlockRule.on === 'ACTION' || p.unlockRule.on === 'ACTION_COUNT') &&
-                typeof p.unlockRule.action === 'string' && p.unlockRule.action.length > 0
+                (p.unlockRule.on === 'ACTION' ||
+                    p.unlockRule.on === 'ACTION_COUNT') &&
+                typeof p.unlockRule.action === 'string' &&
+                p.unlockRule.action.length > 0
             ) {
                 const key = p.unlockRule.action;
                 cache[key] = [...(cache[key] ?? []), p];
@@ -20,58 +41,85 @@ export const progressEngine = ({ ds }: Pick<Ctx, 'ds'>) => {
         });
     };
 
-    const consume = async (log: any) => {
+    const beneficiary = async (log: LogEvt, rule: any): Promise<string | null> => {
+        switch ((rule.actor as Actor) ?? 'SELF') {
+            case 'SELF':
+                return log.author;
+            case 'TARGET':
+                return log.targetType === 'USER' ? log.targetId ?? null : null;
+            case 'OWNER':
+                if (log.meta?.owner) return log.meta.owner;
+                if (log.targetType === 'POST') {
+                    const post = await ds.Posts.getPost(log.targetId!);
+                    return post?.author?.address ?? null;
+                }
+                if (log.targetType === 'COMMENT') {
+                    const c = await ds.Comments.getComment(log.targetId!);
+                    return c?.author?.address ?? null;
+                }
+                return null;
+            default:
+                return null;
+        }
+    };
+
+    const consume = async (log: LogEvt) => {
         await load();
 
         const list = cache[log.type] ?? [];
         if (!list.length) return;
 
-        const user = await ds.Users.getUser(log.author);
-        if (!user) return;
-
         for (const meta of list) {
-            if (meta.minRankId && user.currentRank && meta.minRankId > user.currentRank) continue;
+            const userId = await beneficiary(log, meta.unlockRule);
+            if (!userId) continue;
 
-            const state = await ds.Perks.getState(user.address, meta.id);
+            const user = await ds.Users.getUser(userId);
+            if (!user) continue;
+            if (meta.minRankId && user.currentRank && meta.minRankId > user.currentRank)
+                continue;
+
+            const state = await ds.Perks.getState(userId, meta.id);
+            const dBy = meta.unlockRule.distinctBy as DistinctBy | undefined;
+            const fp = fingerprint(log, dBy);
+            const alreadyCounted = fp && state?.seen?.includes(fp);
 
             if (meta.unlockRule.on === 'ACTION') {
-                const s = !state
-                    ? { status:'AVAILABLE', progress:1 }
-                    : state.status === 'LOCKED'
-                        ? { status:'AVAILABLE', progress:1 }
-                        : null;
-                if (!s) continue;
+                if (alreadyCounted) continue;
 
                 await ds.Perks.upsertState({
-                    user        : user.address,
+                    user        : userId,
                     perkId      : meta.id,
-                    progress    : s.progress,
+                    progress    : 1,
                     target      : 1,
-                    status      : s.status as ('AVAILABLE' | 'LOCKED' | 'CLAIMED'),
+                    status      : 'AVAILABLE',
                     availableAt : Date.now(),
                     cooldownSec : meta.executionRule.cooldownSec ?? 0,
+                    seen: fp ? [...(state?.seen ?? []), fp] : state?.seen ?? [],
                 });
 
                 if (meta.executionRule.type === 'IMMEDIATE') {
-                    await perkEngine({ ds } as any).maybeAutoApply(meta.id, user.address);
+                    await perkEngine({ ds, activity } as any).maybeAutoApply(meta.id, userId);
                 }
 
                 continue;
             }
 
             if (meta.unlockRule.on === 'ACTION_COUNT') {
+                if (alreadyCounted) continue;
+
                 const next    = (state?.progress ?? 0) + 1;
                 const target  = meta.unlockRule.times;
                 const status  = next >= target ? 'AVAILABLE' : 'LOCKED';
 
                 await ds.Perks.upsertState({
-                    user        : user.address,
+                    user        : userId,
                     perkId      : meta.id,
                     progress    : next,
                     target,
                     status,
                     availableAt : status === 'AVAILABLE' ? Date.now() : 0,
                     cooldownSec : meta.executionRule.cooldownSec ?? 0,
+                    seen: fp ? [...(state?.seen ?? []), fp] : state?.seen ?? [],
                 });
             }
         }

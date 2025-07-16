@@ -1,10 +1,13 @@
 import { Perk, PerkInput} from "@/schema/types";
 
+export type Actor       = 'SELF' | 'TARGET' | 'OWNER';
+export type DistinctBy  = 'NONE' | 'TARGET' | 'USER';
+
 export type UnlockRule =
-    | { on: 'RANK_UP';        rankId: string }  // it is dispatched when the user reaches a new rank
-    | { on: 'ACTION';         action: string }  // unique event
-    | { on: 'ACTION_COUNT';   action: string; times: number; window: '24h'|'7d'|'∞' }
-    | { on: 'ALWAYS' };
+    | { on:'RANK_UP';       rankId:string }
+    | { on:'ACTION';        action:string; actor?:Actor; distinctBy?:DistinctBy }
+    | { on:'ACTION_COUNT';  action:string; times:number; window:'24h'|'7d'|'∞'; actor?:Actor; distinctBy?:DistinctBy }
+    | { on:'ALWAYS' };
 
 export type ExecutionRule =
     | { type: 'IMMEDIATE' }
@@ -15,6 +18,10 @@ export type Reward =
     | { action: 'ADD_XP';  amount: number }
     | { action: 'ADD_MMC'; amount: number }
     | { action: 'MINT_NFT'; tokenId: string };
+
+export type PerkHook =
+    | { when:'BEFORE'|'AFTER'; type:'RESET_PROGRESS'|'RELOCK' }
+    | { when:'BEFORE'|'AFTER'; type:'CUSTOM'; fnId:string; params?:Record<string,any> };
 
 export function rewardPreviewFrom(reward: Perk['reward']): string {
     switch (reward.action) {
@@ -42,5 +49,6 @@ export function makePerk(input: PerkInput): Perk {
         },
         createdAt     : now as any,
         updatedAt     : now as any,
+        hooks:        input.hooks ?? [],
     } as unknown as Perk
 }

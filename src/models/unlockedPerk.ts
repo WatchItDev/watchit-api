@@ -9,6 +9,7 @@ export interface UnlockedPerk {
     collectedAt: number | null;
     cooldownSec: number;
     createdAt:   number;
+    seen: string[];
 }
 
 export function makeUnlockedPerk(p: {
@@ -18,5 +19,5 @@ export function makeUnlockedPerk(p: {
     availableAt: number; cooldownSec: number;
 }): UnlockedPerk {
     const now = Date.now();
-    return { id: `${p.user}-${p.perkId}`, createdAt: now, ...p, collectedAt: null };
+    return { id: `${p.user}-${p.perkId}`, createdAt: now, ...p, collectedAt: null, seen: [] };
 }
