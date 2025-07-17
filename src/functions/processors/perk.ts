@@ -25,6 +25,7 @@ export const perkEngine = ({ ds, ext, activity }: Pick<Ctx,'ds' | 'ext' | 'activ
                     await ds.Perks.upsertState({
                         ...ctx.state,
                         status:'LOCKED',
+                        progress: 0,
                         availableAt:Date.now()+ctx.state.cooldownSec*1000,
                     });
                     break;
@@ -69,7 +70,6 @@ export const perkEngine = ({ ds, ext, activity }: Pick<Ctx,'ds' | 'ext' | 'activ
             if (!hasRelock) {
                 await ds.Perks.claimPerk(addr, perkId);
             }
-            await ds.Perks.claimPerk(addr, perkId)
         },
 
         claim: async (perkId: string, addr: string) => {
