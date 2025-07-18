@@ -3,7 +3,7 @@ import { enhanceFunction } from '../../manager';
 
 export const resetCooldowns = onSchedule(
     {
-        schedule : '0 3 * * *',
+        schedule : '*/30 * * * *',
         timeZone : 'UTC',
     },
     enhanceFunction(async ({ services }) => {

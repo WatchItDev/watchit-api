@@ -10,6 +10,8 @@ export interface LogEvt {
     meta?:      Record<string, any>
 }
 
+const REFRESH_INTERVAL = +(process.env.API_REFRESH_PERK_CACHE_SECONDS || 5_000)
+
 const fingerprint = (log: LogEvt,
                      distinctBy?: DistinctBy | null): string | null =>
     distinctBy === 'TARGET'
@@ -33,7 +35,7 @@ export const progressEngine = (
     }
 
     const refreshPerkCache = async () => {
-        if (Date.now() - lastLoad < 5_000) return          // TTL
+        if (Date.now() - lastLoad < REFRESH_INTERVAL) return
         perkCache = {}
         const catalog = await ds.Perks.getCatalog()
         for (const p of catalog) {
