@@ -10,11 +10,11 @@ export const activityLogger = ({ ds }: Pick<Ctx,'ds'>) => {
     return {
         emit,
 
-        likeCreated     : (a:string,p:string, t: string)=>emit('LIKE_CREATED',     {author:a,targetId:p,targetType: t}),
-        likeRemoved     : (a:string,p:string, t: string)=>emit('LIKE_REMOVED',     {author:a,targetId:p,targetType: t}),
-        bookmarkCreated : (a:string,p:string)=>emit('BOOKMARK_CREATED', {author:a,targetId:p,targetType:'POST'}),
+        likeCreated     : (a:string,p:string,t:string,meta={})=>emit('LIKE_CREATED',     {author:a,targetId:p,targetType: t,meta}),
+        likeRemoved     : (a:string,p:string,t:string)=>emit('LIKE_REMOVED',     {author:a,targetId:p,targetType: t}),
+        bookmarkCreated : (a:string,p:string,meta={})=>emit('BOOKMARK_CREATED', {author:a,targetId:p,targetType:'POST',meta}),
         bookmarkRemoved : (a:string,p:string)=>emit('BOOKMARK_REMOVED', {author:a,targetId:p,targetType:'POST'}),
-        followCreated   : (a:string,t:string)=>emit('FOLLOW_CREATED',   {author:a,targetId:t,targetType:'USER'}),
+        followCreated   : (a:string,t:string,meta={})=>emit('FOLLOW_CREATED',   {author:a,targetId:t,targetType:'USER',meta}),
         followRemoved   : (a:string,t:string)=>emit('FOLLOW_REMOVED',   {author:a,targetId:t,targetType:'USER'}),
 
         postCreated     : (a:string,p:string)=>emit('POST_CREATED',     {author:a,targetId:p,targetType:'POST'}),

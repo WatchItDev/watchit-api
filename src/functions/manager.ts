@@ -32,7 +32,7 @@ function buildCtx(): Ctx {
         eco:  economy({ ds, ext, activity }),
         rank: rankEngine({ ds, ext, activity }),
         perk: perkEngine({ ds, ext, activity }),
-        progress: progressEngine({ ds }),
+        progress: progressEngine({ ds, activity }),
         activity: activityLogger({ ds }),
     };
 }

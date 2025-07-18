@@ -51,13 +51,18 @@ export class PerksService extends ServiceManager {
         });
         return true;
     }
+    refreshCooldown = (id: string) =>
+        this.ds.Perks.updatePerkState(id, {
+            status: 'AVAILABLE',
+            collectedAt: null,
+            availableAt: Date.now(),
+        });
     resetCooldowns = async () => {
-        const now = Date.now();
+        const now  = Date.now();
         const rows = await this.ds.Perks.expiredCooldowns(now);
-        await Promise.all(
-            rows.map(r =>
-                this.ds.Perks.refreshCooldown(r.id, now + r.cooldownSec*1000)),
-        );
+        await Promise.all(rows.map(r => this.refreshCooldown(r.id)));
         return rows.length;
     };
+    hasPerk = (addr: string, perkId: string) =>
+        this.ds.Perks.hasPerk(addr, perkId);
 }

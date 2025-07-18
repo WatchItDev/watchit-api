@@ -3,9 +3,13 @@
 ###########################
 
 enum PerkCategory { GAMIFICATION ECONOMY SOCIAL ACCESS }
+enum Actor       { SELF TARGET OWNER }
+enum DistinctBy  { NONE TARGET USER }
 
 type UnlockRule {
   on:      String!
+  actor:   Actor
+  distinctBy: DistinctBy
   rankId:  String
   action:  String
   times:   Int
@@ -37,6 +41,7 @@ type Perk {
   executionRule:ExecutionRule!
   reward:       Reward!
   enabled:      Boolean!
+  hooks:        [JSON]
 }
 
 type UnlockedPerkState {
@@ -55,6 +60,8 @@ type UnlockedPerkState {
 
 input UnlockRuleInput {
   on:String!,
+  actor:Actor,
+  distinctBy:DistinctBy,
   rankId:String,
   action:String,
   times:Int,
@@ -82,11 +89,13 @@ input PerkInput {
   executionRule:ExecutionRuleInput!
   reward:       RewardInput!
   enabled:      Boolean!
+  hooks:        [JSON]
 }
 
 extend type Query {
   getPerks: [Perk!]!
   getUnlockedPerks(address:String!,limit:Int = 50,offset:Int = 0): [UnlockedPerkState!]!
+  hasPerk(address: String!, perkId: ID!): Boolean!
 }
 
 extend type Mutation {

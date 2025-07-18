@@ -25,6 +25,11 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
+export type Actor =
+  | 'OWNER'
+  | 'SELF'
+  | 'TARGET';
+
 export type AddXPInput = {
   action: Scalars['String']['input'];
   address: Scalars['String']['input'];
@@ -68,6 +73,11 @@ export type CreatePostInput = {
   title: Scalars['String']['input'];
   visibility: VisibilitySetting;
 };
+
+export type DistinctBy =
+  | 'NONE'
+  | 'TARGET'
+  | 'USER';
 
 export type EventLog = {
   __typename?: 'EventLog';
@@ -274,6 +284,7 @@ export type Perk = {
   cooldownRemaining: Scalars['Int']['output'];
   enabled: Scalars['Boolean']['output'];
   executionRule: ExecutionRule;
+  hooks?: Maybe<Array<Maybe<Scalars['JSON']['output']>>>;
   id: Scalars['String']['output'];
   minRankId: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -293,6 +304,7 @@ export type PerkInput = {
   category: PerkCategory;
   enabled: Scalars['Boolean']['input'];
   executionRule: ExecutionRuleInput;
+  hooks?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
   id: Scalars['String']['input'];
   minRankId: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -353,6 +365,7 @@ export type Query = {
   getUserRanks: Array<UserRank>;
   getUserXPHistory: Array<XPEntry>;
   getUsers: Array<User>;
+  hasPerk: Scalars['Boolean']['output'];
 };
 
 
@@ -526,6 +539,12 @@ export type QuerygetUsersArgs = {
   query: Scalars['String']['input'];
 };
 
+
+export type QueryhasPerkArgs = {
+  address: Scalars['String']['input'];
+  perkId: Scalars['ID']['input'];
+};
+
 export type Rank = {
   __typename?: 'Rank';
   badgeUrl: Scalars['String']['output'];
@@ -578,6 +597,8 @@ export type TargetType =
 export type UnlockRule = {
   __typename?: 'UnlockRule';
   action?: Maybe<Scalars['String']['output']>;
+  actor?: Maybe<Actor>;
+  distinctBy?: Maybe<DistinctBy>;
   on: Scalars['String']['output'];
   rankId?: Maybe<Scalars['String']['output']>;
   times?: Maybe<Scalars['Int']['output']>;
@@ -586,6 +607,8 @@ export type UnlockRule = {
 
 export type UnlockRuleInput = {
   action?: InputMaybe<Scalars['String']['input']>;
+  actor?: InputMaybe<Actor>;
+  distinctBy?: InputMaybe<DistinctBy>;
   on: Scalars['String']['input'];
   rankId?: InputMaybe<Scalars['String']['input']>;
   times?: InputMaybe<Scalars['Int']['input']>;
@@ -774,6 +797,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Actor: ResolverTypeWrapper<'SELF' | 'TARGET' | 'OWNER'>;
   AddXPInput: AddXPInput;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -785,6 +809,7 @@ export type ResolversTypes = {
   CreatePostInput: CreatePostInput;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  DistinctBy: ResolverTypeWrapper<'NONE' | 'TARGET' | 'USER'>;
   EventLog: ResolverTypeWrapper<EventLog>;
   ExecutionRule: ResolverTypeWrapper<ExecutionRule>;
   ExecutionRuleInput: ExecutionRuleInput;
@@ -797,7 +822,7 @@ export type ResolversTypes = {
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: ResolverTypeWrapper<{}>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  Perk: ResolverTypeWrapper<Omit<Perk, 'category'> & { category: ResolversTypes['PerkCategory'] }>;
+  Perk: ResolverTypeWrapper<Omit<Perk, 'category' | 'unlockRule'> & { category: ResolversTypes['PerkCategory'], unlockRule: ResolversTypes['UnlockRule'] }>;
   PerkCategory: ResolverTypeWrapper<'GAMIFICATION' | 'ECONOMY' | 'SOCIAL' | 'ACCESS'>;
   PerkInput: PerkInput;
   Post: ResolverTypeWrapper<Omit<Post, 'visibility'> & { visibility: ResolversTypes['VisibilitySetting'] }>;
@@ -810,7 +835,7 @@ export type ResolversTypes = {
   SocialLinkInput: SocialLinkInput;
   TargetType: ResolverTypeWrapper<'POST' | 'COMMENT'>;
   Timestamp: ResolverTypeWrapper<Scalars['Timestamp']['output']>;
-  UnlockRule: ResolverTypeWrapper<UnlockRule>;
+  UnlockRule: ResolverTypeWrapper<Omit<UnlockRule, 'actor' | 'distinctBy'> & { actor?: Maybe<ResolversTypes['Actor']>, distinctBy?: Maybe<ResolversTypes['DistinctBy']> }>;
   UnlockRuleInput: UnlockRuleInput;
   UnlockedPerkState: ResolverTypeWrapper<Omit<UnlockedPerkState, 'perk'> & { perk: ResolversTypes['Perk'] }>;
   UpdateCommentInput: UpdateCommentInput;
@@ -851,7 +876,7 @@ export type ResolversParentTypes = {
   MediaAttachmentInput: MediaAttachmentInput;
   Mutation: {};
   ID: Scalars['ID']['output'];
-  Perk: Perk;
+  Perk: Omit<Perk, 'unlockRule'> & { unlockRule: ResolversParentTypes['UnlockRule'] };
   PerkInput: PerkInput;
   Post: Post;
   Query: {};
@@ -886,6 +911,8 @@ export type cacheControlDirectiveArgs = {
 
 export type cacheControlDirectiveResolver<Result, Parent, ContextType = any, Args = cacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export type ActorResolvers = EnumResolverSignature<{ OWNER?: any, SELF?: any, TARGET?: any }, ResolversTypes['Actor']>;
+
 export type CacheControlScopeResolvers = EnumResolverSignature<{ PRIVATE?: any, PUBLIC?: any }, ResolversTypes['CacheControlScope']>;
 
 export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
@@ -909,6 +936,8 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
+
+export type DistinctByResolvers = EnumResolverSignature<{ NONE?: any, TARGET?: any, USER?: any }, ResolversTypes['DistinctBy']>;
 
 export type EventLogResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventLog'] = ResolversParentTypes['EventLog']> = {
   amount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -974,6 +1003,7 @@ export type PerkResolvers<ContextType = any, ParentType extends ResolversParentT
   cooldownRemaining?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   enabled?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   executionRule?: Resolver<ResolversTypes['ExecutionRule'], ParentType, ContextType>;
+  hooks?: Resolver<Maybe<Array<Maybe<ResolversTypes['JSON']>>>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   minRankId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1037,6 +1067,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getUserRanks?: Resolver<Array<ResolversTypes['UserRank']>, ParentType, ContextType, RequireFields<QuerygetUserRanksArgs, 'address'>>;
   getUserXPHistory?: Resolver<Array<ResolversTypes['XPEntry']>, ParentType, ContextType, RequireFields<QuerygetUserXPHistoryArgs, 'address' | 'limit' | 'offset'>>;
   getUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUsersArgs, 'query'>>;
+  hasPerk?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QueryhasPerkArgs, 'address' | 'perkId'>>;
 };
 
 export type RankResolvers<ContextType = any, ParentType extends ResolversParentTypes['Rank'] = ResolversParentTypes['Rank']> = {
@@ -1072,6 +1103,8 @@ export interface TimestampScalarConfig extends GraphQLScalarTypeConfig<Resolvers
 
 export type UnlockRuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['UnlockRule'] = ResolversParentTypes['UnlockRule']> = {
   action?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  actor?: Resolver<Maybe<ResolversTypes['Actor']>, ParentType, ContextType>;
+  distinctBy?: Resolver<Maybe<ResolversTypes['DistinctBy']>, ParentType, ContextType>;
   on?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   rankId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   times?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -1154,10 +1187,12 @@ export type XPEntryResolvers<ContextType = any, ParentType extends ResolversPare
 };
 
 export type Resolvers<ContextType = any> = {
+  Actor?: ActorResolvers;
   CacheControlScope?: CacheControlScopeResolvers;
   Comment?: CommentResolvers<ContextType>;
   Date?: GraphQLScalarType;
   DateTime?: GraphQLScalarType;
+  DistinctBy?: DistinctByResolvers;
   EventLog?: EventLogResolvers<ContextType>;
   ExecutionRule?: ExecutionRuleResolvers<ContextType>;
   JSON?: GraphQLScalarType;

@@ -11,4 +11,6 @@ export class PerksQuery extends DataSourceManager {
             .then(r => r.slice(o));
     getState = (u: string, p: string) =>
         this.fs<UnlockedPerk>('userPerkState').get(`${u}-${p}`);
+    hasPerk = async (u: string, p: string): Promise<boolean> =>
+        !!(await this.getState(u, p));
 }

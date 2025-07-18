@@ -1,5 +1,11 @@
 directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
+enum Actor {
+  OWNER
+  SELF
+  TARGET
+}
+
 input AddXPInput {
   action: String!
   address: String!
@@ -48,6 +54,12 @@ scalar Date
 
 """ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
 scalar DateTime
+
+enum DistinctBy {
+  NONE
+  TARGET
+  USER
+}
 
 type EventLog {
   amount: Int
@@ -144,6 +156,7 @@ type Perk {
   cooldownRemaining: Int!
   enabled: Boolean!
   executionRule: ExecutionRule!
+  hooks: [JSON]
   id: String!
   minRankId: String!
   name: String!
@@ -164,6 +177,7 @@ input PerkInput {
   category: PerkCategory!
   enabled: Boolean!
   executionRule: ExecutionRuleInput!
+  hooks: [JSON]
   id: String!
   minRankId: String!
   name: String!
@@ -222,6 +236,7 @@ type Query {
   getUserRanks(address: String!): [UserRank!]!
   getUserXPHistory(address: String!, limit: Int = 50, offset: Int = 0): [XPEntry!]!
   getUsers(limit: Int, query: String!): [User!]!
+  hasPerk(address: String!, perkId: ID!): Boolean!
 }
 
 type Rank {
@@ -276,6 +291,8 @@ scalar Timestamp
 
 type UnlockRule {
   action: String
+  actor: Actor
+  distinctBy: DistinctBy
   on: String!
   rankId: String
   times: Int
@@ -284,6 +301,8 @@ type UnlockRule {
 
 input UnlockRuleInput {
   action: String
+  actor: Actor
+  distinctBy: DistinctBy
   on: String!
   rankId: String
   times: Int

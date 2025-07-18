@@ -1,8 +1,37 @@
 import { economy } from './economy'
 import type {Ctx} from "@/functions/manager";
+import {PerkHook} from "@/models/perk";
 
 export const perkEngine = ({ ds, ext, activity }: Pick<Ctx,'ds' | 'ext' | 'activity'>) => {
     const eco = economy({ ds, ext, activity })
+
+    const runHooks = async (
+        hooks: PerkHook[]|undefined,
+        when:'BEFORE'|'AFTER',
+        ctx:{ meta:any; user:string; state:any }
+    ) => {
+        for (const h of hooks?.filter(x => x.when === when) ?? []) {
+            switch (h.type) {
+                case 'RESET_PROGRESS':
+                    await ds.Perks.upsertState({
+                        user:ctx.user, perkId:ctx.meta.id,
+                        progress:0, target:ctx.state.target,
+                        status:'LOCKED', availableAt:0,
+                        cooldownSec:ctx.state.cooldownSec,
+                        seen:[]
+                    });
+                    break;
+                case 'RELOCK':
+                    await ds.Perks.upsertState({
+                        ...ctx.state,
+                        status:'LOCKED',
+                        progress: 0,
+                        availableAt:Date.now()+ctx.state.cooldownSec*1000,
+                    });
+                    break;
+            }
+        }
+    };
 
     const applyReward = async (meta: any, addr: string) => {
         const r = meta.reward
@@ -21,6 +50,13 @@ export const perkEngine = ({ ds, ext, activity }: Pick<Ctx,'ds' | 'ext' | 'activ
         }
     }
 
+    const apply = async (meta:any, addr:string) => {
+        const state = await ds.Perks.getState(addr, meta.id);
+        await runHooks(meta.hooks,'BEFORE',{meta,user:addr,state});
+        await applyReward(meta, addr);
+        await runHooks(meta.hooks,'AFTER',{meta,user:addr,state});
+    };
+
     return {
         maybeAutoApply: async (perkId: string, addr: string) => {
             const meta   = (await ds.Perks.getCatalog()).find((p: any) => p.id === perkId)
@@ -28,14 +64,18 @@ export const perkEngine = ({ ds, ext, activity }: Pick<Ctx,'ds' | 'ext' | 'activ
 
             const state  = await ds.Perks.getState(addr, perkId)
             if (!state || state.status !== 'AVAILABLE') return
-            await applyReward(meta, addr)
-            await ds.Perks.claimPerk(addr, perkId)
+            await apply(meta, addr)
+
+            const hasRelock = meta.hooks?.some(h => h.when === 'AFTER' && h.type === 'RELOCK');
+            if (!hasRelock) {
+                await ds.Perks.claimPerk(addr, perkId);
+            }
         },
 
         claim: async (perkId: string, addr: string) => {
             const meta = (await ds.Perks.getCatalog())
                 .find((p: any) => p.id === perkId)
-            if (meta) await applyReward(meta, addr)
+            if (meta) await apply(meta, addr)
         },
     }
 }

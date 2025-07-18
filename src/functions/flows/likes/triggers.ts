@@ -5,6 +5,7 @@ interface LikeDoc {
     author:     string
     targetId:   string
     targetType: 'POST' | 'COMMENT'
+    owner?:     string;
 }
 
 export const likeInc = onDocumentCreated(
@@ -13,7 +14,7 @@ export const likeInc = onDocumentCreated(
         const snap = event.data
         if (!snap) return
 
-        const { targetId, targetType, author } = snap.data() as LikeDoc
+        const { targetId, targetType, author, owner } = snap.data() as LikeDoc
         if (!targetId || !targetType) return
 
         if (targetType === 'POST') {
@@ -24,7 +25,7 @@ export const likeInc = onDocumentCreated(
             await ds.Comments.updateCounterField(targetId, 'likeCount', +1)
             console.log(`👍  Comment ${targetId} liked`)
         }
-        await activity.likeCreated(author, targetId, targetType)
+        await activity.likeCreated(author, targetId, targetType, { owner });
     })
 )
 
