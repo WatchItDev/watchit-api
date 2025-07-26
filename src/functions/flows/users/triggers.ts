@@ -1,7 +1,7 @@
 import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { enhanceTrigger } from '../../manager';
 import { FirestoreUser } from '../../../externals/firebase/types';
-import { processImageFromIpfs } from '../../processors/image';
+import { processImage } from '../../processors/image';
 import { extractCid } from '../../processors/ipfs';
 
 function shouldOptimize(current?: string | null, original?: string | null): boolean {
@@ -18,10 +18,11 @@ async function buildUserPicturePatch(wallet: string, user: FirestoreUser) {
 
     if (shouldOptimize(user.profilePicture, user.profilePictureOriginal)) {
         try {
-            const { optimizedUri, originalUri } = await processImageFromIpfs({
-                source: user.profilePicture!,
+            const { optimizedUri, originalUri } = await processImage({
+                source: user.profilePicture,
                 preset: 'profile',
                 tag: `user-${wallet}-profile`,
+                mode: 'ipfs',
             });
             patch.profilePicture = optimizedUri;
             patch.profilePictureOriginal = originalUri;
@@ -34,10 +35,11 @@ async function buildUserPicturePatch(wallet: string, user: FirestoreUser) {
 
     if (shouldOptimize(user.coverPicture, user.coverPictureOriginal)) {
         try {
-            const { optimizedUri, originalUri } = await processImageFromIpfs({
-                source: user.coverPicture!,
+            const { optimizedUri, originalUri } = await processImage({
+                source: user.coverPicture,
                 preset: 'cover',
                 tag: `user-${wallet}-cover`,
+                mode: 'ipfs',
             });
             patch.coverPicture = optimizedUri;
             patch.coverPictureOriginal = originalUri;
@@ -65,16 +67,16 @@ export const logUserCreated = onDocumentCreated(
 
         console.log(`🎉  ${wallet} promoted to watcher & perks seeded`);
 
-        try {
-            const patch = await buildUserPicturePatch(wallet, newUser);
-            if (patch) {
-                patch.updatedAt = Date.now();
-                await snap.ref.update(patch);
-                console.log(`🖼️ processed user pictures for ${wallet}`);
-            }
-        } catch (err) {
-            console.warn(`⚠️ processUserPictures (create) failed for ${wallet}:`, err);
-        }
+        // try {
+        //     const patch = await buildUserPicturePatch(wallet, newUser);
+        //     if (patch) {
+        //         patch.updatedAt = Date.now();
+        //         await snap.ref.update(patch);
+        //         console.log(`🖼️ processed user pictures for ${wallet}`);
+        //     }
+        // } catch (err) {
+        //     console.warn(`⚠️ processUserPictures (create) failed for ${wallet}:`, err);
+        // }
     }),
 );
 

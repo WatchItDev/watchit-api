@@ -1,5 +1,6 @@
+/* processors/image.ts */
 import sharp from 'sharp';
-import { fetchIpfsImage, uploadBufferToIpfs } from './ipfs';
+import { fetchImage, uploadBufferToIpfs, extractCid } from './ipfs';
 
 type Preset = 'profile' | 'cover' | 'poster' | 'square' | 'wallpaper' | 'generic';
 
@@ -7,6 +8,7 @@ export interface ProcessOptions {
     source: string;
     preset: Preset;
     tag?: string;
+    mode: 'ipfs' | 'http'; // ← NUEVO
 }
 
 function presetToResize(preset: Preset): sharp.ResizeOptions {
@@ -20,17 +22,20 @@ function presetToResize(preset: Preset): sharp.ResizeOptions {
     }
 }
 
-export async function processImageFromIpfs({
-                                               source,
-                                               preset,
-                                               tag,
-                                           }: ProcessOptions): Promise<{
+export async function processImage({
+                                       source,
+                                       preset,
+                                       tag,
+                                       mode,
+                                   }: ProcessOptions): Promise<{
     optimizedUri: string;
     originalUri: string;
     width: number;
     height: number;
 }> {
-    const { buffer: original } = await fetchIpfsImage(source);
+    console.log(`[processImage] mode=${mode} preset=${preset} src=${source}`);
+
+    const { buffer: original, originalUri } = await fetchImage(source, mode);
 
     const resizeCfg = presetToResize(preset);
     const optimized = await sharp(original).rotate().resize(resizeCfg).webp({ quality: 82 }).toBuffer();
@@ -41,8 +46,6 @@ export async function processImageFromIpfs({
 
     const pinMeta = tag ? { name: `opt-${tag}`, keyvalues: { preset } } : undefined;
     const optimizedUri = await uploadBufferToIpfs(optimized, `optimized.webp`, 'image/webp', pinMeta);
-
-    const originalUri = source.startsWith('ipfs://') ? source : `ipfs://${source.split('/').pop()}`;
 
     return { optimizedUri, originalUri, width: w, height: h };
 }

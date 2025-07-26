@@ -20,8 +20,6 @@ type MediaAttachment {
   id:          String!
   url:         String
   cid:         String!
-  originalUrl: String
-  originalCid: String
   title:       String
   type:        String!
 }

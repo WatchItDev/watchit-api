@@ -39,8 +39,6 @@ export function makeNewPost(
             title:  m.title,
             cid:  m.cid,
             url:  m.url,
-            originalUrl: m.url,
-            originalCid: m.cid,
             type: m.type,
         })) ?? [],
         visibility: input.visibility,

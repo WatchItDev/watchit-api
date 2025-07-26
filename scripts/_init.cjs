@@ -4,7 +4,17 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const admin  = require('firebase-admin');
 
-process.env.FIRESTORE_EMULATOR_HOST ??= 'localhost:8080';
+const { setGlobalDispatcher, Agent } = require('undici');
+
+setGlobalDispatcher(new Agent({
+    keepAliveTimeout: 60_000,
+    keepAliveMaxTimeout: 60_000,
+    connect: {
+        family: 4,
+    },
+}));
+
+// process.env.FIRESTORE_EMULATOR_HOST ??= 'localhost:8080';
 
 function cleanKey(k) { return k ? k.replace(/\\n/g, '\n') : undefined; }
 
