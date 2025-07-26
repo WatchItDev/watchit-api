@@ -132,8 +132,6 @@ export type MediaAttachment = {
   __typename?: 'MediaAttachment';
   cid: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  originalCid?: Maybe<Scalars['String']['output']>;
-  originalUrl?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   type: Scalars['String']['output'];
   url?: Maybe<Scalars['String']['output']>;
@@ -970,8 +968,6 @@ export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export type MediaAttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaAttachment'] = ResolversParentTypes['MediaAttachment']> = {
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  originalCid?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  originalUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

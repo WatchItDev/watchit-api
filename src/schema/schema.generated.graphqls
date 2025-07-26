@@ -113,8 +113,6 @@ input LogEventInput {
 type MediaAttachment {
   cid: String!
   id: String!
-  originalCid: String
-  originalUrl: String
   title: String
   type: String!
   url: String
