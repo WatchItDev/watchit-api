@@ -132,6 +132,8 @@ export type MediaAttachment = {
   __typename?: 'MediaAttachment';
   cid: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  originalCid?: Maybe<Scalars['String']['output']>;
+  originalUrl?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   type: Scalars['String']['output'];
   url?: Maybe<Scalars['String']['output']>;
@@ -659,6 +661,7 @@ export type User = {
   bio: Scalars['String']['output'];
   bookmarksCount: Scalars['Int']['output'];
   coverPicture: Scalars['String']['output'];
+  coverPictureOriginal: Scalars['String']['output'];
   createdAt: Scalars['Timestamp']['output'];
   currentRank: Scalars['String']['output'];
   displayName: Scalars['String']['output'];
@@ -667,6 +670,7 @@ export type User = {
   followingCount: Scalars['Int']['output'];
   id: Scalars['String']['output'];
   profilePicture: Scalars['String']['output'];
+  profilePictureOriginal: Scalars['String']['output'];
   publicationsCount: Scalars['Int']['output'];
   socialLinks?: Maybe<Array<SocialLink>>;
   updatedAt: Scalars['Timestamp']['output'];
@@ -966,6 +970,8 @@ export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export type MediaAttachmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['MediaAttachment'] = ResolversParentTypes['MediaAttachment']> = {
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  originalCid?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  originalUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1136,6 +1142,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   bookmarksCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   coverPicture?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  coverPictureOriginal?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   currentRank?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1144,6 +1151,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   followingCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   profilePicture?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  profilePictureOriginal?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   publicationsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   socialLinks?: Resolver<Maybe<Array<ResolversTypes['SocialLink']>>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;

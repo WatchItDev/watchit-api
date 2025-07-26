@@ -8,6 +8,11 @@ process.env.FIRESTORE_EMULATOR_HOST ??= 'localhost:8080';
 
 function cleanKey(k) { return k ? k.replace(/\\n/g, '\n') : undefined; }
 
+process.env.PINATA_JWT            ??= process.env.API_PINATA_JWT;
+process.env.PINATA_API_KEY        ??= process.env.API_PINATA_API_KEY;
+process.env.PINATA_SECRET_API_KEY ??= process.env.API_PINATA_SECRET_API_KEY;
+process.env.IPFS_GATEWAY_BASE     ??= 'https://cloudflare-ipfs.com/ipfs';
+
 const {
     API_FIREBASE_TYPE,
     API_FIREBASE_PROJECT_ID,

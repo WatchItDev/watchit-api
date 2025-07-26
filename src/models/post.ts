@@ -36,9 +36,11 @@ export function makeNewPost(
         cid:      input.cid,
         media:      input.media?.map((m) => ({
             id:   m.cid,
-            cid:  m.cid,
             title:  m.title,
+            cid:  m.cid,
             url:  m.url,
+            originalUrl: m.url,
+            originalCid: m.cid,
             type: m.type,
         })) ?? [],
         visibility: input.visibility,
