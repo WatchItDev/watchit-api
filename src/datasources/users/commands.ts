@@ -28,10 +28,25 @@ export class UsersCommands extends DataSourceManager {
         if (!current) throw new Error(`User ${address} not found`);
 
         const cleanPatch = stripNulls(patch);
-        const merged = { ...current, ...cleanPatch };
+        const nextDoc: Partial<FirestoreUser> = { ...cleanPatch };
+
+        if (typeof cleanPatch.profilePicture === 'string'
+            && cleanPatch.profilePicture
+            && cleanPatch.profilePicture !== current.profilePicture) {
+            nextDoc.profilePictureOriginal = cleanPatch.profilePicture;
+        }
+
+        if (typeof cleanPatch.coverPicture === 'string'
+            && cleanPatch.coverPicture
+            && cleanPatch.coverPicture !== current.coverPicture) {
+            nextDoc.coverPictureOriginal = cleanPatch.coverPicture;
+        }
+
+        const merged = { ...current, ...nextDoc };
+        console.log('merged user data:', merged);
         const keywords = buildKeywords(merged, USER_PREFIX_FIELDS, USER_WHOLE_FIELDS);
         const timestamp = Date.now();
-        const updateDoc = {...cleanPatch, keywords, updatedAt: timestamp,};
+        const updateDoc = { ...nextDoc, keywords, updatedAt: timestamp };
         const { keywords: _k, ...publicUser } = { ...merged, updatedAt: timestamp };
 
         await dao.update(address, updateDoc);

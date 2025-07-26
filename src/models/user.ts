@@ -4,8 +4,8 @@ import {AuthData} from "@/types";
 export function defaultUserData(): Omit<
     User,
     'address' | 'email' | 'id' | 'username' | 'displayName' | 'bio' |
-    'profilePicture' | 'coverPicture' | 'socialLinks' |
-    'createdAt' | 'updatedAt'
+    'profilePicture' | 'coverPicture' | 'socialLinks' | 'profilePictureOriginal' |
+    'createdAt' | 'updatedAt' | 'coverPictureOriginal'
 > {
     return {
         followersCount: 0,
@@ -27,7 +27,9 @@ export function makeNewUser(input: UserInput & AuthData): User {
         id:             input.id ?? '',
         email:          input.email ?? '',
         profilePicture: input.profilePicture ?? '',
+        profilePictureOriginal: input.profilePicture ?? '',
         coverPicture:   input.coverPicture ?? '',
+        coverPictureOriginal:   input.coverPicture ?? '',
         socialLinks:    input.socialLinks ?? [],
         createdAt:      now,
         updatedAt:      now,

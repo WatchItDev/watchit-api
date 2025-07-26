@@ -353,6 +353,7 @@ type User {
   bio: String!
   bookmarksCount: Int!
   coverPicture: String!
+  coverPictureOriginal: String!
   createdAt: Timestamp!
   currentRank: String!
   displayName: String!
@@ -361,6 +362,7 @@ type User {
   followingCount: Int!
   id: String!
   profilePicture: String!
+  profilePictureOriginal: String!
   publicationsCount: Int!
   socialLinks: [SocialLink!]
   updatedAt: Timestamp!

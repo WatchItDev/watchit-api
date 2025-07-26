@@ -17,11 +17,11 @@ enum VisibilitySetting {
 ####################
 
 type MediaAttachment {
-  id:         String!
-  url:        String
-  cid:        String!
-  title:      String
-  type:       String!
+  id:          String!
+  url:         String
+  cid:         String!
+  title:       String
+  type:        String!
 }
 
 type Post {

@@ -19,7 +19,9 @@ type User {
   displayName: String!
   bio: String!
   profilePicture: String!
+  profilePictureOriginal: String!
   coverPicture: String!
+  coverPictureOriginal: String!
   socialLinks: [SocialLink!]
   xpBalance: Int!
   xpTotal:   Int!
