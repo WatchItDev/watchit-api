@@ -67,16 +67,16 @@ export const logUserCreated = onDocumentCreated(
 
         console.log(`🎉  ${wallet} promoted to watcher & perks seeded`);
 
-        // try {
-        //     const patch = await buildUserPicturePatch(wallet, newUser);
-        //     if (patch) {
-        //         patch.updatedAt = Date.now();
-        //         await snap.ref.update(patch);
-        //         console.log(`🖼️ processed user pictures for ${wallet}`);
-        //     }
-        // } catch (err) {
-        //     console.warn(`⚠️ processUserPictures (create) failed for ${wallet}:`, err);
-        // }
+        try {
+            const patch = await buildUserPicturePatch(wallet, newUser);
+            if (patch) {
+                patch.updatedAt = Date.now();
+                await snap.ref.update(patch);
+                console.log(`🖼️ processed user pictures for ${wallet}`);
+            }
+        } catch (err) {
+            console.warn(`⚠️ processUserPictures (create) failed for ${wallet}:`, err);
+        }
     }),
 );
 
@@ -90,15 +90,15 @@ export const logUserUpdated = onDocumentUpdated(
 
         await activity.userUpdated(wallet);
 
-        // try {
-        //     const patch = await buildUserPicturePatch(wallet, after);
-        //     if (patch) {
-        //         patch.updatedAt = Date.now();
-        //         await change.after.ref.update(patch);
-        //         console.log(`🖼️ processed user pictures (update) for ${wallet}`);
-        //     }
-        // } catch (err) {
-        //     console.warn(`⚠️ processUserPictures (update) failed for ${wallet}:`, err);
-        // }
+        try {
+            const patch = await buildUserPicturePatch(wallet, after);
+            if (patch) {
+                patch.updatedAt = Date.now();
+                await change.after.ref.update(patch);
+                console.log(`🖼️ processed user pictures (update) for ${wallet}`);
+            }
+        } catch (err) {
+            console.warn(`⚠️ processUserPictures (update) failed for ${wallet}:`, err);
+        }
     }),
 );
