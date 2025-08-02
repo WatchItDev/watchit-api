@@ -1,0 +1,106 @@
+###########################
+#          PERKS          #
+###########################
+
+enum PerkCategory { GAMIFICATION ECONOMY SOCIAL ACCESS }
+enum Actor       { SELF TARGET OWNER }
+enum DistinctBy  { NONE TARGET USER }
+
+type UnlockRule {
+  on:      String!
+  actor:   Actor
+  distinctBy: DistinctBy
+  rankId:  String
+  action:  String
+  times:   Int
+  window:  String
+}
+
+type ExecutionRule {
+  type:        String!
+  cooldownSec: Int!
+}
+
+type Reward {
+  action: String!
+  amount: Int
+  tokenId: String
+}
+
+type Perk {
+  id: String!
+  name: String!
+  minRankId: String!
+  uiHint: String
+  category: PerkCategory!
+  collectedAt: Timestamp
+  availableAt: Timestamp
+  cooldownRemaining: Int!
+  rewardPreview: String!
+  unlockRule:   UnlockRule!
+  executionRule:ExecutionRule!
+  reward:       Reward!
+  enabled:      Boolean!
+  hooks:        [JSON]
+}
+
+type UnlockedPerkState {
+  id:          String!
+  user:        String!
+  perkId:      String!
+  status:      String!
+  progress:    Int!
+  target:      Int!
+  availableAt: Timestamp!
+  collectedAt: Timestamp
+  cooldownSec: Int!
+  createdAt:   Timestamp!
+  perk: Perk!
+}
+
+input UnlockRuleInput {
+  on:String!,
+  actor:Actor,
+  distinctBy:DistinctBy,
+  rankId:String,
+  action:String,
+  times:Int,
+  window:String
+}
+
+input ExecutionRuleInput {
+  type:String!,
+  cooldownSec:Int!
+}
+
+input RewardInput {
+  action:String!,
+  amount:Int,
+  tokenId:String
+}
+
+input PerkInput {
+  id:           String!
+  name:         String!
+  minRankId:    String!
+  uiHint:       String
+  category:     PerkCategory!
+  unlockRule:   UnlockRuleInput!
+  executionRule:ExecutionRuleInput!
+  reward:       RewardInput!
+  enabled:      Boolean!
+  hooks:        [JSON]
+}
+
+extend type Query {
+  getPerks: [Perk!]!
+  getUnlockedPerks(address:String!,limit:Int = 50,offset:Int = 0): [UnlockedPerkState!]!
+  hasPerk(address: String!, perkId: ID!): Boolean!
+}
+
+extend type Mutation {
+  claimPerk(perkId:ID!): Boolean!
+  createPerk(input:PerkInput!): Perk!
+  updatePerk(id:ID!, patch:PerkInput!): Perk!
+  deletePerk(id:ID!): Boolean!
+}

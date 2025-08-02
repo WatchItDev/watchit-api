@@ -14,6 +14,7 @@
   "emulators": {
     "functions": { "port": 5001 },
     "firestore": { "port": 8080 },
+    "pubsub":    { "port": 8085 },
     "ui": {
       "enabled": true,
       "port": 4001

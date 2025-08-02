@@ -1,5 +1,11 @@
 directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
+enum Actor {
+  OWNER
+  SELF
+  TARGET
+}
+
 input AddXPInput {
   action: String!
   address: String!
@@ -50,6 +56,12 @@ scalar Date
 """ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
 scalar DateTime
 
+enum DistinctBy {
+  NONE
+  TARGET
+  USER
+}
+
 type EventLog {
   amount: Int
   author: String
@@ -60,6 +72,16 @@ type EventLog {
   progress: Int
   targetId: String
   targetType: String
+  type: String!
+}
+
+type ExecutionRule {
+  cooldownSec: Int!
+  type: String!
+}
+
+input ExecutionRuleInput {
+  cooldownSec: Int!
   type: String!
 }
 
@@ -105,9 +127,14 @@ input MediaAttachmentInput {
 }
 
 type Mutation {
+  claimPerk(perkId: ID!): Boolean!
   createComment(input: CreateCommentInput!): Comment!
+  createPerk(input: PerkInput!): Perk!
   createPost(input: CreatePostInput!): Post!
+  createRank(input: RankInput!): Rank!
   createUser(input: UserInput!): User!
+  deletePerk(id: ID!): Boolean!
+  deleteRank(id: ID!): Boolean!
   hideComment(commentId: String!): Boolean
   hidePost(postId: String!): Boolean
   incrementPostView(postId: String!): Post!
@@ -117,8 +144,47 @@ type Mutation {
   toggleFollow(input: FollowInput!): Boolean!
   toggleLike(input: LikeInput!): Boolean!
   updateComment(input: UpdateCommentInput!): Comment!
+  updatePerk(id: ID!, patch: PerkInput!): Perk!
   updatePost(input: UpdatePostInput!): Post!
+  updateRank(id: ID!, patch: RankInput!): Rank!
   updateUser(input: UpdateUserInput!): User!
+}
+
+type Perk {
+  availableAt: Timestamp
+  category: PerkCategory!
+  collectedAt: Timestamp
+  cooldownRemaining: Int!
+  enabled: Boolean!
+  executionRule: ExecutionRule!
+  hooks: [JSON]
+  id: String!
+  minRankId: String!
+  name: String!
+  reward: Reward!
+  rewardPreview: String!
+  uiHint: String
+  unlockRule: UnlockRule!
+}
+
+enum PerkCategory {
+  ACCESS
+  ECONOMY
+  GAMIFICATION
+  SOCIAL
+}
+
+input PerkInput {
+  category: PerkCategory!
+  enabled: Boolean!
+  executionRule: ExecutionRuleInput!
+  hooks: [JSON]
+  id: String!
+  minRankId: String!
+  name: String!
+  reward: RewardInput!
+  uiHint: String
+  unlockRule: UnlockRuleInput!
 }
 
 type Post {
@@ -139,6 +205,7 @@ type Post {
 }
 
 type Query {
+  getAchievements(address: String!): UserAchievements!
   getActiveUsers(limit: Int): [User!]!
   getAllPosts(limit: Int): [Post!]!
   getBookmarksByPost(limit: Int = 50, postId: String!): [User!]!
@@ -147,6 +214,8 @@ type Query {
   getIsBookmarked(postId: String!): Boolean!
   getIsFollowing(targetAddress: String!): Boolean!
   getIsLiked(targetId: String!): Boolean!
+  getLeaderboard(limit: Int = 100): [User!]!
+  getPerks: [Perk!]!
   getPopularPosts(limit: Int): [Post!]!
   getPopularUsers(limit: Int): [User!]!
   getPost(id: String!): Post
@@ -154,17 +223,53 @@ type Query {
   getPosts(limit: Int, query: String!): [Post!]!
   getPostsByAuthor(author: String!, limit: Int): [Post!]!
   getProfileViews(address: String!): Int!
+  getRanksCatalog: [Rank!]!
   getRecentPosts(limit: Int): [Post!]!
   getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
   getTargetEvents(limit: Int = 50, offset: Int = 0, targetId: String!, targetType: String, type: String): [EventLog!]!
+  getUnlockedPerks(address: String!, limit: Int = 50, offset: Int = 0): [UnlockedPerkState!]!
   getUser(input: UserByInput!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!
   getUserEvents(address: String!, limit: Int = 50, offset: Int = 0, type: String): [EventLog!]!
   getUserFollowers(address: String!, limit: Int): [User!]!
   getUserFollowing(address: String!, limit: Int): [User!]!
+  getUserRanks(address: String!): [UserRank!]!
   getUserXPHistory(address: String!, limit: Int = 50, offset: Int = 0): [XPEntry!]!
   getUsers(limit: Int, query: String!): [User!]!
+  hasPerk(address: String!, perkId: ID!): Boolean!
+}
+
+type Rank {
+  badgeUrl: String!
+  colorTheme: String!
+  createdAt: Timestamp!
+  id: String!
+  minXp: Int!
+  name: String!
+  order: Int!
+  updatedAt: Timestamp!
+}
+
+input RankInput {
+  badgeUrl: String!
+  colorTheme: String!
+  id: String!
+  minXp: Int!
+  name: String!
+  order: Int!
+}
+
+type Reward {
+  action: String!
+  amount: Int
+  tokenId: String
+}
+
+input RewardInput {
+  action: String!
+  amount: Int
+  tokenId: String
 }
 
 type SocialLink {
@@ -184,6 +289,40 @@ enum TargetType {
 
 """Unix epoch in milliseconds (number)."""
 scalar Timestamp
+
+type UnlockRule {
+  action: String
+  actor: Actor
+  distinctBy: DistinctBy
+  on: String!
+  rankId: String
+  times: Int
+  window: String
+}
+
+input UnlockRuleInput {
+  action: String
+  actor: Actor
+  distinctBy: DistinctBy
+  on: String!
+  rankId: String
+  times: Int
+  window: String
+}
+
+type UnlockedPerkState {
+  availableAt: Timestamp!
+  collectedAt: Timestamp
+  cooldownSec: Int!
+  createdAt: Timestamp!
+  id: String!
+  perk: Perk!
+  perkId: String!
+  progress: Int!
+  status: String!
+  target: Int!
+  user: String!
+}
 
 input UpdateCommentInput {
   commentId: String!
@@ -216,6 +355,7 @@ type User {
   bookmarksCount: Int!
   coverPicture: String!
   createdAt: Timestamp!
+  currentRank: String!
   displayName: String!
   email: String!
   followersCount: Int!
@@ -228,6 +368,15 @@ type User {
   username: String!
   verified: Boolean!
   xpBalance: Int!
+  xpTotal: Int!
+}
+
+type UserAchievements {
+  currentRank: Rank!
+  nextRank: Rank
+  progressPct: Float!
+  xpBalance: Int!
+  xpRemaining: Int!
   xpTotal: Int!
 }
 
@@ -244,6 +393,12 @@ input UserInput {
   profilePicture: String
   socialLinks: [SocialLinkInput!]
   username: String!
+}
+
+type UserRank {
+  achievedAt: Timestamp!
+  rankId: String!
+  user: String!
 }
 
 enum VisibilitySetting {
