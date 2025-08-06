@@ -10,6 +10,7 @@ import { LogService }   from './logs';
 import { RanksService } from './ranks';
 import { PerksService } from './perks';
 import { LeaderboardService } from './leaderboard';
+import { TipsService } from './tips';
 
 export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
     Profile:      new ProfileService({ ds, ext }),
@@ -24,6 +25,7 @@ export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
     Ranks:        new RanksService({ ds, ext }),
     Perks:        new PerksService({ ds, ext }),
     Leaderboard:  new LeaderboardService({ ds, ext }),
+    Tips:         new TipsService({ ds, ext }),
 });
 
 export type ServicesType = ReturnType<typeof Services>;

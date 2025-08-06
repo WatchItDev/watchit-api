@@ -50,6 +50,14 @@ input CreatePostInput {
   visibility: VisibilitySetting!
 }
 
+input CreateTipInput {
+  amount: Float!
+  creator: String!
+  message: String
+  postId: String!
+  txHash: String
+}
+
 scalar Date
 
 """ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
@@ -131,6 +139,7 @@ type Mutation {
   createPerk(input: PerkInput!): Perk!
   createPost(input: CreatePostInput!): Post!
   createRank(input: RankInput!): Rank!
+  createTip(input: CreateTipInput!): Tip!
   createUser(input: UserInput!): User!
   deletePerk(id: ID!): Boolean!
   deleteRank(id: ID!): Boolean!
@@ -210,6 +219,7 @@ type Query {
   getBookmarksByPost(limit: Int = 50, postId: String!): [User!]!
   getBookmarksByUser(address: String!, limit: Int = 50): [Post!]!
   getCommentsByPost(limit: Int, postId: String!): [Comment!]!
+  getCreatorTips(address: String!, limit: Int): [Tip!]!
   getIsBookmarked(postId: String!): Boolean!
   getIsFollowing(targetAddress: String!): Boolean!
   getIsLiked(targetId: String!): Boolean!
@@ -227,6 +237,8 @@ type Query {
   getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
   getTargetEvents(limit: Int = 50, offset: Int = 0, targetId: String!, targetType: String, type: String): [EventLog!]!
+  getTipsByBakerForPost(limit: Int, postId: String!): [TipByBaker!]!
+  getTipsForPost(limit: Int, postId: String!): [Tip!]!
   getUnlockedPerks(address: String!, limit: Int = 50, offset: Int = 0): [UnlockedPerkState!]!
   getUser(input: UserByInput!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!
@@ -234,6 +246,7 @@ type Query {
   getUserFollowers(address: String!, limit: Int): [User!]!
   getUserFollowing(address: String!, limit: Int): [User!]!
   getUserRanks(address: String!): [UserRank!]!
+  getUserTipsHistory(address: String!, limit: Int): [Tip!]!
   getUserXPHistory(address: String!, limit: Int = 50, offset: Int = 0): [XPEntry!]!
   getUsers(limit: Int, query: String!): [User!]!
   hasPerk(address: String!, perkId: ID!): Boolean!
@@ -288,6 +301,24 @@ enum TargetType {
 
 """Unix epoch in milliseconds (number)."""
 scalar Timestamp
+
+type Tip {
+  amount: Float!
+  baker: String!
+  createdAt: Timestamp!
+  creator: String!
+  id: String!
+  message: String
+  postId: String!
+  txHash: String
+}
+
+type TipByBaker {
+  baker: User!
+  count: Float!
+  lastTipAt: Timestamp!
+  totalAmount: Float!
+}
 
 type UnlockRule {
   action: String
