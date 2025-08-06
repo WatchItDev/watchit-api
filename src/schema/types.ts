@@ -74,6 +74,14 @@ export type CreatePostInput = {
   visibility: VisibilitySetting;
 };
 
+export type CreateTipInput = {
+  amount: Scalars['Float']['input'];
+  creator: Scalars['String']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
+  postId: Scalars['String']['input'];
+  txHash?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type DistinctBy =
   | 'NONE'
   | 'TARGET'
@@ -151,6 +159,7 @@ export type Mutation = {
   createPerk: Perk;
   createPost: Post;
   createRank: Rank;
+  createTip: Tip;
   createUser: User;
   deletePerk: Scalars['Boolean']['output'];
   deleteRank: Scalars['Boolean']['output'];
@@ -192,6 +201,11 @@ export type MutationcreatePostArgs = {
 
 export type MutationcreateRankArgs = {
   input: RankInput;
+};
+
+
+export type MutationcreateTipArgs = {
+  input: CreateTipInput;
 };
 
 
@@ -339,6 +353,7 @@ export type Query = {
   getBookmarksByPost: Array<User>;
   getBookmarksByUser: Array<Post>;
   getCommentsByPost: Array<Comment>;
+  getCreatorTips: Array<Tip>;
   getIsBookmarked: Scalars['Boolean']['output'];
   getIsFollowing: Scalars['Boolean']['output'];
   getIsLiked: Scalars['Boolean']['output'];
@@ -356,6 +371,8 @@ export type Query = {
   getRecentUsers: Array<User>;
   getRepliesByComment: Array<Comment>;
   getTargetEvents: Array<EventLog>;
+  getTipsByBakerForPost: Array<TipByBaker>;
+  getTipsForPost: Array<Tip>;
   getUnlockedPerks: Array<UnlockedPerkState>;
   getUser?: Maybe<User>;
   getUserBookmarks: Array<Post>;
@@ -363,6 +380,7 @@ export type Query = {
   getUserFollowers: Array<User>;
   getUserFollowing: Array<User>;
   getUserRanks: Array<UserRank>;
+  getUserTipsHistory: Array<Tip>;
   getUserXPHistory: Array<XPEntry>;
   getUsers: Array<User>;
   hasPerk: Scalars['Boolean']['output'];
@@ -399,6 +417,12 @@ export type QuerygetBookmarksByUserArgs = {
 export type QuerygetCommentsByPostArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   postId: Scalars['String']['input'];
+};
+
+
+export type QuerygetCreatorTipsArgs = {
+  address: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -484,6 +508,18 @@ export type QuerygetTargetEventsArgs = {
 };
 
 
+export type QuerygetTipsByBakerForPostArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  postId: Scalars['String']['input'];
+};
+
+
+export type QuerygetTipsForPostArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  postId: Scalars['String']['input'];
+};
+
+
 export type QuerygetUnlockedPerksArgs = {
   address: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -524,6 +560,12 @@ export type QuerygetUserFollowingArgs = {
 
 export type QuerygetUserRanksArgs = {
   address: Scalars['String']['input'];
+};
+
+
+export type QuerygetUserTipsHistoryArgs = {
+  address: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -593,6 +635,26 @@ export type SocialLinkInput = {
 export type TargetType =
   | 'COMMENT'
   | 'POST';
+
+export type Tip = {
+  __typename?: 'Tip';
+  amount: Scalars['Float']['output'];
+  baker: Scalars['String']['output'];
+  createdAt: Scalars['Timestamp']['output'];
+  creator: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  message?: Maybe<Scalars['String']['output']>;
+  postId: Scalars['String']['output'];
+  txHash?: Maybe<Scalars['String']['output']>;
+};
+
+export type TipByBaker = {
+  __typename?: 'TipByBaker';
+  baker: User;
+  count: Scalars['Float']['output'];
+  lastTipAt: Scalars['Timestamp']['output'];
+  totalAmount: Scalars['Float']['output'];
+};
 
 export type UnlockRule = {
   __typename?: 'UnlockRule';
@@ -807,6 +869,8 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateCommentInput: CreateCommentInput;
   CreatePostInput: CreatePostInput;
+  CreateTipInput: CreateTipInput;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   DistinctBy: ResolverTypeWrapper<'NONE' | 'TARGET' | 'USER'>;
@@ -835,6 +899,8 @@ export type ResolversTypes = {
   SocialLinkInput: SocialLinkInput;
   TargetType: ResolverTypeWrapper<'POST' | 'COMMENT'>;
   Timestamp: ResolverTypeWrapper<Scalars['Timestamp']['output']>;
+  Tip: ResolverTypeWrapper<Tip>;
+  TipByBaker: ResolverTypeWrapper<TipByBaker>;
   UnlockRule: ResolverTypeWrapper<Omit<UnlockRule, 'actor' | 'distinctBy'> & { actor?: Maybe<ResolversTypes['Actor']>, distinctBy?: Maybe<ResolversTypes['DistinctBy']> }>;
   UnlockRuleInput: UnlockRuleInput;
   UnlockedPerkState: ResolverTypeWrapper<Omit<UnlockedPerkState, 'perk'> & { perk: ResolversTypes['Perk'] }>;
@@ -844,7 +910,6 @@ export type ResolversTypes = {
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
   UserAchievements: ResolverTypeWrapper<UserAchievements>;
-  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   UserByInput: UserByInput;
   UserInput: UserInput;
   UserRank: ResolverTypeWrapper<UserRank>;
@@ -862,6 +927,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   CreateCommentInput: CreateCommentInput;
   CreatePostInput: CreatePostInput;
+  CreateTipInput: CreateTipInput;
+  Float: Scalars['Float']['output'];
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
   EventLog: EventLog;
@@ -887,6 +954,8 @@ export type ResolversParentTypes = {
   SocialLink: SocialLink;
   SocialLinkInput: SocialLinkInput;
   Timestamp: Scalars['Timestamp']['output'];
+  Tip: Tip;
+  TipByBaker: TipByBaker;
   UnlockRule: UnlockRule;
   UnlockRuleInput: UnlockRuleInput;
   UnlockedPerkState: Omit<UnlockedPerkState, 'perk'> & { perk: ResolversParentTypes['Perk'] };
@@ -896,7 +965,6 @@ export type ResolversParentTypes = {
   Upload: Scalars['Upload']['output'];
   User: User;
   UserAchievements: UserAchievements;
-  Float: Scalars['Float']['output'];
   UserByInput: UserByInput;
   UserInput: UserInput;
   UserRank: UserRank;
@@ -978,6 +1046,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createPerk?: Resolver<ResolversTypes['Perk'], ParentType, ContextType, RequireFields<MutationcreatePerkArgs, 'input'>>;
   createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationcreatePostArgs, 'input'>>;
   createRank?: Resolver<ResolversTypes['Rank'], ParentType, ContextType, RequireFields<MutationcreateRankArgs, 'input'>>;
+  createTip?: Resolver<ResolversTypes['Tip'], ParentType, ContextType, RequireFields<MutationcreateTipArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationcreateUserArgs, 'input'>>;
   deletePerk?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeletePerkArgs, 'id'>>;
   deleteRank?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationdeleteRankArgs, 'id'>>;
@@ -1041,6 +1110,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getBookmarksByPost?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetBookmarksByPostArgs, 'limit' | 'postId'>>;
   getBookmarksByUser?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetBookmarksByUserArgs, 'address' | 'limit'>>;
   getCommentsByPost?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetCommentsByPostArgs, 'postId'>>;
+  getCreatorTips?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerygetCreatorTipsArgs, 'address'>>;
   getIsBookmarked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsBookmarkedArgs, 'postId'>>;
   getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'targetAddress'>>;
   getIsLiked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsLikedArgs, 'targetId'>>;
@@ -1058,6 +1128,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getRecentUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QuerygetRecentUsersArgs>>;
   getRepliesByComment?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetRepliesByCommentArgs, 'commentId'>>;
   getTargetEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetTargetEventsArgs, 'limit' | 'offset' | 'targetId'>>;
+  getTipsByBakerForPost?: Resolver<Array<ResolversTypes['TipByBaker']>, ParentType, ContextType, RequireFields<QuerygetTipsByBakerForPostArgs, 'postId'>>;
+  getTipsForPost?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerygetTipsForPostArgs, 'postId'>>;
   getUnlockedPerks?: Resolver<Array<ResolversTypes['UnlockedPerkState']>, ParentType, ContextType, RequireFields<QuerygetUnlockedPerksArgs, 'address' | 'limit' | 'offset'>>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserArgs, 'input'>>;
   getUserBookmarks?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetUserBookmarksArgs, 'address'>>;
@@ -1065,6 +1137,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getUserFollowers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserFollowersArgs, 'address'>>;
   getUserFollowing?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserFollowingArgs, 'address'>>;
   getUserRanks?: Resolver<Array<ResolversTypes['UserRank']>, ParentType, ContextType, RequireFields<QuerygetUserRanksArgs, 'address'>>;
+  getUserTipsHistory?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerygetUserTipsHistoryArgs, 'address'>>;
   getUserXPHistory?: Resolver<Array<ResolversTypes['XPEntry']>, ParentType, ContextType, RequireFields<QuerygetUserXPHistoryArgs, 'address' | 'limit' | 'offset'>>;
   getUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUsersArgs, 'query'>>;
   hasPerk?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QueryhasPerkArgs, 'address' | 'perkId'>>;
@@ -1100,6 +1173,26 @@ export type TargetTypeResolvers = EnumResolverSignature<{ COMMENT?: any, POST?: 
 export interface TimestampScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Timestamp'], any> {
   name: 'Timestamp';
 }
+
+export type TipResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tip'] = ResolversParentTypes['Tip']> = {
+  amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  baker?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  creator?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  postId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  txHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TipByBakerResolvers<ContextType = any, ParentType extends ResolversParentTypes['TipByBaker'] = ResolversParentTypes['TipByBaker']> = {
+  baker?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  count?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  lastTipAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
+  totalAmount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type UnlockRuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['UnlockRule'] = ResolversParentTypes['UnlockRule']> = {
   action?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1207,6 +1300,8 @@ export type Resolvers<ContextType = any> = {
   SocialLink?: SocialLinkResolvers<ContextType>;
   TargetType?: TargetTypeResolvers;
   Timestamp?: GraphQLScalarType;
+  Tip?: TipResolvers<ContextType>;
+  TipByBaker?: TipByBakerResolvers<ContextType>;
   UnlockRule?: UnlockRuleResolvers<ContextType>;
   UnlockedPerkState?: UnlockedPerkStateResolvers<ContextType>;
   Upload?: GraphQLScalarType;

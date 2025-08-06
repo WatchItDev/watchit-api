@@ -1,0 +1,49 @@
+###########################
+#          TIPS           #
+###########################
+
+scalar Timestamp
+
+type Tip {
+  id: String!
+  postId: String!
+  creator: String!
+  baker: String!
+  amount: Float!
+  txHash: String
+  message: String
+  createdAt: Timestamp!
+}
+
+type TipByBaker {
+  baker: User!
+  totalAmount: Float!
+  count: Float!
+  lastTipAt: Timestamp!
+}
+
+input CreateTipInput {
+  postId: String!             @constraint(minLength: 1)
+  creator: String!            @constraint(minLength: 1)
+  amount: Float!              @constraint(minLength: 0)
+  txHash: String
+  message: String
+}
+
+extend type Mutation {
+  createTip(input: CreateTipInput!): Tip!
+}
+
+extend type Query {
+  # History of tips for a post
+  getTipsForPost(postId: String!, limit: Int): [Tip!]!
+
+  # Tips by baker
+  getTipsByBakerForPost(postId: String!, limit: Int): [TipByBaker!]!
+
+  # History of tips for a user
+  getUserTipsHistory(address: String!, limit: Int): [Tip!]!
+
+  # History of tips for a creator
+  getCreatorTips(address: String!, limit: Int): [Tip!]!
+}
