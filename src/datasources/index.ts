@@ -7,7 +7,7 @@ import BookmarksDS from "./bookmarks";
 import FollowsDS from "./follows";
 import LikesDS from "./likes";
 import XPDS from "./xp";
-import SynapseDS from "./synapse";
+import Web3DS from "./web3";
 import LogsDS from "./logs";
 import RanksDS from "./ranks";
 import PerksDS from "./perks";
@@ -22,7 +22,7 @@ export const DataSources = (store: FireStore) => ({
   Follows: new FollowsDS(store),
   Likes: new LikesDS(store),
   XP: new XPDS(store),
-  SynapseDS: new SynapseDS(store),
+  Web3: new Web3DS(store),
   Logs: new LogsDS(store),
   Ranks: new RanksDS(store),
   Perks: new PerksDS(store),

@@ -67,4 +67,4 @@ export const IntentDiscoveryGraph = (config: any = {}) => {
     .compile(config);
 };
 
-export type RootGraphType = ReturnType<typeof IntentDiscoveryGraph>;
+export type IntentDiscoveryGraphType = ReturnType<typeof IntentDiscoveryGraph>;

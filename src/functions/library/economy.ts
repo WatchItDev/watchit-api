@@ -1,6 +1,10 @@
 // economy.ts
-import { makeXpEntry } from "../../models/xp";
 import type { Ctx } from "@/functions/manager";
+import type { UsersDSType } from "@/datasources/users";
+import type { XPDSType } from "@/datasources/xp";
+import type { Web3DSType } from "@/datasources/web3";
+import { ActivityLogger } from "../library/activity";
+import { makeXpEntry } from "../../models/xp";
 
 // ---- Zero-cost string enums ----
 export const XPAction = {
@@ -10,42 +14,23 @@ export const XPAction = {
   // LIKE: "LIKE",
   // POST_CREATE: "POST_CREATE",
 } as const;
+
+type DSUsersPort = Pick<UsersDSType, "getUser">;
+type DSXpPort = Pick<XPDSType, "addEntry">;
+type DSWeb3Port = Pick<Web3DSType, "transfer">;
 export type XPAction = typeof XPAction[keyof typeof XPAction];
-
-// ---- Minimal ports extracted from ds/activity ----
-type User = {
-  address: string;
-  xpBalance: number;
-  xpTotal: number;
-};
-
-type DSUsersPort = {
-  getUser: (addr: string) => Promise<User | null | undefined>;
-};
-
-type DSXpPort = {
-  addEntry: (entry: ReturnType<typeof makeXpEntry>) => Promise<void>;
-};
-
-type DSSynapsePort = {
-  transfer: (addr: string, amount: number) => Promise<unknown>;
-};
 
 type DS = {
   Users: DSUsersPort;
   XP: DSXpPort;
-  SynapseDS: DSSynapsePort;
+  Web3: DSWeb3Port;
 };
 
-type ActivityPort = {
-  xpGained?: (author: string, amount: number) => Promise<unknown> | unknown;
-  mmcTransfer?: (author: string, amount: number) => Promise<unknown> | unknown;
-};
 
 // ---- API ----
 type EconomyDeps = Pick<Ctx, "ds" | "ext" | "activity"> & {
   ds: DS;                  // narrow ds to the subset we actually use
-  activity?: ActivityPort; // activity is optional
+  activity?: ActivityLogger; // activity is optional
 };
 
 export const economy = ({ ds, activity }: EconomyDeps) => {
@@ -80,13 +65,16 @@ export const economy = ({ ds, activity }: EconomyDeps) => {
         totalBefore: u.xpTotal,
       });
 
-      await ds.XP.addEntry(entry);
+
 
       // Best-effort side effect (should not break if activity fails)
       try {
-        await activity?.xpGained?.(addr, amount);
+        Promise.resolve([
+          ds.XP.addEntry(entry),
+          activity?.xpGained?.(addr, amount),
+        ])
       } catch (e) {
-        // console.warn("activity.xpGained failed", e);
+        console.warn("activity.xpGained failed", e);
       }
 
       return entry;
@@ -104,7 +92,7 @@ export const economy = ({ ds, activity }: EconomyDeps) => {
         throw new Error("transferMMC: 'amount' must be a number > 0");
       }
 
-      const res = await ds.SynapseDS.transfer(addr, amount);
+      const res = await ds.Web3.transfer(addr, amount);
 
       try {
         await activity?.mmcTransfer?.(addr, amount);

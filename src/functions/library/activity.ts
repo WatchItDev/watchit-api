@@ -144,3 +144,6 @@ export const activityLogger = ({ ds }: Pick<Ctx, "ds">) => {
       emit(EventType.MMC_TRANSFER, { author, amount, currency: Currency.MMC }),
   };
 };
+
+
+export type ActivityLogger = ReturnType<typeof activityLogger>;

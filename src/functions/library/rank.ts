@@ -27,7 +27,7 @@ export const rankEngine = ({
       (p) => p.unlockRule.on === "RANK_UP" && p.unlockRule.rankId === rankId,
     );
 
-    const seedable = catalog.filter(
+    const seed = catalog.filter(
       (p) =>
         (order[p.minRankId] ?? 0) <= (order[rankId] ?? 0) &&
         p.unlockRule.on !== "RANK_UP",
@@ -53,7 +53,7 @@ export const rankEngine = ({
     );
 
     await Promise.all(
-      seedable.map(async (p) => {
+      seed.map(async (p) => {
         const exists = await ds.Perks.getState(user, p.id);
         if (exists) return;
 
@@ -86,6 +86,7 @@ export const rankEngine = ({
           ds.Users.updateUser(userAddr, { currentRank: first.id }),
           ds.Ranks.addUserRank(userAddr, first.id),
         ]);
+
         await unlockPerksForRank(first.id, userAddr);
         await activity.rankUp(userAddr, first.id);
         return;
