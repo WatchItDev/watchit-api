@@ -4,7 +4,7 @@ import { Actor, DistinctBy } from "../../models/perk";
 
 /**
  * The interval, in milliseconds, at which the perk cache is refreshed.
- * 
+ *
  * This value is determined by the `API_REFRESH_PERK_CACHE_SECONDS` environment variable.
  * If the environment variable is not set, it defaults to 5000 milliseconds (5 seconds).
  */
@@ -66,7 +66,6 @@ export const progressEngine = ({
     }
     lastLoad = Date.now();
   };
-
 
   const isRepeatable = (meta: any): boolean =>
     meta.executionRule.type === "ON_COOLDOWN" ||

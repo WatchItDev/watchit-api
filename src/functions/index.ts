@@ -9,4 +9,3 @@ export * as likesTrigger from "./triggers/likes";
 export * as xpTrigger from "./triggers/xp";
 export * as perksTrigger from "./triggers/perks";
 export * as logsTrigger from "./triggers/logs";
-

@@ -9,7 +9,7 @@ import { makeXpEntry } from "../../models/xp";
 // ---- Zero-cost string enums ----
 export const XPAction = {
   SYS: "SYS",
-  RANK_UP_BONUS: "RANK_UP_BONUS"
+  RANK_UP_BONUS: "RANK_UP_BONUS",
   // Add more domain actions here: LIKE, POST_CREATE, RANK_UP, etc.
   // LIKE: "LIKE",
   // POST_CREATE: "POST_CREATE",
@@ -18,7 +18,7 @@ export const XPAction = {
 type DSUsersPort = Pick<UsersDSType, "getUser">;
 type DSXpPort = Pick<XPDSType, "addEntry">;
 type DSWeb3Port = Pick<Web3DSType, "transfer">;
-export type XPAction = typeof XPAction[keyof typeof XPAction];
+export type XPAction = (typeof XPAction)[keyof typeof XPAction];
 
 type DS = {
   Users: DSUsersPort;
@@ -26,10 +26,9 @@ type DS = {
   Web3: DSWeb3Port;
 };
 
-
 // ---- API ----
 type EconomyDeps = Pick<Ctx, "ds" | "ext" | "activity"> & {
-  ds: DS;                  // narrow ds to the subset we actually use
+  ds: DS; // narrow ds to the subset we actually use
   activity?: ActivityLogger; // activity is optional
 };
 
@@ -65,14 +64,12 @@ export const economy = ({ ds, activity }: EconomyDeps) => {
         totalBefore: u.xpTotal,
       });
 
-
-
       // Best-effort side effect (should not break if activity fails)
       try {
         Promise.resolve([
           ds.XP.addEntry(entry),
           activity?.xpGained?.(addr, amount),
-        ])
+        ]);
       } catch (e) {
         console.warn("activity.xpGained failed", e);
       }
@@ -93,13 +90,7 @@ export const economy = ({ ds, activity }: EconomyDeps) => {
       }
 
       const res = await ds.Web3.transfer(addr, amount);
-
-      try {
-        await activity?.mmcTransfer?.(addr, amount);
-      } catch (e) {
-        console.warn("activity.mmcTransfer failed", e);
-      }
-
+      await activity?.mmcTransfer?.(addr, amount);
       console.log(`${amount} MMC sent to ${addr}`);
       return res;
     },

@@ -15,12 +15,10 @@ const openAIKey = process.env.API_OPENAI_API_KEY;
  */
 const llm = GPT4o({ apiKey: openAIKey, temperature: 0 });
 
-
 const HarvestingState = Annotation.Root({
   query: Annotation<typeof Query>,
   userInput: Annotation<string>,
 });
-
 
 const harvestNode = async (state: typeof HarvestingState.State) => {
   const expert = new Compiler(llm, Query);
@@ -28,7 +26,6 @@ const harvestNode = async (state: typeof HarvestingState.State) => {
   const query = await expert.call([message]);
   return { query: query, finish: true };
 };
-
 
 export const HarvestGraph = (config: any = {}) => {
   return new StateGraph(HarvestingState)

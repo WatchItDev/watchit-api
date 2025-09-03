@@ -1,2 +1,2 @@
-export {RootAgent} from "./root";
-export {IntentDiscoveryGraph} from "./intent";
+export { RootAgent } from "./root";
+export { IntentDiscoveryGraph } from "./intent";

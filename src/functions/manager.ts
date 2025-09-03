@@ -1,4 +1,4 @@
-import type {ExternalsType} from "../externals";
+import type { ExternalsType } from "../externals";
 import { Externals } from "../externals";
 import { DataSources } from "../datasources";
 import { Services, ServicesType } from "../services";
