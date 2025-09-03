@@ -1,15 +1,15 @@
-import type { CodegenConfig } from '@graphql-codegen/cli'
-import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files'
+import type { CodegenConfig } from "@graphql-codegen/cli";
+import { defineConfig } from "@eddeee888/gcg-typescript-resolver-files";
 
 const config: CodegenConfig = {
-  schema: '**/schema.graphql',
+  schema: "**/schema.graphql",
   emitLegacyCommonJSImports: false,
   generates: {
-    'src/schema': defineConfig({
+    "src/schema": defineConfig({
       resolverTypesPath: "./types.ts",
-      mode: 'modules'
-    })
-  }
-}
+      mode: "modules",
+    }),
+  },
+};
 
-export default config
+export default config;

@@ -1,0 +1,20 @@
+type Message {
+  content: String! @constraint(minLength: 1)
+}
+
+input AgentInput {
+  message: String! @constraint(minLength: 1)
+}
+
+type AgentOutput {
+  message: Message
+  done: Boolean
+}
+
+extend type Subscription {
+  onAiMessage: AgentOutput
+}
+
+extend type Mutation {
+  humanMessage(input: AgentInput!): Message
+}

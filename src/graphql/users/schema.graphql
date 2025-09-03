@@ -22,50 +22,49 @@ type User {
   coverPicture: String!
   socialLinks: [SocialLink!]
   xpBalance: Int!
-  xpTotal:   Int!
+  xpTotal: Int!
   currentRank: String!
 
   followersCount: Int!
   followingCount: Int!
   publicationsCount: Int!
-  bookmarksCount:    Int!
+  bookmarksCount: Int!
 
   verified: Boolean!
   createdAt: Timestamp!
   updatedAt: Timestamp!
 }
 
-
 ####################
 #     INPUTS       #
 ####################
 
 input SocialLinkInput {
-  platform: String!        @constraint(minLength: 1)
-  url:      String!        @constraint(format: "uri")
+  platform: String! @constraint(minLength: 1)
+  url: String! @constraint(format: "uri")
 }
 
 input UserInput {
-  address:        String!          @constraint(minLength: 1)
-  username:       String!          @constraint(minLength: 3, maxLength: 15)
-  displayName:    String!          @constraint(minLength: 1, maxLength: 30)
-  bio:            String!          @constraint(minLength: 10, maxLength: 200)
-  profilePicture: String           @constraint(minLength: 1)
-  coverPicture:   String           @constraint(minLength: 1)
-  socialLinks:    [SocialLinkInput!]
+  address: String! @constraint(minLength: 1)
+  username: String! @constraint(minLength: 3, maxLength: 15)
+  displayName: String! @constraint(minLength: 1, maxLength: 30)
+  bio: String! @constraint(minLength: 10, maxLength: 200)
+  profilePicture: String @constraint(minLength: 1)
+  coverPicture: String @constraint(minLength: 1)
+  socialLinks: [SocialLinkInput!]
 }
 
 input UpdateUserInput {
-  username:       String          @constraint(minLength: 3, maxLength: 15)
-  displayName:    String          @constraint(minLength: 1, maxLength: 30)
-  bio:            String          @constraint(minLength: 10, maxLength: 200)
-  profilePicture: String          @constraint(minLength: 1)
-  coverPicture:   String          @constraint(minLength: 1)
-  socialLinks:    [SocialLinkInput!]
+  username: String @constraint(minLength: 3, maxLength: 15)
+  displayName: String @constraint(minLength: 1, maxLength: 30)
+  bio: String @constraint(minLength: 10, maxLength: 200)
+  profilePicture: String @constraint(minLength: 1)
+  coverPicture: String @constraint(minLength: 1)
+  socialLinks: [SocialLinkInput!]
 }
 
 input UserByInput {
-  address: String!            @constraint(minLength: 1)
+  address: String! @constraint(minLength: 1)
   idSession: String
 }
 
@@ -75,21 +74,18 @@ input UserByInput {
 
 extend type Query {
   getUser(input: UserByInput!): User
-  getUsers(
-    query: String!
-    limit:  Int              @constraint(min: 1, max: 100)
-  ): [User!]!
+  getUsers(query: String!, limit: Int @constraint(min: 1, max: 100)): [User!]!
   getUserFollowers(
-    address: String!          @constraint(minLength: 1)
-    limit:   Int             @constraint(min: 1, max: 100)
+    address: String! @constraint(minLength: 1)
+    limit: Int @constraint(min: 1, max: 100)
   ): [User!]!
   getUserFollowing(
-    address: String!          @constraint(minLength: 1)
-    limit:   Int             @constraint(min: 1, max: 100)
+    address: String! @constraint(minLength: 1)
+    limit: Int @constraint(min: 1, max: 100)
   ): [User!]!
   getUserBookmarks(
-    address: String!          @constraint(minLength: 1)
-    limit:   Int             @constraint(min: 1, max: 100)
+    address: String! @constraint(minLength: 1)
+    limit: Int @constraint(min: 1, max: 100)
   ): [Post!]!
 }
 

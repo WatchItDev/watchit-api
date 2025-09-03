@@ -1,7 +1,10 @@
-enum TargetType { POST COMMENT }
+enum TargetType {
+  POST
+  COMMENT
+}
 
 input LikeInput {
-  targetId:   String!     @constraint(minLength: 1)
+  targetId: String! @constraint(minLength: 1)
   targetType: TargetType!
 }
 

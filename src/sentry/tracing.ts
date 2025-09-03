@@ -4,17 +4,17 @@
  */
 export default ({ Sentry }) => {
   return {
-    didEncounterErrors (ctx) {
+    didEncounterErrors(ctx) {
       // If we couldn't parse the operation, don't do anything here
       if (!ctx.operation) {
-        return
+        return;
       }
 
       for (const err of ctx.errors) {
         // Add scoped report details and send to Sentry
-        Sentry.withScope(scope => {
+        Sentry.withScope((scope) => {
           // Annotate whether failing operation was query/mutation/subscription
-        //   scope.setUser({ id: ctx.context?.id ?? 0, email: ctx.context?.email })
+          //   scope.setUser({ id: ctx.context?.id ?? 0, email: ctx.context?.email })
           // scope.setTag('kind', ctx.operation.operation)
           // // Log query and variables as extras
           // scope.setExtra('name', ctx.operationName)
@@ -32,9 +32,9 @@ export default ({ Sentry }) => {
           //     level: Sentry.Severity.Debug
           //   })
           // }
-          Sentry.captureException(err)
-        })
+          Sentry.captureException(err);
+        });
       }
-    }
-  }
-}
+    },
+  };
+};

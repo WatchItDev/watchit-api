@@ -1,4 +1,8 @@
-directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
+directive @cacheControl(
+  inheritMaxAge: Boolean
+  maxAge: Int
+  scope: CacheControlScope
+) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
 enum Actor {
   OWNER
@@ -13,6 +17,15 @@ input AddXPInput {
   description: String!
 }
 
+input AgentInput {
+  message: String!
+}
+
+type AgentOutput {
+  done: Boolean
+  message: Message
+}
+
 input BookmarkInput {
   postId: String!
 }
@@ -22,7 +35,9 @@ enum CacheControlScope {
   PUBLIC
 }
 
-"""A comment on a post, or a reply to another comment."""
+"""
+A comment on a post, or a reply to another comment.
+"""
 type Comment {
   author: User!
   content: String!
@@ -60,7 +75,9 @@ input CreateTipInput {
 
 scalar Date
 
-"""ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
+"""
+ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)
+"""
 scalar DateTime
 
 enum DistinctBy {
@@ -133,6 +150,10 @@ input MediaAttachmentInput {
   url: String
 }
 
+type Message {
+  content: String!
+}
+
 type Mutation {
   claimPerk(perkId: ID!): Boolean!
   createComment(input: CreateCommentInput!): Comment!
@@ -145,6 +166,7 @@ type Mutation {
   deleteRank(id: ID!): Boolean!
   hideComment(commentId: String!): Boolean
   hidePost(postId: String!): Boolean
+  humanMessage(input: AgentInput!): Message
   incrementPostView(postId: String!): Post!
   logAnonymousEvent(input: LogEventInput!): Boolean!
   logEvent(input: LogEventInput!): Boolean!
@@ -236,18 +258,37 @@ type Query {
   getRecentPosts(limit: Int): [Post!]!
   getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
-  getTargetEvents(limit: Int = 50, offset: Int = 0, targetId: String!, targetType: String, type: String): [EventLog!]!
+  getTargetEvents(
+    limit: Int = 50
+    offset: Int = 0
+    targetId: String!
+    targetType: String
+    type: String
+  ): [EventLog!]!
   getTipsByBakerForPost(limit: Int, postId: String!): [TipByBaker!]!
   getTipsForPost(limit: Int, postId: String!): [Tip!]!
-  getUnlockedPerks(address: String!, limit: Int = 50, offset: Int = 0): [UnlockedPerkState!]!
+  getUnlockedPerks(
+    address: String!
+    limit: Int = 50
+    offset: Int = 0
+  ): [UnlockedPerkState!]!
   getUser(input: UserByInput!): User
   getUserBookmarks(address: String!, limit: Int): [Post!]!
-  getUserEvents(address: String!, limit: Int = 50, offset: Int = 0, type: String): [EventLog!]!
+  getUserEvents(
+    address: String!
+    limit: Int = 50
+    offset: Int = 0
+    type: String
+  ): [EventLog!]!
   getUserFollowers(address: String!, limit: Int): [User!]!
   getUserFollowing(address: String!, limit: Int): [User!]!
   getUserRanks(address: String!): [UserRank!]!
   getUserTipsHistory(address: String!, limit: Int): [Tip!]!
-  getUserXPHistory(address: String!, limit: Int = 50, offset: Int = 0): [XPEntry!]!
+  getUserXPHistory(
+    address: String!
+    limit: Int = 50
+    offset: Int = 0
+  ): [XPEntry!]!
   getUsers(limit: Int, query: String!): [User!]!
   hasPerk(address: String!, perkId: ID!): Boolean!
 }
@@ -294,12 +335,18 @@ input SocialLinkInput {
   url: String!
 }
 
+type Subscription {
+  onAiMessage: AgentOutput
+}
+
 enum TargetType {
   COMMENT
   POST
 }
 
-"""Unix epoch in milliseconds (number)."""
+"""
+Unix epoch in milliseconds (number).
+"""
 scalar Timestamp
 
 type Tip {

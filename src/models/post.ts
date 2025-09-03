@@ -1,51 +1,52 @@
-import type { Post, CreatePostInput } from '@/schema/types'
+import type { Post, CreatePostInput } from "@/schema/types";
 
 export function defaultPostData(): Omit<
-    Post,
-    | 'id'
-    | 'author'
-    | 'title'
-    | 'description'
-    | 'cid'
-    | 'media'
-    | 'visibility'
-    | 'createdAt'
-    | 'updatedAt'
+  Post,
+  | "id"
+  | "author"
+  | "title"
+  | "description"
+  | "cid"
+  | "media"
+  | "visibility"
+  | "createdAt"
+  | "updatedAt"
 > {
-    return {
-        commentCount:   0,
-        likeCount:      0,
-        bookmarkCount:  0,
-        viewCount:      0,
-        hidden:         false,
-    }
+  return {
+    commentCount: 0,
+    likeCount: 0,
+    bookmarkCount: 0,
+    viewCount: 0,
+    hidden: false,
+  };
 }
 
 export function makeNewPost(
-    id: string,
-    address: string,
-    input: CreatePostInput
+  id: string,
+  address: string,
+  input: CreatePostInput,
 ): Post {
-    const now = Date.now()
+  const now = Date.now();
 
-    return {
-        id,
-        author: { address: address } as any,
-        title:      input.title,
-        description:      input.description,
-        cid:      input.cid,
-        media:      input.media?.map((m) => ({
-            id:   m.cid,
-            cid:  m.cid,
-            title:  m.title,
-            url:  m.url,
-            type: m.type,
-        })) ?? [],
-        visibility: input.visibility,
+  return {
+    id,
+    author: { address: address } as any,
+    title: input.title,
+    description: input.description,
+    cid: input.cid,
+    media:
+      input.media?.map((m) => ({
+        id: m.cid,
+        cid: m.cid,
+        title: m.title,
+        url: m.url,
+        type: m.type,
+      })) ?? [],
+    visibility: input.visibility,
 
-        ...defaultPostData(),
+    ...defaultPostData(),
 
-        createdAt: now,
-        updatedAt: now,
-    }
+    createdAt: now,
+    updatedAt: now,
+  };
 }

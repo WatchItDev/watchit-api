@@ -1,3 +1,3 @@
-import { DataSourceManager } from '../manager';
+import { DataSourceManager } from "../manager";
 
 export class SynapseQuery extends DataSourceManager {}

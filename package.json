@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "dependencies": {
     "@apollo/server": "^4.12.0",
+    "@langchain/core": "^0.3.72",
+    "@langchain/langgraph": "^0.4.7",
+    "@langchain/langgraph-checkpoint-postgres": "^0.1.2",
+    "@langchain/openai": "^0.6.9",
     "@sentry/cli": "^2.45.0",
     "@sentry/node": "^9.22.0",
     "@sentry/tracing": "^7.120.3",
@@ -19,18 +23,25 @@
     "graphql": "^16.10.0",
     "graphql-constraint-directive": "^6.0.0",
     "graphql-scalars": "^1.24.2",
+    "graphql-subscriptions": "^3.0.0",
     "graphql-tag": "^2.12.6",
+    "graphql-ws": "^6.0.6",
     "graphql-yoga": "^5.13.4",
     "helmet": "^8.1.0",
     "jose": "^6.0.10",
+    "langchain": "^0.3.31",
+    "pg": "^8.16.3",
     "ts-mixer": "^6.0.4",
-    "viem": "^2.29.3"
+    "viem": "^2.29.3",
+    "ws": "^8.18.3",
+    "zod": "^3.25.76"
   },
   "type": "module",
   "devDependencies": {
     "@eddeee888/gcg-server-config": "^0.2.3",
     "@eddeee888/gcg-typescript-resolver-files": "^0.12.0",
     "@graphql-codegen/cli": "^5.0.5",
+    "prettier": "^3.6.2",
     "ts-node-dev": "^2.0.0",
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",
@@ -41,6 +52,7 @@
     "dev": "tsx watch src/index.ts",
     "start": "node build/index.js",
     "generate": "graphql-codegen --config codegen.ts",
+    "format": "prettier --write .",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org velatrix --project node-express ./dist && sentry-cli sourcemaps upload --org velatrix --project node-express ./dist"
   }
 }

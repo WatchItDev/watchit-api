@@ -3,26 +3,26 @@
 ###########################
 
 type EventLog {
-  id:          String!
-  type:        String!
-  author:      String
-  targetId:    String
-  targetType:  String
-  progress:    Int
-  amount:      Int
-  currency:    String
-  meta:        JSON
-  createdAt:   Timestamp!
+  id: String!
+  type: String!
+  author: String
+  targetId: String
+  targetType: String
+  progress: Int
+  amount: Int
+  currency: String
+  meta: JSON
+  createdAt: Timestamp!
 }
 
 input LogEventInput {
-  type:        String!     @constraint(minLength: 1)
-  targetId:    String
-  targetType:  String
-  progress:    Int
-  amount:      Int
-  currency:    String
-  meta:        JSON
+  type: String! @constraint(minLength: 1)
+  targetId: String
+  targetType: String
+  progress: Int
+  amount: Int
+  currency: String
+  meta: JSON
 }
 
 ###########################
@@ -39,17 +39,17 @@ extend type Mutation {
 extend type Query {
   getUserEvents(
     address: String! @constraint(minLength: 1)
-    type:    String
-    limit:   Int = 50  @constraint(min: 1, max: 200)
-    offset:  Int = 0   @constraint(min: 0)
+    type: String
+    limit: Int = 50 @constraint(min: 1, max: 200)
+    offset: Int = 0 @constraint(min: 0)
   ): [EventLog!]!
 
   getTargetEvents(
-    targetId:   String! @constraint(minLength: 1)
+    targetId: String! @constraint(minLength: 1)
     targetType: String
-    type:       String
-    limit:      Int = 50
-    offset:     Int = 0
+    type: String
+    limit: Int = 50
+    offset: Int = 0
   ): [EventLog!]!
 
   getPostViews(postId: String!): Int!

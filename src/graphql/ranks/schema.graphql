@@ -29,22 +29,22 @@ input RankInput {
 }
 
 type UserAchievements {
-  currentRank:  Rank!
-  nextRank:     Rank
-  xpBalance:    Int!
-  xpTotal:      Int!
-  progressPct:  Float!
-  xpRemaining:  Int!
+  currentRank: Rank!
+  nextRank: Rank
+  xpBalance: Int!
+  xpTotal: Int!
+  progressPct: Float!
+  xpRemaining: Int!
 }
 
 extend type Query {
-  getRanksCatalog:   [Rank!]!
-  getAchievements(address:String!): UserAchievements!
-  getUserRanks(address:String!): [UserRank!]!
+  getRanksCatalog: [Rank!]!
+  getAchievements(address: String!): UserAchievements!
+  getUserRanks(address: String!): [UserRank!]!
 }
 
 extend type Mutation {
-  createRank(input:RankInput!): Rank!
-  updateRank(id:ID!, patch:RankInput!): Rank!
-  deleteRank(id:ID!): Boolean!
+  createRank(input: RankInput!): Rank!
+  updateRank(id: ID!, patch: RankInput!): Rank!
+  deleteRank(id: ID!): Boolean!
 }

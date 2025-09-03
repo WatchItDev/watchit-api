@@ -6,11 +6,11 @@ Backend in **TypeScript + GraphQL + Firebase** where all **social primitives are
 
 ## Stack
 
-| Layer      | Tech                                                   |
-|------------|--------------------------------------------------------|
-| Gateway    | **Apollo Server 4** (GraphQL)                         |
-| Mutations  | **Firebase Cloud Functions v2** (callable + triggers)  |
-| Storage    | **Firestore** (Admin SDK)                              |
+| Layer     | Tech                                                  |
+| --------- | ----------------------------------------------------- |
+| Gateway   | **Apollo Server 4** (GraphQL)                         |
+| Mutations | **Firebase Cloud Functions v2** (callable + triggers) |
+| Storage   | **Firestore** (Admin SDK)                             |
 
 ---
 
@@ -69,14 +69,14 @@ query {
 
 ## Scripts
 
-| Root command           | Action                     |
-|------------------------|----------------------------|
-| `npm run dev`          | watch GraphQL API          |
-| `npm run generate`     | graphql-codegen            |
-| `npm run compile`      | build API to `dist/`       |
+| Root command       | Action               |
+| ------------------ | -------------------- |
+| `npm run dev`      | watch GraphQL API    |
+| `npm run generate` | graphql-codegen      |
+| `npm run compile`  | build API to `dist/` |
 
 | `src/functions` command | Action                  |
-|-------------------------|-------------------------|
+| ----------------------- | ----------------------- |
 | `npm run build`         | compile Cloud Functions |
 | `npm run emulate`       | start local emulators   |
 
@@ -89,4 +89,3 @@ cd src/functions && run build          # compile functions
 npx firebase deploy --only functions   # deploy functions
 npm run compile && node dist/index.js  # run GraphQL API
 ```
-

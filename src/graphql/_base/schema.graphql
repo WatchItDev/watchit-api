@@ -4,16 +4,17 @@
 
 type Query
 type Mutation
+type Subscription
 
 enum CacheControlScope {
-    PUBLIC
-    PRIVATE
+  PUBLIC
+  PRIVATE
 }
 
 directive @cacheControl(
-    maxAge: Int
-    scope: CacheControlScope
-    inheritMaxAge: Boolean
+  maxAge: Int
+  scope: CacheControlScope
+  inheritMaxAge: Boolean
 ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 """
@@ -32,6 +33,6 @@ scalar Upload
 scalar ID
 
 input FilterInput {
-    limit: Int
-    offset: Int
+  limit: Int
+  offset: Int
 }

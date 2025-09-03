@@ -15,11 +15,11 @@ extend type Query {
 
   getBookmarksByUser(
     address: String! @constraint(minLength: 1)
-    limit:   Int = 50 @constraint(min: 1, max: 200)
+    limit: Int = 50 @constraint(min: 1, max: 200)
   ): [Post!]!
 
   getBookmarksByPost(
-    postId: String!  @constraint(minLength: 1)
-    limit:  Int = 50 @constraint(min: 1, max: 500)
+    postId: String! @constraint(minLength: 1)
+    limit: Int = 50 @constraint(min: 1, max: 500)
   ): [User!]!
 }

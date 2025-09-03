@@ -1,21 +1,12 @@
-import './env';
+import "./env";
 
-export * as usersTrigger      from './flows/users/triggers';
+export * as usersTrigger from "./triggers/users";
+export * as postsTrigger from "./triggers/posts";
+export * as commentsTrigger from "./triggers/comments";
+export * as bookmarksTrigger from "./triggers/bookmarks";
+export * as followsTrigger from "./triggers/follow";
+export * as likesTrigger from "./triggers/likes";
+export * as xpTrigger from "./triggers/xp";
+export * as perksTrigger from "./triggers/perks";
+export * as logsTrigger from "./triggers/logs";
 
-export * as postsTrigger      from './flows/posts/triggers';
-
-export * as commentsTrigger   from './flows/comments/triggers';
-
-export * as bookmarksTrigger  from './flows/bookmarks/triggers';
-
-export * as followsTrigger    from './flows/follows/triggers';
-
-export * as likesTrigger      from './flows/likes/triggers';
-
-export * as xpTrigger         from './flows/xp/triggers';
-
-export * as perksTrigger      from './flows/perks/triggers';
-
-export * as logsTrigger       from './flows/logs/triggers';
-
-export * as perksCooldown     from './flows/coldowns/triggers';

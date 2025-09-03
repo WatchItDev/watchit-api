@@ -23,9 +23,9 @@ type TipByBaker {
 }
 
 input CreateTipInput {
-  postId: String!             @constraint(minLength: 1)
-  creator: String!            @constraint(minLength: 1)
-  amount: Float!              @constraint(minLength: 0)
+  postId: String! @constraint(minLength: 1)
+  creator: String! @constraint(minLength: 1)
+  amount: Float! @constraint(minLength: 0)
   txHash: String
   message: String
 }

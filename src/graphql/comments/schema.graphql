@@ -2,20 +2,22 @@
 #       COMMENTS          #
 ###########################
 
-"""A comment on a post, or a reply to another comment."""
+"""
+A comment on a post, or a reply to another comment.
+"""
 type Comment {
-  id:             String!
-  author:         User!
-  content:        String!
-  post:           Post!
-  parentComment:  Comment
-  createdAt:      Timestamp!
-  updatedAt:      Timestamp!
-  hidden:         Boolean!
+  id: String!
+  author: User!
+  content: String!
+  post: Post!
+  parentComment: Comment
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  hidden: Boolean!
 
   #–– raw count ––
-  likeCount:      Int!
-  repliesCount:      Int!
+  likeCount: Int!
+  repliesCount: Int!
 }
 
 ####################
@@ -23,14 +25,14 @@ type Comment {
 ####################
 
 input CreateCommentInput {
-  postId:        String!   @constraint(minLength: 1)
-  parentComment: String    @constraint(minLength: 1)
-  content:       String!   @constraint(minLength: 1, maxLength: 500)
+  postId: String! @constraint(minLength: 1)
+  parentComment: String @constraint(minLength: 1)
+  content: String! @constraint(minLength: 1, maxLength: 500)
 }
 
 input UpdateCommentInput {
-  commentId: String!      @constraint(minLength: 1)
-  content:   String!      @constraint(minLength: 1, maxLength: 500)
+  commentId: String! @constraint(minLength: 1)
+  content: String! @constraint(minLength: 1, maxLength: 500)
 }
 
 ####################
@@ -39,13 +41,13 @@ input UpdateCommentInput {
 
 extend type Query {
   getCommentsByPost(
-    postId: String!       @constraint(minLength: 1)
-    limit:  Int           @constraint(min: 1, max: 100)
+    postId: String! @constraint(minLength: 1)
+    limit: Int @constraint(min: 1, max: 100)
   ): [Comment!]!
 
   getRepliesByComment(
-    commentId: String!    @constraint(minLength: 1)
-    limit:     Int        @constraint(min: 1, max: 100)
+    commentId: String! @constraint(minLength: 1)
+    limit: Int @constraint(min: 1, max: 100)
   ): [Comment!]!
 }
 
