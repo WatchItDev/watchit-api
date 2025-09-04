@@ -1,7 +1,6 @@
 import { HumanMessage } from "@langchain/core/messages";
 import { Annotation, StateGraph } from "@langchain/langgraph";
-import { Query, Compiler } from "@/externals/ai/agents/compiler";
-import { FireStore } from "@/externals/firebase";
+import { Schema, Harvester } from "@/externals/ai/agents/harvester";
 import { GPT4o } from "@/externals/ai/models";
 
 const openAIKey = process.env.API_OPENAI_API_KEY;
@@ -16,18 +15,18 @@ const openAIKey = process.env.API_OPENAI_API_KEY;
 const llm = GPT4o({ apiKey: openAIKey, temperature: 0 });
 
 const HarvestingState = Annotation.Root({
-  query: Annotation<typeof Query>,
-  userInput: Annotation<string>,
+  cleaned: Annotation<typeof Schema>,
+  raw: Annotation<string>,
 });
 
 const harvestNode = async (state: typeof HarvestingState.State) => {
-  const expert = new Compiler(llm, Query);
-  const message = new HumanMessage(state.userInput);
-  const query = await expert.call([message]);
-  return { query: query, finish: true };
+  const expert = new Harvester(llm, Schema);
+  const message = new HumanMessage(state.raw);
+  const cleaned = await expert.call([message]);
+  return { cleaned };
 };
 
-export const HarvestGraph = (config: any = {}) => {
+export const HarvestingGraph = (config: any = {}) => {
   return new StateGraph(HarvestingState)
     .addNode("harvest_node", harvestNode)
     .addEdge("__start__", "harvest_node")
@@ -35,4 +34,4 @@ export const HarvestGraph = (config: any = {}) => {
     .compile(config);
 };
 
-export type HarvestGraphType = ReturnType<typeof HarvestGraph>;
+export type HarvestingGraphType = ReturnType<typeof HarvestingGraph>;

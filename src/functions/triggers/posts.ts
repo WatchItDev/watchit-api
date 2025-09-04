@@ -7,7 +7,10 @@ import { type Ctx, enhanceTrigger } from "../manager";
 export const postCreated = onDocumentCreated(
   "posts/{postId}",
   enhanceTrigger(
-    async ({ ds, activity }: Pick<Ctx, "ds" | "activity">, event) => {
+    async (
+      { ds, activity, ext }: Pick<Ctx, "ds" | "activity" | "ext">,
+      event,
+    ) => {
       const post = await ds.Posts.getPost(event.params.postId);
       const authorizedUser = post?.author.address;
 

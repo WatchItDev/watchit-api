@@ -35,6 +35,7 @@ type Post {
   createdAt: Timestamp!
   updatedAt: Timestamp!
   hidden: Boolean!
+  year: Int!
 
   #–– raw counts ––
   commentCount: Int!

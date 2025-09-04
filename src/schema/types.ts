@@ -341,6 +341,7 @@ export type Post = {
   cid: Scalars["String"]["output"];
   commentCount: Scalars["Int"]["output"];
   createdAt: Scalars["Timestamp"]["output"];
+  credits: Scalars["String"]["output"];
   description: Scalars["String"]["output"];
   hidden: Scalars["Boolean"]["output"];
   id: Scalars["String"]["output"];
@@ -350,6 +351,7 @@ export type Post = {
   updatedAt: Scalars["Timestamp"]["output"];
   viewCount: Scalars["Int"]["output"];
   visibility: VisibilitySetting;
+  year: Scalars["Int"]["output"];
 };
 
 export type Query = {
@@ -1346,6 +1348,7 @@ export type PostResolvers<
   cid?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   commentCount?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes["Timestamp"], ParentType, ContextType>;
+  credits?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   hidden?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
@@ -1363,6 +1366,7 @@ export type PostResolvers<
     ParentType,
     ContextType
   >;
+  year?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

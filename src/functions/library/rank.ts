@@ -61,7 +61,10 @@ export const rankEngine = ({
   };
 
   const unlockPerksForRank = async (rankId: string, user: string) => {
-    const [catalog, ranks] = await Promise.all([ports.Perks.getCatalog(), getRanks()]);
+    const [catalog, ranks] = await Promise.all([
+      ports.Perks.getCatalog(),
+      getRanks(),
+    ]);
     if (!orderById || Object.keys(orderById).length === 0) {
       for (const r of ranks) orderById[r.id] = r.order;
     }
@@ -88,7 +91,9 @@ export const rankEngine = ({
           status: "AVAILABLE",
           availableAt: now,
           cooldownSec:
-            p.executionRule.type === "ON_COOLDOWN" ? (p.executionRule.cooldownSec ?? 0) : 0,
+            p.executionRule.type === "ON_COOLDOWN"
+              ? (p.executionRule.cooldownSec ?? 0)
+              : 0,
           seen: [],
         }),
       ),
@@ -99,7 +104,8 @@ export const rankEngine = ({
         const exists = await ports.Perks.getState(user, p.id);
         if (exists) return;
 
-        const initTarget = p.unlockRule.on === "ACTION_COUNT" ? (p.unlockRule.times ?? 1) : 1;
+        const initTarget =
+          p.unlockRule.on === "ACTION_COUNT" ? (p.unlockRule.times ?? 1) : 1;
         await ports.Perks.upsertState({
           user,
           perkId: p.id,
@@ -142,7 +148,12 @@ export const rankEngine = ({
     ]);
     await unlockPerksForRank(next.id, userAddr);
     await tryActivity(acts, "rankUp", userAddr, next.id);
-    await eco.addXp(userAddr, 10, XPAction.RANK_UP_BONUS, `Reached ${next.name}`);
+    await eco.addXp(
+      userAddr,
+      10,
+      XPAction.RANK_UP_BONUS,
+      `Reached ${next.name}`,
+    );
   };
 
   return {
@@ -154,7 +165,11 @@ export const rankEngine = ({
       if (!u.currentRank) {
         await bootstrapFirstRank(userAddr, ranks);
       } else {
-        await promoteNextRank(userAddr, { xpTotal: u.xpTotal, currentRank: u.currentRank }, ranks);
+        await promoteNextRank(
+          userAddr,
+          { xpTotal: u.xpTotal, currentRank: u.currentRank },
+          ranks,
+        );
       }
     },
 

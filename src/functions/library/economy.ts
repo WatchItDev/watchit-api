@@ -10,6 +10,7 @@ import { makeXpEntry } from "../../models/xp";
 export const XPAction = {
   SYS: "SYS",
   RANK_UP_BONUS: "RANK_UP_BONUS",
+  PERK_REWARD: "PERK_REWARD",
   // Add more domain actions here: LIKE, POST_CREATE, RANK_UP, etc.
   // LIKE: "LIKE",
   // POST_CREATE: "POST_CREATE",

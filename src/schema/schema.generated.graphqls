@@ -223,6 +223,7 @@ type Post {
   cid: String!
   commentCount: Int!
   createdAt: Timestamp!
+  credits: String!
   description: String!
   hidden: Boolean!
   id: String!
@@ -232,6 +233,7 @@ type Post {
   updatedAt: Timestamp!
   viewCount: Int!
   visibility: VisibilitySetting!
+  year: Int!
 }
 
 type Query {

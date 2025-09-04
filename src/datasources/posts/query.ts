@@ -1,5 +1,5 @@
 import { DataSourceManager } from "../manager";
-import type { Post, User } from "../../schema/types";
+import type { Post } from "../../schema/types";
 
 export class PostsQuery extends DataSourceManager {
   async getPost(id: string): Promise<Post | null> {
