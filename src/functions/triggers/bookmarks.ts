@@ -16,8 +16,8 @@ export const bookmarkInc = onDocumentCreated(
     async ({ ds, activity }: Pick<Ctx, "ds" | "activity">, event) => {
       const snap = event.data;
       if (!snap) return;
-      const { author, postId, owner } = snap.data() as BmDoc;
 
+      const { author, postId, owner } = snap.data() as BmDoc;
       if (!author || !postId) return;
 
       await Promise.all([
@@ -26,7 +26,7 @@ export const bookmarkInc = onDocumentCreated(
         activity.bookmarkCreated(author, postId, { owner }),
       ]);
 
-      console.log(`🔖  Post ${postId} bookmarked by ${author}`);
+      console.log(`Post ${postId} bookmarked by ${author}`);
     },
   ),
 );
@@ -37,8 +37,8 @@ export const bookmarkDec = onDocumentDeleted(
     async ({ ds, activity }: Pick<Ctx, "ds" | "activity">, event) => {
       const snap = event.data;
       if (!snap) return;
-      const { author, postId } = snap.data() as BmDoc;
 
+      const { author, postId } = snap.data() as BmDoc;
       if (!author || !postId) return;
 
       await Promise.all([
@@ -47,7 +47,7 @@ export const bookmarkDec = onDocumentDeleted(
         activity.bookmarkRemoved(author, postId),
       ]);
 
-      console.log(`❌  Bookmark removed on post ${postId} by ${author}`);
+      console.log(`Bookmark removed on post ${postId} by ${author}`);
     },
   ),
 );

@@ -8,7 +8,6 @@ export const humanMessage: NonNullable<
   const configs = { configurable: { thread_id: "3" } };
 
   const answer = await graph.invoke({ userInput: _arg.input.message }, configs);
-  console.log(answer.query);
   pubsub.publish("ASSISTANT_CHAT", {
     onAiMessage: {
       message: { content: answer.assistant },

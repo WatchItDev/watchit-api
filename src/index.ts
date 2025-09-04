@@ -20,18 +20,19 @@ import {
   constraintDirectiveTypeDefsGql,
 } from "graphql-constraint-directive/apollo4.js";
 
+import { webcrypto } from "crypto";
 import { typeDefs } from "@/schema/typeDefs.generated";
 import { resolvers } from "@/schema/resolvers.generated";
-import { Services } from "./services";
-import { DataSources } from "./datasources";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { GQL } from "@/types";
-import { User } from "@/schema/types";
-import { webcrypto } from "crypto";
 import { PubSub } from "graphql-subscriptions";
+import { User } from "@/schema/types";
+import { GQL } from "@/types";
+
 import Externals from "./externals";
+import { DataSources } from "./datasources";
+import { Services } from "./services";
 
 // import SentryPlugin from '@/sentry'
 

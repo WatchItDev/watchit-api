@@ -29,6 +29,7 @@ const llm = GPT4o({ apiKey: openAIKey, temperature: 0 });
 const IntentState = Annotation.Root({
   query: Annotation<typeof Query>,
   userInput: Annotation<string>,
+  finish: Annotation<boolean>,
 });
 
 /**
