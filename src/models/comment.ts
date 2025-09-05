@@ -1,14 +1,14 @@
-import type { Comment, CreateCommentInput } from "@/schema/types";
+import type { Comment, CreateCommentInput } from '@/schema/types';
 
 export function defaultCommentData(): Omit<
   Comment,
-  | "id"
-  | "author"
-  | "post"
-  | "parentComment"
-  | "content"
-  | "createdAt"
-  | "updatedAt"
+  | 'id'
+  | 'author'
+  | 'post'
+  | 'parentComment'
+  | 'content'
+  | 'createdAt'
+  | 'updatedAt'
 > {
   return {
     likeCount: 0,

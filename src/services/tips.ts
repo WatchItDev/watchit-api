@@ -1,5 +1,5 @@
-import { ServiceManager } from "./manager";
-import type { Tip, User } from "../schema/types";
+import { ServiceManager } from './manager';
+import type { Tip, User } from '../schema/types';
 
 export class TipsService extends ServiceManager {
   async createTip(
@@ -12,7 +12,7 @@ export class TipsService extends ServiceManager {
       message?: string | null;
     },
   ): Promise<Tip> {
-    if (input.amount <= 0) throw new Error("Amount must be > 0");
+    if (input.amount <= 0) throw new Error('Amount must be > 0');
 
     return this.ds.Tips.createTip({
       postId: input.postId,

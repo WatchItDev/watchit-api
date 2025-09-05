@@ -1,19 +1,19 @@
-import type { User, UserInput } from "@/schema/types";
-import { AuthData } from "@/types";
+import type { User, UserInput } from '@/schema/types';
+import { AuthData } from '@/types';
 
 export function defaultUserData(): Omit<
   User,
-  | "address"
-  | "email"
-  | "id"
-  | "username"
-  | "displayName"
-  | "bio"
-  | "profilePicture"
-  | "coverPicture"
-  | "socialLinks"
-  | "createdAt"
-  | "updatedAt"
+  | 'address'
+  | 'email'
+  | 'id'
+  | 'username'
+  | 'displayName'
+  | 'bio'
+  | 'profilePicture'
+  | 'coverPicture'
+  | 'socialLinks'
+  | 'createdAt'
+  | 'updatedAt'
 > {
   return {
     followersCount: 0,
@@ -22,7 +22,7 @@ export function defaultUserData(): Omit<
     bookmarksCount: 0,
     xpBalance: 0,
     xpTotal: 0,
-    currentRank: "",
+    currentRank: '',
     verified: false,
   };
 }
@@ -32,10 +32,10 @@ export function makeNewUser(input: UserInput & AuthData): User {
   return {
     ...defaultUserData(),
     ...input,
-    id: input.id ?? "",
-    email: input.email ?? "",
-    profilePicture: input.profilePicture ?? "",
-    coverPicture: input.coverPicture ?? "",
+    id: input.id ?? '',
+    email: input.email ?? '',
+    profilePicture: input.profilePicture ?? '',
+    coverPicture: input.coverPicture ?? '',
     socialLinks: input.socialLinks ?? [],
     createdAt: now,
     updatedAt: now,

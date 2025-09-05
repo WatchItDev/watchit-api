@@ -1,6 +1,6 @@
-import { ServiceManager } from "./manager";
-import { makeRank } from "../models/rank";
-import { RankInput } from "../schema/types";
+import { ServiceManager } from './manager';
+import { makeRank } from '../models/rank';
+import { RankInput } from '../schema/types';
 
 export class RanksService extends ServiceManager {
   catalog = () => this.ds.Ranks.catalog();

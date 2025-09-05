@@ -1,7 +1,7 @@
-import { GraphQLScalarType } from "graphql";
+import { GraphQLScalarType } from 'graphql';
 export const Upload = new GraphQLScalarType({
-  name: "Upload",
-  description: "Upload description",
+  name: 'Upload',
+  description: 'Upload description',
   serialize: (value) => {
     /* Implement logic to turn the returned value from resolvers to a value that can be sent to clients */
   },

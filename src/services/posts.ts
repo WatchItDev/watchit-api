@@ -1,5 +1,5 @@
-import { ServiceManager } from "./manager";
-import type { Post, CreatePostInput, UpdatePostInput } from "@/schema/types";
+import { ServiceManager } from './manager';
+import type { Post, CreatePostInput, UpdatePostInput } from '@/schema/types';
 
 export class PostService extends ServiceManager {
   /** Create a new post via Cloud Function */
@@ -19,7 +19,7 @@ export class PostService extends ServiceManager {
 
   /** Increment view count via Cloud Function */
   async incrementView(postId: string): Promise<Post | null> {
-    await this.ds.Posts.updateCounterField(postId, "viewCount", 1);
+    await this.ds.Posts.updateCounterField(postId, 'viewCount', 1);
     return this.ds.Posts.getPost(postId);
   }
 

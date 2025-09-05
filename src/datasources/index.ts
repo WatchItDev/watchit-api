@@ -1,17 +1,17 @@
-import type { FireStore } from "./types";
-import UsersDS from "./users";
-import PostsDS from "./posts";
-import CommentsDS from "./comments";
-import FeedsDS from "./feeds";
-import BookmarksDS from "./bookmarks";
-import FollowsDS from "./follows";
-import LikesDS from "./likes";
-import XPDS from "./xp";
-import Web3DS from "./web3";
-import LogsDS from "./logs";
-import RanksDS from "./ranks";
-import PerksDS from "./perks";
-import TipsDS from "./tips";
+import type { FireStore } from './types';
+import UsersDS from './users';
+import PostsDS from './posts';
+import CommentsDS from './comments';
+import FeedsDS from './feeds';
+import BookmarksDS from './bookmarks';
+import FollowsDS from './follows';
+import LikesDS from './likes';
+import XPDS from './xp';
+import Web3DS from './web3';
+import LogsDS from './logs';
+import RanksDS from './ranks';
+import PerksDS from './perks';
+import TipsDS from './tips';
 
 export const DataSources = (store: FireStore) => ({
   Users: new UsersDS(store),

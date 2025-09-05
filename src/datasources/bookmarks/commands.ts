@@ -1,8 +1,8 @@
-import { DataSourceManager } from "../manager";
+import { DataSourceManager } from '../manager';
 
 export class BookmarksCommands extends DataSourceManager {
   addBookmark(address: string, postId: string) {
-    return this.fs("bookmarks").create(`${address}_${postId}`, {
+    return this.fs('bookmarks').create(`${address}_${postId}`, {
       postId,
       author: address,
       createdAt: Date.now(),
@@ -10,6 +10,6 @@ export class BookmarksCommands extends DataSourceManager {
   }
 
   removeBookmark(address: string, postId: string) {
-    return this.fs("bookmarks").delete(`${address}_${postId}`);
+    return this.fs('bookmarks').delete(`${address}_${postId}`);
   }
 }

@@ -1,6 +1,6 @@
-import { ServiceManager } from "./manager";
-import type { User, UserInput, UpdateUserInput, Post } from "@/schema/types";
-import { AuthData } from "@/types";
+import { ServiceManager } from './manager';
+import type { User, UserInput, UpdateUserInput, Post } from '@/schema/types';
+import { AuthData } from '@/types';
 
 export class ProfileService extends ServiceManager {
   /** Create a new user via Cloud Function */

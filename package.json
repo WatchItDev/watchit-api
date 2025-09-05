@@ -16,6 +16,7 @@
     "compression": "^1.8.0",
     "dotenv": "^16.5.0",
     "ethers": "^6.14.0",
+    "execa": "^9.6.0",
     "express-rate-limit": "^7.5.0",
     "firebase": "^11.6.0",
     "firebase-admin": "^13.2.0",
@@ -54,6 +55,8 @@
     "start": "node build/index.js",
     "generate": "graphql-codegen --config codegen.ts",
     "format": "prettier --write .",
+    "functions:deploy": "npm run --prefix ./src/functions deploy",
+    "functions:emulate": "npm run --prefix ./src/functions emulate",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org velatrix --project node-express ./dist && sentry-cli sourcemaps upload --org velatrix --project node-express ./dist"
   }
 }

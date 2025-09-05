@@ -1,10 +1,10 @@
-import type { DataSourcesType } from "@/datasources";
-import type { ServicesType } from "@/services";
-import type { ExternalsType } from "@/externals";
-import { PubSub } from "graphql-subscriptions";
-import { Request } from "express";
-import type { JWTPayload } from "jose";
-import { User } from "@/schema/types";
+import type { DataSourcesType } from '@/datasources';
+import type { ServicesType } from '@/services';
+import type { ExternalsType } from '@/externals';
+import { PubSub } from 'graphql-subscriptions';
+import { Request } from 'express';
+import type { JWTPayload } from 'jose';
+import { User } from '@/schema/types';
 
 declare namespace NodeJS {
   interface ProcessEnv {

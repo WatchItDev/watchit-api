@@ -1,6 +1,6 @@
-import { QueryResolvers } from "@/schema/types";
+import { QueryResolvers } from '@/schema/types';
 
-export const getRanksCatalog: NonNullable<QueryResolvers["getRanksCatalog"]> = (
+export const getRanksCatalog: NonNullable<QueryResolvers['getRanksCatalog']> = (
   _p,
   _a,
   { services },

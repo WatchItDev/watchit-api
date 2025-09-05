@@ -1,12 +1,12 @@
-import type { ServiceAccount } from "firebase-admin";
-import { initializeApp, cert, getApp } from "firebase-admin/app";
+import type { ServiceAccount } from 'firebase-admin';
+import { initializeApp, cert, getApp } from 'firebase-admin/app';
 import {
   initializeApp as clientInitialize,
   getApps as clientApps,
   getApp as clientApp,
-} from "firebase/app";
+} from 'firebase/app';
 
-import { adminKey, clientKey } from "./credentials";
+import { adminKey, clientKey } from './credentials';
 
 const {
   API_FIREBASE_PROJECT_ID,
@@ -16,7 +16,7 @@ const {
 } = process.env;
 
 // This is for the Firebase Emulator Suite
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== 'production') {
   process.env.FIRESTORE_EMULATOR_HOST ??= `${API_EMULATOR_HOST}:${API_EMULATOR_PORT}`;
 }
 

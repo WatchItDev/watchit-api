@@ -1,22 +1,22 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const Feedback = z.object({
   aligned_score: z.number().min(0).max(1), // 0–1 cobertura global
   issues: z
     .array(
       z.enum([
-        "missing_genre_style",
-        "missing_tone",
-        "insufficient_constraints",
-        "overfiltering",
-        "invalid_must_should",
-        "must_without_values",
-        "noncanonical_terms",
-        "contradiction",
-        "missing_rate",
-        "missing_viewing_time",
-        "weak_query_terms",
-        "safety_flag",
+        'missing_genre_style',
+        'missing_tone',
+        'insufficient_constraints',
+        'overfiltering',
+        'invalid_must_should',
+        'must_without_values',
+        'noncanonical_terms',
+        'contradiction',
+        'missing_rate',
+        'missing_viewing_time',
+        'weak_query_terms',
+        'safety_flag',
       ]),
     )
     .default([]),
@@ -24,26 +24,26 @@ export const Feedback = z.object({
   promote_must: z
     .array(
       z.enum([
-        "genres",
-        "themes",
-        "emotional_tone",
-        "narrative_style",
-        "sentiment",
-        "viewing_time",
-        "rate",
+        'genres',
+        'themes',
+        'emotional_tone',
+        'narrative_style',
+        'sentiment',
+        'viewing_time',
+        'rate',
       ]),
     )
     .default([]),
   demote_should: z
     .array(
       z.enum([
-        "genres",
-        "themes",
-        "emotional_tone",
-        "narrative_style",
-        "sentiment",
-        "viewing_time",
-        "rate",
+        'genres',
+        'themes',
+        'emotional_tone',
+        'narrative_style',
+        'sentiment',
+        'viewing_time',
+        'rate',
       ]),
     )
     .default([]),
@@ -59,7 +59,7 @@ export const Feedback = z.object({
   patch: z
     .array(
       z.object({
-        op: z.enum(["add", "remove", "replace"]),
+        op: z.enum(['add', 'remove', 'replace']),
         path: z.string(),
         value: z.any().optional(),
       }),

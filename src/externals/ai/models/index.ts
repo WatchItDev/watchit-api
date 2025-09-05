@@ -1,1 +1,1 @@
-export * from "./GPT";
+export * from './GPT';

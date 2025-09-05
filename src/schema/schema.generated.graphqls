@@ -223,7 +223,6 @@ type Post {
   cid: String!
   commentCount: Int!
   createdAt: Timestamp!
-  credits: String!
   description: String!
   hidden: Boolean!
   id: String!

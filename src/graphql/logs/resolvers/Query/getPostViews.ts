@@ -1,6 +1,6 @@
-import type { QueryResolvers } from "@/schema/types";
+import type { QueryResolvers } from '@/schema/types';
 
-export const getPostViews: NonNullable<QueryResolvers["getPostViews"]> = (
+export const getPostViews: NonNullable<QueryResolvers['getPostViews']> = (
   _p,
   { postId },
   { services },

@@ -1,5 +1,5 @@
-import { ServiceManager } from "./manager";
-import type { User, Post } from "@/schema/types";
+import { ServiceManager } from './manager';
+import type { User, Post } from '@/schema/types';
 
 export class FeedsService extends ServiceManager {
   popularUsers(limit?: number): Promise<User[]> {

@@ -1,5 +1,5 @@
-import { ServiceManager } from "./manager";
-import { PerkInput } from "@/schema/types";
+import { ServiceManager } from './manager';
+import { PerkInput } from '@/schema/types';
 
 export class PerksService extends ServiceManager {
   catalog = () => this.ds.Perks.getCatalog();
@@ -31,7 +31,7 @@ export class PerksService extends ServiceManager {
           perk: {
             ...p,
             cooldownRemaining:
-              s.status === "CLAIMED"
+              s.status === 'CLAIMED'
                 ? Math.max(0, Math.floor((s.availableAt - Date.now()) / 1000))
                 : 0,
             executionRule: {
@@ -48,15 +48,15 @@ export class PerksService extends ServiceManager {
     if (!ok) return false;
 
     await this.ds.Logs.logEvent(addr, {
-      type: "PERK_CLAIM",
+      type: 'PERK_CLAIM',
       targetId: perkId,
-      targetType: "PERK",
+      targetType: 'PERK',
     });
     return true;
   }
   refreshCooldown = (id: string) =>
     this.ds.Perks.updatePerkState(id, {
-      status: "AVAILABLE",
+      status: 'AVAILABLE',
       collectedAt: null,
       availableAt: Date.now(),
     });

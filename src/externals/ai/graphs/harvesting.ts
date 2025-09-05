@@ -1,7 +1,7 @@
-import { HumanMessage } from "@langchain/core/messages";
-import { Annotation, StateGraph } from "@langchain/langgraph";
-import { Schema, Harvester } from "@/externals/ai/agents/harvester";
-import { GPT4o } from "@/externals/ai/models";
+import { HumanMessage } from '@langchain/core/messages';
+import { Annotation, StateGraph } from '@langchain/langgraph';
+import { Schema, Harvester } from '../agents/harvester';
+import { GPT4o } from '../models';
 
 const openAIKey = process.env.API_OPENAI_API_KEY;
 /**
@@ -28,9 +28,9 @@ const harvestNode = async (state: typeof HarvestingState.State) => {
 
 export const HarvestingGraph = (config: any = {}) => {
   return new StateGraph(HarvestingState)
-    .addNode("harvest_node", harvestNode)
-    .addEdge("__start__", "harvest_node")
-    .addEdge("harvest_node", "__end__")
+    .addNode('harvest_node', harvestNode)
+    .addEdge('__start__', 'harvest_node')
+    .addEdge('harvest_node', '__end__')
     .compile(config);
 };
 

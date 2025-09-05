@@ -1,12 +1,12 @@
-import { getFirestore as getAdminFS } from "firebase-admin/firestore";
+import { getFirestore as getAdminFS } from 'firebase-admin/firestore';
 import type {
   Firestore as AdminFS,
   CollectionReference,
   DocumentData,
   WithFieldValue,
   Query as FSQuery,
-} from "firebase-admin/firestore";
-import { App } from "./app";
+} from 'firebase-admin/firestore';
+import { App } from './app';
 
 /**
  * A generic Firestore DAO.
@@ -83,11 +83,11 @@ export class CollectionDAO<T> {
     if (!terms.length) return [];
 
     let q: FSQuery<DocumentData> = this.ref.where(
-      "keywords",
-      "array-contains-any",
+      'keywords',
+      'array-contains-any',
       terms,
     );
-    if (includeHidden) q = q.where("hidden", "==", false);
+    if (includeHidden) q = q.where('hidden', '==', false);
     if (limit) q = q.limit(limit);
 
     const snap = await q.get();

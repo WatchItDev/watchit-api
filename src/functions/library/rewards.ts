@@ -1,24 +1,24 @@
 // economy.ts
-import type { Ctx } from "@/functions/manager";
-import type { UsersDSType } from "@/datasources/users";
-import type { XPDSType } from "@/datasources/xp";
-import type { Web3DSType } from "@/datasources/web3";
-import { ActivityLogger } from "../library/activity";
-import { makeXpEntry } from "../../models/xp";
+import type { Ctx } from '@/functions/manager';
+import type { UsersDSType } from '@/datasources/users';
+import type { XPDSType } from '@/datasources/xp';
+import type { Web3DSType } from '@/datasources/web3';
+import { ActivityLibType } from './activity';
+import { makeXpEntry } from '../../models/xp';
 
 // ---- Zero-cost string enums ----
 export const XPAction = {
-  SYS: "SYS",
-  RANK_UP_BONUS: "RANK_UP_BONUS",
-  PERK_REWARD: "PERK_REWARD",
+  SYS: 'SYS',
+  RANK_UP_BONUS: 'RANK_UP_BONUS',
+  PERK_REWARD: 'PERK_REWARD',
   // Add more domain actions here: LIKE, POST_CREATE, RANK_UP, etc.
   // LIKE: "LIKE",
   // POST_CREATE: "POST_CREATE",
 } as const;
 
-type DSUsersPort = Pick<UsersDSType, "getUser">;
-type DSXpPort = Pick<XPDSType, "addEntry">;
-type DSWeb3Port = Pick<Web3DSType, "transfer">;
+type DSUsersPort = Pick<UsersDSType, 'getUser'>;
+type DSXpPort = Pick<XPDSType, 'addEntry'>;
+type DSWeb3Port = Pick<Web3DSType, 'transfer'>;
 export type XPAction = (typeof XPAction)[keyof typeof XPAction];
 
 type DS = {
@@ -28,12 +28,21 @@ type DS = {
 };
 
 // ---- API ----
-type EconomyDeps = Pick<Ctx, "ds" | "ext" | "activity"> & {
+type RewardsDeps = Pick<Ctx, 'ds' | 'ext' | 'activity'> & {
   ds: DS; // narrow ds to the subset we actually use
-  activity?: ActivityLogger; // activity is optional
+  activity?: ActivityLibType; // activity is optional
 };
 
-export const economy = ({ ds, activity }: EconomyDeps) => {
+/**
+ * Provides reward-related operations such as adding XP to a user and transferring MMC.
+ *
+ * @param ds - Data sources required for user and transaction operations.
+ * @param activity - Optional activity event handlers for XP and MMC actions.
+ * @returns An object containing reward functions:
+ * - `addXp`: Adds XP to a user, records an entry, and emits an activity event.
+ * - `transferMMC`: Transfers MMC to a user and emits an activity event.
+ */
+export const rewards = ({ ds, activity }: RewardsDeps) => {
   return {
     /**
      * Add XP to a user and record an entry.
@@ -44,7 +53,7 @@ export const economy = ({ ds, activity }: EconomyDeps) => {
       addr: string,
       amount: number,
       action: XPAction = XPAction.SYS,
-      description = "",
+      description = '',
     ) => {
       if (!addr?.trim()) {
         throw new Error("addXp: 'addr' is required");
@@ -72,7 +81,7 @@ export const economy = ({ ds, activity }: EconomyDeps) => {
           activity?.xpGained?.(addr, amount),
         ]);
       } catch (e) {
-        console.warn("activity.xpGained failed", e);
+        console.warn('activity.xpGained failed', e);
       }
 
       return entry;
@@ -97,3 +106,5 @@ export const economy = ({ ds, activity }: EconomyDeps) => {
     },
   };
 };
+
+export type RewardsLibType = ReturnType<typeof rewards>;

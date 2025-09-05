@@ -1,16 +1,16 @@
-import { ProfileService } from "./profile";
-import { PostService } from "./posts";
-import { CommentService } from "./comments";
-import { FeedsService } from "./feeds";
-import { LikesService } from "./likes";
-import { BookmarkService } from "./bookmarks";
-import { FollowService } from "./follows";
-import { XPService } from "./xp";
-import { LogService } from "./logs";
-import { RanksService } from "./ranks";
-import { PerksService } from "./perks";
-import { LeaderboardService } from "./leaderboard";
-import { TipsService } from "./tips";
+import { ProfileService } from './profile';
+import { PostService } from './posts';
+import { CommentService } from './comments';
+import { FeedsService } from './feeds';
+import { LikesService } from './likes';
+import { BookmarkService } from './bookmarks';
+import { FollowService } from './follows';
+import { XPService } from './xp';
+import { LogService } from './logs';
+import { RanksService } from './ranks';
+import { PerksService } from './perks';
+import { LeaderboardService } from './leaderboard';
+import { TipsService } from './tips';
 
 export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
   Profile: new ProfileService({ ds, ext }),

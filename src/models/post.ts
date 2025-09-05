@@ -1,16 +1,17 @@
-import type { Post, CreatePostInput } from "@/schema/types";
+import type { Post, CreatePostInput } from '@/schema/types';
 
 export function defaultPostData(): Omit<
   Post,
-  | "id"
-  | "author"
-  | "title"
-  | "description"
-  | "cid"
-  | "media"
-  | "visibility"
-  | "createdAt"
-  | "updatedAt"
+  | 'id'
+  | 'author'
+  | 'title'
+  | 'description'
+  | 'cid'
+  | 'media'
+  | 'visibility'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'year'
 > {
   return {
     commentCount: 0,
@@ -34,6 +35,7 @@ export function makeNewPost(
     title: input.title,
     description: input.description,
     cid: input.cid,
+    year: 0,
     media:
       input.media?.map((m) => ({
         id: m.cid,

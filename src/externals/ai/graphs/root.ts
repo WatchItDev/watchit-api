@@ -1,12 +1,12 @@
-import type { BaseMessage } from "@langchain/core/messages";
-import { trimMessages } from "@langchain/core/messages";
-import { HumanMessage } from "@langchain/core/messages";
-import { createReactAgent } from "@langchain/langgraph/prebuilt";
-import { Annotation, StateGraph } from "@langchain/langgraph";
-import { Query } from "@/externals/ai/agents/compiler";
-import { PostgresCheckpoint } from "@/externals/ai/memory";
-import { GPT4oMini } from "@/externals/ai/models";
-import { IntentDiscoveryGraph } from "@/externals/ai/graphs/intent";
+import type { BaseMessage } from '@langchain/core/messages';
+import { trimMessages } from '@langchain/core/messages';
+import { HumanMessage } from '@langchain/core/messages';
+import { createReactAgent } from '@langchain/langgraph/prebuilt';
+import { Annotation, StateGraph } from '@langchain/langgraph';
+import { IntentDiscoveryGraph } from './intent';
+import { PostgresCheckpoint } from '../memory';
+import { Query } from '../agents/compiler';
+import { GPT4oMini } from '../models';
 
 /**
  * Represents the root state of the AI graph, encapsulating all relevant properties
@@ -35,8 +35,8 @@ const GraphState = Annotation.Root({
  * @returns Returns `"MORE_CHAT"` if the assistant does not include `"READY_DATA"`, otherwise returns `"OK"`.
  */
 const evalStatus = (state: typeof GraphState.State) => {
-  if (!state?.assistant.includes("READY_DATA")) return "MORE_CHAT";
-  return "OK";
+  if (!state?.assistant.includes('READY_DATA')) return 'MORE_CHAT';
+  return 'OK';
 };
 
 /**
@@ -102,13 +102,13 @@ const createAssistantAgentNode = () => {
   });
 
   return async (state: typeof GraphState.State) => {
-    const inputMessage = new HumanMessage(state.userInput ?? "");
+    const inputMessage = new HumanMessage(state.userInput ?? '');
     const messages = (state.messages ?? []).concat([inputMessage]);
 
     // We need to avoid keep long chats to reduce costs!
     const trimmed = await trimMessages(messages, {
-      maxTokens: parseInt(process.env.API_MAX_TOKENS_HISTORY ?? "256"),
-      strategy: "last",
+      maxTokens: parseInt(process.env.API_MAX_TOKENS_HISTORY ?? '256'),
+      strategy: 'last',
       tokenCounter: model,
       includeSystem: false,
     });
@@ -126,20 +126,20 @@ const createAssistantAgentNode = () => {
 
 const RootGraph = (config: any) => {
   return new StateGraph(GraphState)
-    .addNode("intent_discovery_node", IntentDiscoveryGraph(config))
-    .addNode("assistant_node", createAssistantAgentNode())
-    .addEdge("__start__", "assistant_node")
-    .addEdge("intent_discovery_node", "__end__")
-    .addConditionalEdges("assistant_node", evalStatus, {
-      MORE_CHAT: "__end__",
-      OK: "intent_discovery_node",
+    .addNode('intent_discovery_node', IntentDiscoveryGraph(config))
+    .addNode('assistant_node', createAssistantAgentNode())
+    .addEdge('__start__', 'assistant_node')
+    .addEdge('intent_discovery_node', '__end__')
+    .addConditionalEdges('assistant_node', evalStatus, {
+      MORE_CHAT: '__end__',
+      OK: 'intent_discovery_node',
     })
     .compile(config);
 };
 
 export const RootAgent = () => {
   return {
-    name: "RootAgent",
+    name: 'RootAgent',
     graph: (c: any) => RootGraph(c),
     memory: () => PostgresCheckpoint(),
   };

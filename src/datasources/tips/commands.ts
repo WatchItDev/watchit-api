@@ -1,12 +1,12 @@
-import { DataSourceManager } from "../manager";
-import { Tip as FirestoreTip } from "../../schema/types";
-import crypto from "crypto";
+import { DataSourceManager } from '../manager';
+import { Tip as FirestoreTip } from '../../schema/types';
+import crypto from 'crypto';
 
 export class TipsCommands extends DataSourceManager {
   async createTip(
-    record: Omit<FirestoreTip, "id" | "createdAt"> & { createdAt?: number },
+    record: Omit<FirestoreTip, 'id' | 'createdAt'> & { createdAt?: number },
   ): Promise<FirestoreTip> {
-    const dao = this.fs<FirestoreTip>("tips");
+    const dao = this.fs<FirestoreTip>('tips');
 
     const now = Date.now();
     const base = {

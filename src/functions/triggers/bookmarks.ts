@@ -1,8 +1,8 @@
 import {
   onDocumentCreated,
   onDocumentDeleted,
-} from "firebase-functions/v2/firestore";
-import { type Ctx, enhanceTrigger } from "../manager";
+} from 'firebase-functions/v2/firestore';
+import { type Ctx, enhanceFunction } from '../manager';
 
 interface BmDoc {
   author: string;
@@ -11,9 +11,9 @@ interface BmDoc {
 }
 
 export const bookmarkInc = onDocumentCreated(
-  "bookmarks/{bmId}",
-  enhanceTrigger(
-    async ({ ds, activity }: Pick<Ctx, "ds" | "activity">, event) => {
+  'bookmarks/{bmId}',
+  enhanceFunction(
+    async ({ ds, activity }: Pick<Ctx, 'ds' | 'activity'>, event) => {
       const snap = event.data;
       if (!snap) return;
 
@@ -21,8 +21,8 @@ export const bookmarkInc = onDocumentCreated(
       if (!author || !postId) return;
 
       await Promise.all([
-        ds.Posts.updateCounterField(postId, "bookmarkCount", +1),
-        ds.Users.updateCounterField(author, "bookmarksCount", +1),
+        ds.Posts.updateCounterField(postId, 'bookmarkCount', +1),
+        ds.Users.updateCounterField(author, 'bookmarksCount', +1),
         activity.bookmarkCreated(author, postId, { owner }),
       ]);
 
@@ -32,9 +32,9 @@ export const bookmarkInc = onDocumentCreated(
 );
 
 export const bookmarkDec = onDocumentDeleted(
-  "bookmarks/{bmId}",
-  enhanceTrigger(
-    async ({ ds, activity }: Pick<Ctx, "ds" | "activity">, event) => {
+  'bookmarks/{bmId}',
+  enhanceFunction(
+    async ({ ds, activity }: Pick<Ctx, 'ds' | 'activity'>, event) => {
       const snap = event.data;
       if (!snap) return;
 
@@ -42,8 +42,8 @@ export const bookmarkDec = onDocumentDeleted(
       if (!author || !postId) return;
 
       await Promise.all([
-        ds.Posts.updateCounterField(postId, "bookmarkCount", -1),
-        ds.Users.updateCounterField(author, "bookmarksCount", -1),
+        ds.Posts.updateCounterField(postId, 'bookmarkCount', -1),
+        ds.Users.updateCounterField(author, 'bookmarksCount', -1),
         activity.bookmarkRemoved(author, postId),
       ]);
 

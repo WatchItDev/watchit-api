@@ -1,7 +1,7 @@
-import "@sentry/tracing";
-import * as Sentry from "@sentry/node";
+import '@sentry/tracing';
+import * as Sentry from '@sentry/node';
 // import pj from '@/package.json'
-import pluginTracing from "@/sentry/tracing";
+import pluginTracing from '@/sentry/tracing';
 
 Sentry.init({
   sendDefaultPii: true,
@@ -10,7 +10,7 @@ Sentry.init({
   // debug: process.env.SENTRY_ENV !== 'production',
   dsn: process.env.SENTRY_DSN,
   integrations: [
-    Sentry.captureConsoleIntegration({ levels: ["error", "debug"] }),
+    Sentry.captureConsoleIntegration({ levels: ['error', 'debug'] }),
   ],
   // release: pj.version,
   // Set tracesSampleRate to 1.0 to capture 100%

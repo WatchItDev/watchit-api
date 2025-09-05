@@ -1,6 +1,6 @@
-import { ServiceManager } from "./manager";
-import { toggle } from "../helpers/toggle";
-import type { User } from "../schema/types";
+import { ServiceManager } from './manager';
+import { toggle } from '../helpers/toggle';
+import type { User } from '../schema/types';
 
 export class FollowService extends ServiceManager {
   toggleFollow = (me: string, target: string) =>

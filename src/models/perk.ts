@@ -1,50 +1,50 @@
-import { Perk, PerkInput } from "@/schema/types";
+import { Perk, PerkInput } from '@/schema/types';
 
-export type Actor = "SELF" | "TARGET" | "OWNER";
-export type DistinctBy = "NONE" | "TARGET" | "USER";
+export type Actor = 'SELF' | 'TARGET' | 'OWNER';
+export type DistinctBy = 'NONE' | 'TARGET' | 'USER';
 
 export type UnlockRule =
-  | { on: "RANK_UP"; rankId: string }
-  | { on: "ACTION"; action: string; actor?: Actor; distinctBy?: DistinctBy }
+  | { on: 'RANK_UP'; rankId: string }
+  | { on: 'ACTION'; action: string; actor?: Actor; distinctBy?: DistinctBy }
   | {
-      on: "ACTION_COUNT";
+      on: 'ACTION_COUNT';
       action: string;
       times: number;
-      window: "24h" | "7d" | "∞";
+      window: '24h' | '7d' | '∞';
       actor?: Actor;
       distinctBy?: DistinctBy;
     }
-  | { on: "ALWAYS" };
+  | { on: 'ALWAYS' };
 
 export type ExecutionRule =
-  | { type: "IMMEDIATE" }
-  | { type: "ON_CLAIM" }
-  | { type: "ON_COOLDOWN"; cooldownSec: number };
+  | { type: 'IMMEDIATE' }
+  | { type: 'ON_CLAIM' }
+  | { type: 'ON_COOLDOWN'; cooldownSec: number };
 
 export type Reward =
-  | { action: "ADD_XP"; amount: number }
-  | { action: "ADD_MMC"; amount: number }
-  | { action: "MINT_NFT"; tokenId: string };
+  | { action: 'ADD_XP'; amount: number }
+  | { action: 'ADD_MMC'; amount: number }
+  | { action: 'MINT_NFT'; tokenId: string };
 
 export type PerkHook =
-  | { when: "BEFORE" | "AFTER"; type: "RESET_PROGRESS" | "RELOCK" }
+  | { when: 'BEFORE' | 'AFTER'; type: 'RESET_PROGRESS' | 'RELOCK' }
   | {
-      when: "BEFORE" | "AFTER";
-      type: "CUSTOM";
+      when: 'BEFORE' | 'AFTER';
+      type: 'CUSTOM';
       fnId: string;
       params?: Record<string, any>;
     };
 
-export function rewardPreviewFrom(reward: Perk["reward"]): string {
+export function rewardPreviewFrom(reward: Perk['reward']): string {
   switch (reward.action) {
-    case "ADD_XP":
+    case 'ADD_XP':
       return `+${reward.amount ?? 0} XP`;
-    case "ADD_MMC":
+    case 'ADD_MMC':
       return `+${reward.amount ?? 0} MMC`;
-    case "MINT_NFT":
-      return `NFT #${reward.tokenId ?? ""}`;
+    case 'MINT_NFT':
+      return `NFT #${reward.tokenId ?? ''}`;
     default:
-      return "";
+      return '';
   }
 }
 
@@ -53,7 +53,7 @@ export function makePerk(input: PerkInput): Perk {
 
   return {
     ...input,
-    uiHint: input.uiHint ?? "",
+    uiHint: input.uiHint ?? '',
     rewardPreview: rewardPreviewFrom(input.reward),
     enabled: input.enabled ?? true,
     collectedAt: null,

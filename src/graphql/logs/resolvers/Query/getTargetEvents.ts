@@ -1,6 +1,6 @@
-import type { QueryResolvers } from "@/schema/types";
+import type { QueryResolvers } from '@/schema/types';
 
-export const getTargetEvents: NonNullable<QueryResolvers["getTargetEvents"]> = (
+export const getTargetEvents: NonNullable<QueryResolvers['getTargetEvents']> = (
   _p,
   { targetId, targetType, type, limit, offset },
   { services },

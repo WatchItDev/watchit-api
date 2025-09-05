@@ -1,11 +1,11 @@
-import { DataSourceManager } from "../manager";
-import { Rank, UserRank } from "../../schema/types";
+import { DataSourceManager } from '../manager';
+import { Rank, UserRank } from '../../schema/types';
 
 export class RanksQuery extends DataSourceManager {
-  getRank = (id: string) => this.fs<Rank>("ranks").get(id);
+  getRank = (id: string) => this.fs<Rank>('ranks').get(id);
 
   async catalog(): Promise<Rank[]> {
-    return this.fs<Rank>("ranks").list(100);
+    return this.fs<Rank>('ranks').list(100);
   }
 
   async evaluate(totalXp: number) {
@@ -18,8 +18,8 @@ export class RanksQuery extends DataSourceManager {
   }
 
   userRanks = (user: string) =>
-    this.fs<UserRank>("userRanks").query(
-      [{ field: "user", op: "==", value: user }],
-      { orderBy: { field: "achievedAt", direction: "asc" }, limit: 100 },
+    this.fs<UserRank>('userRanks').query(
+      [{ field: 'user', op: '==', value: user }],
+      { orderBy: { field: 'achievedAt', direction: 'asc' }, limit: 100 },
     );
 }

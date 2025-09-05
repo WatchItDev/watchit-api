@@ -1,8 +1,8 @@
 export enum XpAction {
-  REGISTER_BONUS = "REGISTER_BONUS",
-  POST_CREATED = "POST_CREATED",
-  COMMENT_CREATED = "COMMENT_CREATED",
-  COMMENT_STREAK = "COMMENT_STREAK",
+  REGISTER_BONUS = 'REGISTER_BONUS',
+  POST_CREATED = 'POST_CREATED',
+  COMMENT_CREATED = 'COMMENT_CREATED',
+  COMMENT_STREAK = 'COMMENT_STREAK',
 }
 
 export interface XPEntry {
@@ -18,7 +18,7 @@ export interface XPEntry {
 }
 
 export function makeXpEntry(p: {
-  action: XPEntry["action"];
+  action: XPEntry['action'];
   user: string;
   description: string;
   amount: number;

@@ -1,6 +1,6 @@
-import type { GQL } from "@/types";
-import type { User } from "@/schema/types";
-import { extractAuthData } from "@/helpers/auth";
+import type { GQL } from '@/types';
+import type { User } from '@/schema/types';
+import { extractAuthData } from '@/helpers/auth';
 
 export function ensureAuthFieldsOnGetUser<
   T extends (...args: any[]) => Promise<User | null>,

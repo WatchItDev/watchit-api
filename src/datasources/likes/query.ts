@@ -1,7 +1,7 @@
-import { DataSourceManager } from "../manager";
+import { DataSourceManager } from '../manager';
 
 export class LikesQuery extends DataSourceManager {
   isLiked(addr: string, targetId: string) {
-    return this.fs("likes").exists(`${addr}_${targetId}`);
+    return this.fs('likes').exists(`${addr}_${targetId}`);
   }
 }

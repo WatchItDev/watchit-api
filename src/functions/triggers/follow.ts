@@ -1,15 +1,15 @@
 import {
   onDocumentCreated,
   onDocumentDeleted,
-} from "firebase-functions/v2/firestore";
-import { type Ctx, enhanceTrigger } from "../manager";
+} from 'firebase-functions/v2/firestore';
+import { type Ctx, enhanceFunction } from '../manager';
 
 type FollowData = { follower?: string; following?: string };
 
 export const followInc = onDocumentCreated(
-  "follows/{relId}",
-  enhanceTrigger(
-    async ({ ds, activity }: Pick<Ctx, "ds" | "activity">, event) => {
+  'follows/{relId}',
+  enhanceFunction(
+    async ({ ds, activity }: Pick<Ctx, 'ds' | 'activity'>, event) => {
       const snap = event.data;
       if (!snap) return;
 
@@ -17,8 +17,8 @@ export const followInc = onDocumentCreated(
       if (!follower || !following) return;
 
       await Promise.all([
-        ds.Users.updateCounterField(following, "followersCount", +1),
-        ds.Users.updateCounterField(follower, "followingCount", +1),
+        ds.Users.updateCounterField(following, 'followersCount', +1),
+        ds.Users.updateCounterField(follower, 'followingCount', +1),
         activity.followCreated(follower, following),
       ]);
       console.log(`${follower} now follows ${following}`);
@@ -27,9 +27,9 @@ export const followInc = onDocumentCreated(
 );
 
 export const followDec = onDocumentDeleted(
-  "follows/{relId}",
-  enhanceTrigger(
-    async ({ ds, activity }: Pick<Ctx, "ds" | "activity">, event) => {
+  'follows/{relId}',
+  enhanceFunction(
+    async ({ ds, activity }: Pick<Ctx, 'ds' | 'activity'>, event) => {
       const snap = event.data;
       if (!snap) return;
 
@@ -37,8 +37,8 @@ export const followDec = onDocumentDeleted(
       if (!follower || !following) return;
 
       await Promise.all([
-        ds.Users.updateCounterField(following, "followersCount", -1),
-        ds.Users.updateCounterField(follower, "followingCount", -1),
+        ds.Users.updateCounterField(following, 'followersCount', -1),
+        ds.Users.updateCounterField(follower, 'followingCount', -1),
         activity.followRemoved(follower, following),
       ]);
       console.log(`${follower} unfollowed ${following}`);

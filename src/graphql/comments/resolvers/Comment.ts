@@ -1,4 +1,4 @@
-import type { CommentResolvers } from "./../../../schema/types";
+import type { CommentResolvers } from './../../../schema/types';
 
 export const Comment: CommentResolvers = {
   author: (c, _args, { services }) =>

@@ -1,41 +1,40 @@
-// activityLogger.ts
-import { makeNewLog } from "../../models/log";
-import type { Ctx } from "../manager";
+import { makeNewLog } from '../../models/log';
+import type { Ctx } from '../manager';
 
 // ---------- String enums "zero-cost" ----------
 export const EventType = {
-  LIKE_CREATED: "LIKE_CREATED",
-  LIKE_REMOVED: "LIKE_REMOVED",
-  BOOKMARK_CREATED: "BOOKMARK_CREATED",
-  BOOKMARK_REMOVED: "BOOKMARK_REMOVED",
-  FOLLOW_CREATED: "FOLLOW_CREATED",
-  FOLLOW_REMOVED: "FOLLOW_REMOVED",
-  POST_CREATED: "POST_CREATED",
-  POST_UPDATED: "POST_UPDATED",
-  POST_HIDDEN: "POST_HIDDEN",
-  COMMENT_CREATED: "COMMENT_CREATED",
-  COMMENT_UPDATED: "COMMENT_UPDATED",
-  COMMENT_HIDDEN: "COMMENT_HIDDEN",
-  USER_REGISTERED: "USER_REGISTERED",
-  USER_UPDATED: "USER_UPDATED",
-  RANK_UP: "RANK_UP",
-  PERK_CLAIM: "PERK_CLAIM",
-  XP_GAINED: "XP_GAINED",
-  XP_BURNED: "XP_BURNED",
-  MMC_TRANSFER: "MMC_TRANSFER",
+  LIKE_CREATED: 'LIKE_CREATED',
+  LIKE_REMOVED: 'LIKE_REMOVED',
+  BOOKMARK_CREATED: 'BOOKMARK_CREATED',
+  BOOKMARK_REMOVED: 'BOOKMARK_REMOVED',
+  FOLLOW_CREATED: 'FOLLOW_CREATED',
+  FOLLOW_REMOVED: 'FOLLOW_REMOVED',
+  POST_CREATED: 'POST_CREATED',
+  POST_UPDATED: 'POST_UPDATED',
+  POST_HIDDEN: 'POST_HIDDEN',
+  COMMENT_CREATED: 'COMMENT_CREATED',
+  COMMENT_UPDATED: 'COMMENT_UPDATED',
+  COMMENT_HIDDEN: 'COMMENT_HIDDEN',
+  USER_REGISTERED: 'USER_REGISTERED',
+  USER_UPDATED: 'USER_UPDATED',
+  RANK_UP: 'RANK_UP',
+  PERK_CLAIM: 'PERK_CLAIM',
+  XP_GAINED: 'XP_GAINED',
+  XP_BURNED: 'XP_BURNED',
+  MMC_TRANSFER: 'MMC_TRANSFER',
 } as const;
 
 export const TargetType = {
-  POST: "POST",
-  COMMENT: "COMMENT",
-  USER: "USER",
-  RANK: "RANK",
-  PERK: "PERK",
+  POST: 'POST',
+  COMMENT: 'COMMENT',
+  USER: 'USER',
+  RANK: 'RANK',
+  PERK: 'PERK',
 } as const;
 
 export const Currency = {
-  XP: "XP",
-  MMC: "MMC",
+  XP: 'XP',
+  MMC: 'MMC',
 } as const;
 
 type Meta = Record<string, unknown>;
@@ -144,15 +143,31 @@ type EventMap = {
   };
 };
 
-export const activityLogger = ({ ds }: Pick<Ctx, "ds">) => {
+/**
+ * Provides a set of activity logging functions for various user actions within the application.
+ *
+ * @param ds - The data source context containing logging capabilities.
+ * @returns An object with methods to emit activity events for likes, bookmarks, follows, posts, comments, users, ranks, perks, and balances.
+ *
+ * @remarks
+ * Each method emits a specific event type and logs the activity using the provided data source.
+ * The `emit` function validates the presence of an `author` and constructs a log record for the event.
+ *
+ * @example
+ * ```typescript
+ * const activityLogger = activity({ ds });
+ * await activityLogger.likeCreated('user123', 'post456', TargetType.POST);
+ * ```
+ */
+export const activity = ({ ds }: Pick<Ctx, 'ds'>) => {
   const emit = async <T extends EventType>(type: T, payload: EventMap[T]) => {
     const author = (payload as any)?.author;
-    if (typeof author !== "string" || !author.trim()) {
-      throw new Error(`activityLogger.emit(${type}): 'author' required`);
+    if (typeof author !== 'string' || !author.trim()) {
+      throw new Error(`activity.emit(${type}): 'author' required`);
     }
 
     const rec = makeNewLog({ type, ...payload });
-    await ds.Logs.logEvent(rec.author ?? "", rec);
+    await ds.Logs.logEvent(rec.author ?? '', rec);
     return rec as LogRecord;
   };
 
@@ -268,4 +283,4 @@ export const activityLogger = ({ ds }: Pick<Ctx, "ds">) => {
   };
 };
 
-export type ActivityLogger = ReturnType<typeof activityLogger>;
+export type ActivityLibType = ReturnType<typeof activity>;

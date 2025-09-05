@@ -1,4 +1,4 @@
-import { ServiceManager } from "./manager";
+import { ServiceManager } from './manager';
 
 export class LeaderboardService extends ServiceManager {
   async topByXp(limit = 100) {

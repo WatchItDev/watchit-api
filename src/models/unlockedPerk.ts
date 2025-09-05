@@ -2,7 +2,7 @@ export interface UnlockedPerk {
   id: string;
   user: string;
   perkId: string;
-  status: "LOCKED" | "AVAILABLE" | "CLAIMED";
+  status: 'LOCKED' | 'AVAILABLE' | 'CLAIMED';
   progress: number;
   target: number;
   availableAt: number;
@@ -17,7 +17,7 @@ export function makeUnlockedPerk(p: {
   perkId: string;
   progress: number;
   target: number;
-  status: "LOCKED" | "AVAILABLE" | "CLAIMED";
+  status: 'LOCKED' | 'AVAILABLE' | 'CLAIMED';
   availableAt: number;
   cooldownSec: number;
 }): UnlockedPerk {

@@ -1,6 +1,6 @@
-import type { QueryResolvers } from "@/schema/types";
+import type { QueryResolvers } from '@/schema/types';
 
-export const getLeaderboard: NonNullable<QueryResolvers["getLeaderboard"]> = (
+export const getLeaderboard: NonNullable<QueryResolvers['getLeaderboard']> = (
   _p,
   { limit },
   { services },

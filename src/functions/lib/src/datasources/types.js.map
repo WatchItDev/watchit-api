@@ -1,0 +1,1 @@
+{"version":3,"file":"types.js","sourceRoot":"/","sources":["src/datasources/types.ts"],"names":[],"mappings":"","sourcesContent":["import type { CollectionDAO } from \"../externals/firebase/firestore\";\n\nexport interface FireStore {\n  fs: <T>(collection: string) => CollectionDAO<T>;\n}\n"]}

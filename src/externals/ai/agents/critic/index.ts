@@ -1,6 +1,6 @@
-import { StructuredAgent } from "@/externals/ai/types";
-import type { Feedback } from "./types";
-export * from "./types";
+import { StructuredAgent } from '../../types';
+import type { Feedback } from './types';
+export * from './types';
 
 // Reflex compiler agent that interprets user input to generate structured queries for film recommendations.
 export class Critic extends StructuredAgent<typeof Feedback> {

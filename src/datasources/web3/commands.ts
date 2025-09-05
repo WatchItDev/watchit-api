@@ -1,6 +1,6 @@
-import { DataSourceManager } from "../manager";
-import { web3 } from "../../externals/web3";
-import LedgerVaultAbi from "../../externals/web3/config/abi/LedgerVault.json";
+import { DataSourceManager } from '../manager';
+import { web3 } from '../../externals/web3';
+import LedgerVaultAbi from '../../externals/web3/config/abi/LedgerVault.json';
 
 export class Web3Commands extends DataSourceManager {
   /**
@@ -14,7 +14,7 @@ export class Web3Commands extends DataSourceManager {
     return await web3.writeContract({
       address: process.env.API_LEDGER_VAULT_ADDRESS! as `0x${string}`,
       abi: LedgerVaultAbi.abi,
-      fnName: "transfer",
+      fnName: 'transfer',
       args: [to, value, process.env.API_MMC_TOKEN_ADDRESS! as `0x${string}`],
     });
   }

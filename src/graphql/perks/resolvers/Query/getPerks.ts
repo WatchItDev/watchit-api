@@ -1,6 +1,6 @@
-import { QueryResolvers } from "@/schema/types";
+import { QueryResolvers } from '@/schema/types';
 
-export const getPerks: NonNullable<QueryResolvers["getPerks"]> = (
+export const getPerks: NonNullable<QueryResolvers['getPerks']> = (
   _p,
   {},
   { services },

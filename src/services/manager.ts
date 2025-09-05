@@ -1,5 +1,5 @@
-import type { DataSourcesType } from "@/datasources";
-import type * as Externals from "@/externals";
+import type { DataSourcesType } from '@/datasources';
+import type * as Externals from '@/externals';
 
 export interface ServiceParams {
   ds: DataSourcesType;

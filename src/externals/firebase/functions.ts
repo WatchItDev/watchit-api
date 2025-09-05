@@ -2,8 +2,8 @@ import {
   getFunctions,
   httpsCallable,
   connectFunctionsEmulator,
-} from "firebase/functions";
-import { App } from "./app";
+} from 'firebase/functions';
+import { App } from './app';
 import type {
   User,
   UserInput,
@@ -15,14 +15,14 @@ import type {
   CreateCommentInput,
   UpdateCommentInput,
   AddXPInput,
-} from "@/schema/types";
-import { Address } from "@/types";
+} from '@/schema/types';
+import { Address } from '@/types';
 
 export const Functions = () => {
-  const fn = getFunctions(App().getClient(), "us-central1");
+  const fn = getFunctions(App().getClient(), 'us-central1');
 
-  if (process.env.NODE_ENV !== "production") {
-    const host = process.env.API_EMULATOR_HOST ?? "127.0.0.1";
+  if (process.env.NODE_ENV !== 'production') {
+    const host = process.env.API_EMULATOR_HOST ?? '127.0.0.1';
     connectFunctionsEmulator(fn, host, 5001);
   }
 
@@ -30,45 +30,45 @@ export const Functions = () => {
     users: {
       create: httpsCallable<UserInput, { user: User }>(
         fn,
-        "usersCallable-usersCreate",
+        'usersCallable-usersCreate',
       ),
       update: httpsCallable<UpdateUserInput & Address, { user: User }>(
         fn,
-        "usersCallable-usersUpdate",
+        'usersCallable-usersUpdate',
       ),
     },
 
     posts: {
       create: httpsCallable<CreatePostInput & Address, { post: Post }>(
         fn,
-        "postsCallable-postsCreate",
+        'postsCallable-postsCreate',
       ),
       update: httpsCallable<UpdatePostInput, { post: Post }>(
         fn,
-        "postsCallable-postsUpdate",
+        'postsCallable-postsUpdate',
       ),
       hide: httpsCallable<{ postId: string }, { success: boolean }>(
         fn,
-        "postsCallable-postsHide",
+        'postsCallable-postsHide',
       ),
       incrementView: httpsCallable<{ postId: string }, { post: Post }>(
         fn,
-        "postsCallable-postsIncrementView",
+        'postsCallable-postsIncrementView',
       ),
     },
 
     comments: {
       create: httpsCallable<CreateCommentInput & Address, { comment: Comment }>(
         fn,
-        "commentsCallable-commentsCreate",
+        'commentsCallable-commentsCreate',
       ),
       update: httpsCallable<UpdateCommentInput, { comment: Comment }>(
         fn,
-        "commentsCallable-commentsUpdate",
+        'commentsCallable-commentsUpdate',
       ),
       hide: httpsCallable<{ commentId: string }, { success: boolean }>(
         fn,
-        "commentsCallable-commentsHide",
+        'commentsCallable-commentsHide',
       ),
     },
 
@@ -76,31 +76,31 @@ export const Functions = () => {
       toggleBookmark: httpsCallable<
         { me: string; postId: string },
         { success: boolean }
-      >(fn, "bookmarksCallable-toggleBookmark"),
+      >(fn, 'bookmarksCallable-toggleBookmark'),
     },
 
     follows: {
       toggleFollow: httpsCallable<
         { me: string; targetAddress: string },
         { success: boolean }
-      >(fn, "followsCallable-toggleFollow"),
+      >(fn, 'followsCallable-toggleFollow'),
     },
 
     likes: {
       togglePostLike: httpsCallable<
         { me: string; postId: string },
         { success: boolean }
-      >(fn, "likesCallable-togglePostLike"),
+      >(fn, 'likesCallable-togglePostLike'),
       toggleCommentLike: httpsCallable<
         { me: string; commentId: string },
         { success: boolean }
-      >(fn, "likesCallable-toggleCommentLike"),
+      >(fn, 'likesCallable-toggleCommentLike'),
     },
 
     xp: {
       addXP: httpsCallable<AddXPInput, { success: boolean }>(
         fn,
-        "xpCallable-addXP",
+        'xpCallable-addXP',
       ),
     },
   };

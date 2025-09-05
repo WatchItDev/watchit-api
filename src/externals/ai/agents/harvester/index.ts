@@ -1,6 +1,6 @@
-import { StructuredAgent } from "@/externals/ai/types";
-import type { Schema } from "@/externals/ai/agents/harvester/types";
-export * from "./types";
+import { StructuredAgent } from '../../types';
+import type { Schema } from './types';
+export * from './types';
 
 // Reflex compiler agent that interprets user input to generate structured queries for film recommendations.
 export class Harvester extends StructuredAgent<typeof Schema> {

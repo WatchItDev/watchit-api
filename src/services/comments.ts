@@ -1,9 +1,9 @@
-import { ServiceManager } from "./manager";
+import { ServiceManager } from './manager';
 import type {
   Comment,
   CreateCommentInput,
   UpdateCommentInput,
-} from "@/schema/types";
+} from '@/schema/types';
 
 export class CommentService extends ServiceManager {
   /** Create a comment via Cloud Function */

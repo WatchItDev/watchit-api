@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"/","sources":["src/externals/firebase/index.ts"],"names":[],"mappings":";;;AAAA,6BAA4B;AAAnB,0FAAA,GAAG,OAAA;AACZ,yCAAwC;AAA/B,sGAAA,SAAS,OAAA;AAClB,yCAAwC;AAA/B,sGAAA,SAAS,OAAA","sourcesContent":["export { App } from \"./app\";\nexport { FireStore } from \"./firestore\";\nexport { Functions } from \"./functions\";\n"]}

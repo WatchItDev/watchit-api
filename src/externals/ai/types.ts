@@ -1,11 +1,11 @@
-import { z, ZodTypeAny } from "zod";
+import { z, ZodTypeAny } from 'zod';
 import {
   ChatPromptTemplate,
   MessagesPlaceholder,
   SystemMessagePromptTemplate,
-} from "@langchain/core/prompts";
-import type { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import type { BaseMessage } from "@langchain/core/messages";
+} from '@langchain/core/prompts';
+import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import type { BaseMessage } from '@langchain/core/messages';
 
 export interface Model {
   build(): BaseChatModel;
@@ -21,7 +21,7 @@ export abstract class StructuredAgent<S extends ZodTypeAny> {
     this.schema = schema;
     this.prompt = ChatPromptTemplate.fromMessages([
       SystemMessagePromptTemplate.fromTemplate(this.system()),
-      new MessagesPlaceholder("input"),
+      new MessagesPlaceholder('input'),
     ]);
   }
 

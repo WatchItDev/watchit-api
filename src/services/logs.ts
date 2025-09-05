@@ -1,4 +1,4 @@
-import { ServiceManager } from "./manager";
+import { ServiceManager } from './manager';
 
 export class LogService extends ServiceManager {
   logEvent = (addr: string, payload: any) =>
@@ -11,8 +11,8 @@ export class LogService extends ServiceManager {
     this.ds.Logs.eventsByTarget(...args);
 
   countPostViews = (postId: string) =>
-    this.ds.Logs.countEvents("POST_VIEW", "targetId", postId);
+    this.ds.Logs.countEvents('POST_VIEW', 'targetId', postId);
 
   countProfileViews = (addr: string) =>
-    this.ds.Logs.countEvents("PROFILE_VIEW", "targetId", addr);
+    this.ds.Logs.countEvents('PROFILE_VIEW', 'targetId', addr);
 }

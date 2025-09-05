@@ -1,12 +1,12 @@
-import { createPublicClient, createWalletClient, http } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import { polygonAmoy } from "viem/chains";
-import { parseUnits as viemParseUnits } from "viem";
+import { createPublicClient, createWalletClient, http } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
+import { polygonAmoy } from 'viem/chains';
+import { parseUnits as viemParseUnits } from 'viem';
 import type {
   WriteContractOptions,
   ReadContractOptions,
   HexAddress,
-} from "./types";
+} from './types';
 
 // —————————————————————————————————————————
 // Client initialization
@@ -14,7 +14,7 @@ import type {
 
 const { API_RPC_URL, API_PRIVATE_KEY } = process.env;
 if (!API_RPC_URL || !API_PRIVATE_KEY)
-  throw new Error("Missing API_RPC_URL or API_PRIVATE_KEY in env");
+  throw new Error('Missing API_RPC_URL or API_PRIVATE_KEY in env');
 
 const publicClient = createPublicClient({
   transport: http(API_RPC_URL),

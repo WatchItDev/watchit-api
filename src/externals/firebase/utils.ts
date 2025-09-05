@@ -14,10 +14,10 @@ export function buildKeywords(
 
   const normalize = (txt: string) =>
     txt
-      .normalize("NFKD")
-      .replace(/[\u0300-\u036f]/g, "")
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, " ")
+      .replace(/[^a-z0-9\s]/g, ' ')
       .trim();
 
   wholeFields.forEach((f) => {

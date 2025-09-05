@@ -1,8 +1,7 @@
-import { HumanMessage } from "@langchain/core/messages";
-import { Annotation, StateGraph } from "@langchain/langgraph";
-import { Query, Compiler } from "@/externals/ai/agents/compiler";
-import { FireStore } from "@/externals/firebase";
-import { GPT4o } from "@/externals/ai/models";
+import { HumanMessage } from '@langchain/core/messages';
+import { Annotation, StateGraph } from '@langchain/langgraph';
+import { Query, Compiler } from '../agents/compiler';
+import { GPT4o } from '../models';
 
 const openAIKey = process.env.API_OPENAI_API_KEY;
 /**
@@ -49,22 +48,11 @@ const expertNode = async (state: typeof IntentState.State) => {
   return { query: query, finish: true };
 };
 
-const persistNode = async (state: typeof IntentState.State) => {
-  const firestore = FireStore();
-  await firestore.fs("intents").create("1", {
-    query: state.query,
-    userInput: state.userInput,
-    createdAt: new Date(),
-  });
-};
-
 export const IntentDiscoveryGraph = (config: any = {}) => {
   return new StateGraph(IntentState)
-    .addNode("expert_node", expertNode)
-    .addNode("persist_node", persistNode)
-    .addEdge("__start__", "expert_node")
-    .addEdge("expert_node", "persist_node")
-    .addEdge("persist_node", "__end__")
+    .addNode('expert_node', expertNode)
+    .addEdge('__start__', 'expert_node')
+    .addEdge('expert_node', '__end__')
     .compile(config);
 };
 

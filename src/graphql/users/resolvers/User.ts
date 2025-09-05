@@ -1,4 +1,4 @@
-import type { UserResolvers, User as UserType } from "@/schema/types";
+import type { UserResolvers, User as UserType } from '@/schema/types';
 
 export const User: UserResolvers = {
   followersCount: (parent: UserType) => parent.followersCount ?? 0,

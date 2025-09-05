@@ -1,6 +1,6 @@
-import type { QueryResolvers } from "./../../../../schema/types";
+import type { QueryResolvers } from './../../../../schema/types';
 
-export const getPopularPosts: NonNullable<QueryResolvers["getPopularPosts"]> = (
+export const getPopularPosts: NonNullable<QueryResolvers['getPopularPosts']> = (
   _parent,
   { limit },
   { services },

@@ -1,1 +1,1 @@
-export * as web3 from "./client";
+export * as web3 from './client';

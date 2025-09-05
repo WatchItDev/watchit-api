@@ -1,10 +1,10 @@
 // rankEngine.ts
-import { economy, XPAction } from "./economy";
-import type { Ctx } from "@/functions/manager";
-import type { PerksDSType } from "@/datasources/perks";
-import type { RanksDSType } from "@/datasources/ranks";
-import type { UsersDSType } from "@/datasources/users";
-import type { ActivityLogger } from "../library/activity";
+import { rewards, XPAction } from './rewards';
+import type { Ctx } from '@/functions/manager';
+import type { PerksDSType } from '@/datasources/perks';
+import type { RanksDSType } from '@/datasources/ranks';
+import type { UsersDSType } from '@/datasources/users';
+import type { ActivityLibType } from '../library/activity';
 
 // ---------- Minimal domain shapes used here ----------
 type Rank = {
@@ -15,9 +15,9 @@ type Rank = {
 };
 
 // ---------- DS ports narrowed to what we use ----------
-type DSUsersPort = Pick<UsersDSType, "getUser" | "updateUser">;
-type DSRanksPort = Pick<RanksDSType, "catalog" | "addUserRank">;
-type DSPerksPort = Pick<PerksDSType, "getCatalog" | "getState" | "upsertState">;
+type DSUsersPort = Pick<UsersDSType, 'getUser' | 'updateUser'>;
+type DSRanksPort = Pick<RanksDSType, 'catalog' | 'addUserRank'>;
+type DSPerksPort = Pick<PerksDSType, 'getCatalog' | 'getState' | 'upsertState'>;
 
 type DS = {
   Users: DSUsersPort;
@@ -25,29 +25,44 @@ type DS = {
   Perks: DSPerksPort;
 };
 
-const tryActivity = async <K extends keyof ActivityLogger>(
-  activity: ActivityLogger | undefined,
+const tryActivity = async <K extends keyof ActivityLibType>(
+  activity: ActivityLibType | undefined,
   key: K,
-  ...args: Parameters<NonNullable<ActivityLogger[K]>>
+  ...args: Parameters<NonNullable<ActivityLibType[K]>>
 ) => {
   try {
     const fn = activity?.[key] as any;
-    if (typeof fn === "function") await fn(...args);
+    if (typeof fn === 'function') await fn(...args);
   } catch {
     /* best-effort: don't break flow */
   }
 };
 
-export const rankEngine = ({
+/**
+ * Provides rank management functionality for users, including rank progression,
+ * perk unlocking, and cache management.
+ *
+ * @param ds - Data source ports for accessing rank, user, and perk data.
+ * @param ext - External dependencies or context.
+ * @param activity - Activity tracking or logging interface.
+ * @returns An object with methods for rank progression and cache management:
+ * - maybeRankUp(userAddr): Promotes the user to the next rank if eligible, unlocks perks, and logs activity.
+ * - resetCache(): Clears in-memory rank and order caches, useful if rank catalog changes at runtime.
+ *
+ * @remarks
+ * - Handles initial rank assignment for new users.
+ * - Unlocks perks based on rank progression and configured rules.
+ * - Ensures rank and perk state consistency across user actions.
+ */
+export const ranks = ({
   ds,
   ext,
   activity,
-}: Pick<Ctx, "ds" | "ext" | "activity">) => {
-  const eco = economy({ ds, ext, activity });
-
+}: Pick<Ctx, 'ds' | 'ext' | 'activity'>) => {
   // Locally narrow ports for this module
   const ports = ds as unknown as DS;
-  const acts = activity as unknown as ActivityLogger | undefined;
+  const rewardsHandler = rewards({ ds, ext, activity });
+  const acts = activity as unknown as ActivityLibType | undefined;
 
   let rankCache: Rank[] | null = null;
   let orderById: Record<string, number> = Object.create(null);
@@ -70,13 +85,13 @@ export const rankEngine = ({
     }
 
     const instant = catalog.filter(
-      (p) => p.unlockRule.on === "RANK_UP" && p.unlockRule.rankId === rankId,
+      (p) => p.unlockRule.on === 'RANK_UP' && p.unlockRule.rankId === rankId,
     );
 
     const seed = catalog.filter(
       (p) =>
         (orderById[p.minRankId] ?? 0) <= (orderById[rankId] ?? 0) &&
-        p.unlockRule.on !== "RANK_UP",
+        p.unlockRule.on !== 'RANK_UP',
     );
 
     const now = Date.now();
@@ -88,10 +103,10 @@ export const rankEngine = ({
           perkId: p.id,
           progress: 0,
           target: 0,
-          status: "AVAILABLE",
+          status: 'AVAILABLE',
           availableAt: now,
           cooldownSec:
-            p.executionRule.type === "ON_COOLDOWN"
+            p.executionRule.type === 'ON_COOLDOWN'
               ? (p.executionRule.cooldownSec ?? 0)
               : 0,
           seen: [],
@@ -105,13 +120,13 @@ export const rankEngine = ({
         if (exists) return;
 
         const initTarget =
-          p.unlockRule.on === "ACTION_COUNT" ? (p.unlockRule.times ?? 1) : 1;
+          p.unlockRule.on === 'ACTION_COUNT' ? (p.unlockRule.times ?? 1) : 1;
         await ports.Perks.upsertState({
           user,
           perkId: p.id,
           progress: 0,
           target: initTarget,
-          status: "LOCKED",
+          status: 'LOCKED',
           availableAt: 0,
           cooldownSec: p.executionRule.cooldownSec ?? 0,
           seen: [],
@@ -127,8 +142,9 @@ export const rankEngine = ({
       ports.Users.updateUser(userAddr, { currentRank: first.id }),
       ports.Ranks.addUserRank(userAddr, first.id),
     ]);
+
     await unlockPerksForRank(first.id, userAddr);
-    await tryActivity(acts, "rankUp", userAddr, first.id);
+    await tryActivity(acts, 'rankUp', userAddr, first.id);
   };
 
   const promoteNextRank = async (
@@ -146,9 +162,10 @@ export const rankEngine = ({
       ports.Users.updateUser(userAddr, { currentRank: next.id }),
       ports.Ranks.addUserRank(userAddr, next.id),
     ]);
+
     await unlockPerksForRank(next.id, userAddr);
-    await tryActivity(acts, "rankUp", userAddr, next.id);
-    await eco.addXp(
+    await tryActivity(acts, 'rankUp', userAddr, next.id);
+    await rewardsHandler.addXp(
       userAddr,
       10,
       XPAction.RANK_UP_BONUS,
@@ -180,3 +197,5 @@ export const rankEngine = ({
     },
   };
 };
+
+export type RankLibType = ReturnType<typeof ranks>;
