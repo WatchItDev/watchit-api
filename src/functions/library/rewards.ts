@@ -1,10 +1,10 @@
 // economy.ts
-import type { Ctx } from '@/functions/manager';
-import type { UsersDSType } from '@/datasources/users';
-import type { XPDSType } from '@/datasources/xp';
+import type { UsersDsType } from '@/datasources/users';
 import type { Web3DSType } from '@/datasources/web3';
-import { ActivityLibType } from './activity';
+import type { XPDSType } from '@/datasources/xp';
+import type { Ctx } from '@/functions/manager';
 import { makeXpEntry } from '../../models/xp';
+import { ActivityLibType } from './activity';
 
 // ---- Zero-cost string enums ----
 export const XPAction = {
@@ -16,7 +16,7 @@ export const XPAction = {
   // POST_CREATE: "POST_CREATE",
 } as const;
 
-type DSUsersPort = Pick<UsersDSType, 'getUser'>;
+type DSUsersPort = Pick<UsersDsType, 'getUser'>;
 type DSXpPort = Pick<XPDSType, 'addEntry'>;
 type DSWeb3Port = Pick<Web3DSType, 'transfer'>;
 export type XPAction = (typeof XPAction)[keyof typeof XPAction];
@@ -76,10 +76,7 @@ export const rewards = ({ ds, activity }: RewardsDeps) => {
 
       // Best-effort side effect (should not break if activity fails)
       try {
-        Promise.resolve([
-          ds.XP.addEntry(entry),
-          activity?.xpGained?.(addr, amount),
-        ]);
+        Promise.resolve([ds.XP.addEntry(entry), activity?.xpGained?.(addr, amount)]);
       } catch (e) {
         console.warn('activity.xpGained failed', e);
       }

@@ -1,11 +1,11 @@
-import { getFirestore as getAdminFS } from 'firebase-admin/firestore';
 import type {
   Firestore as AdminFS,
   CollectionReference,
   DocumentData,
-  WithFieldValue,
   Query as FSQuery,
+  WithFieldValue,
 } from 'firebase-admin/firestore';
+import { getFirestore as getAdminFS } from 'firebase-admin/firestore';
 import { App } from './app';
 
 /**
@@ -69,8 +69,7 @@ export class CollectionDAO<T> {
   ): Promise<T[]> {
     let q: FSQuery<DocumentData> = this.ref;
     for (const c of clauses) q = q.where(c.field, c.op, c.value);
-    if (options?.orderBy)
-      q = q.orderBy(options.orderBy.field, options.orderBy.direction);
+    if (options?.orderBy) q = q.orderBy(options.orderBy.field, options.orderBy.direction);
     if (options?.limit) q = q.limit(options.limit);
     const snap = await q.get();
     return snap.docs.map((d) => d.data() as T);
@@ -82,11 +81,7 @@ export class CollectionDAO<T> {
 
     if (!terms.length) return [];
 
-    let q: FSQuery<DocumentData> = this.ref.where(
-      'keywords',
-      'array-contains-any',
-      terms,
-    );
+    let q: FSQuery<DocumentData> = this.ref.where('keywords', 'array-contains-any', terms);
     if (includeHidden) q = q.where('hidden', '==', false);
     if (limit) q = q.limit(limit);
 
@@ -110,3 +105,5 @@ export function FireStore() {
   const fs = <U>(path: string): CollectionDAO<U> => new CollectionDAO<U>(path);
   return { fs };
 }
+
+export type FireStore = ReturnType<typeof FireStore>;

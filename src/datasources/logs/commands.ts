@@ -1,6 +1,6 @@
-import { DataSourceManager } from '../manager';
 import { makeNewLog } from '../../models/log';
 import { EventLog } from '../../schema/types';
+import { DataSourceManager } from '../manager';
 
 export class LogsCommands extends DataSourceManager {
   async logEvent(author: string, data: Omit<EventLog, 'id' | 'createdAt'>) {

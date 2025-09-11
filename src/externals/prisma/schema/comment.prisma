@@ -1,0 +1,12 @@
+model Comment {
+    id        Int    @id @default(autoincrement())
+    body      String
+    postId    Int
+    contentId Int    @unique
+    parentId  Int
+
+    post          Post        @relation(fields: [postId], references: [id])
+    base          Content @relation(fields: [contentId], references: [id])
+    parent        Comment[]   @relation("CommentReply")
+    parentComment Comment?    @relation("CommentReply", fields: [parentId], references: [id])
+}

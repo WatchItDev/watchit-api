@@ -1,0 +1,28 @@
+enum Visibility {
+    PUBLIC
+    FOLLOWERS_ONLY
+    PRIVATE
+}
+
+enum ContentKind {
+    POST
+    COMMENT
+}
+
+model Content {
+    id         Int         @id @default(autoincrement())
+    userId     Int
+    tags       Json?
+    active     Boolean     @default(true)
+    kind       ContentKind @default(POST)
+    visibility Visibility  @default(PUBLIC)
+    createdAt  DateTime    @default(now())
+
+    post      Post?
+    comment   Comment?
+    reactions Reactions[]
+    user      User        @relation(fields: [userId], references: [id])
+
+    @@index([kind])
+    @@map("Content")
+}

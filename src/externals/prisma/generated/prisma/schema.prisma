@@ -1,0 +1,189 @@
+enum Visibility {
+  PUBLIC
+  FOLLOWERS_ONLY
+  PRIVATE
+}
+
+enum ContentKind {
+  POST
+  COMMENT
+}
+
+model Content {
+  id         Int         @id @default(autoincrement())
+  userId     Int
+  tags       Json?
+  active     Boolean     @default(true)
+  kind       ContentKind @default(POST)
+  visibility Visibility  @default(PUBLIC)
+  createdAt  DateTime    @default(now())
+
+  post      Post?
+  comment   Comment?
+  reactions Reactions[]
+  user      User        @relation(fields: [userId], references: [id])
+
+  @@index([kind])
+  @@map("Content")
+}
+
+model MediaAttachments {
+  id     Int    @id @default(autoincrement())
+  postId Int
+  url    String
+  cid    String @unique
+  title  String
+  type   String
+
+  post Post @relation(fields: [postId], references: [id])
+
+  @@index([cid])
+}
+
+model Post {
+  id        Int    @id @default(autoincrement())
+  title     String
+  body      String
+  contentId Int    @unique
+
+  comments    Comment[]
+  attachments MediaAttachments[]
+  base        Content            @relation(fields: [contentId], references: [id])
+}
+
+model Comment {
+  id        Int    @id @default(autoincrement())
+  body      String
+  postId    Int
+  contentId Int    @unique
+  parentId  Int
+
+  post          Post      @relation(fields: [postId], references: [id])
+  parent        Comment[] @relation("CommentReply")
+  base          Content   @relation(fields: [contentId], references: [id])
+  parentComment Comment?  @relation("CommentReply", fields: [parentId], references: [id])
+}
+
+// model Bookmarks {
+//     id        Int      @id @default(autoincrement())
+//     createdAt DateTime @default(now())
+//     postId    Int
+//     userId    Int
+
+//     user User @relation(fields: [userId], references: [id])
+//     post Post @relation(fields: [postId], references: [id])
+
+//     @@unique([userId, postId])
+// }
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../generated/prisma"
+  previewFeatures = ["postgresqlExtensions", "fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("API_DATABASE_URL")
+}
+
+enum ReactionType {
+  HATE
+  LIKE
+  LOVE
+}
+
+model Reactions {
+  id        Int          @id @default(autoincrement())
+  kind      ReactionType @default(LIKE)
+  userId    Int
+  contentId Int
+  createdAt DateTime     @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  content Content @relation(fields: [contentId], references: [id])
+
+  @@unique([userId, contentId])
+  @@index([kind])
+}
+
+model Follows {
+  followerId  Int
+  followingId Int
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("UserFollows", fields: [followerId], references: [id])
+  following User @relation("UserFollowedBy", fields: [followingId], references: [id])
+
+  @@id([followerId, followingId])
+}
+
+enum TxType {
+  DEPOSIT
+  WITHDRAW
+  TRADE
+  TIP
+}
+
+model Transactions {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  type        TxType
+  amount      Float
+  balance     Float
+  currency    String
+  description String
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Socials {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  platform String
+  url      String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([platform(sort: Asc)])
+}
+
+model Profile {
+  id       Int     @id @default(autoincrement())
+  userId   Int     @unique
+  username String  @unique
+  bio      String
+  picture  String?
+  cover    String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([username(sort: Asc)])
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  address     String   @unique
+  displayName String
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  profile      Profile?
+  socials      Socials[]
+  contents     Content[]
+  reactions    Reactions[]
+  // bookmarks    Bookmarks[]
+  transactions Transactions[]
+  follower     Follows[]      @relation("UserFollows")
+  following    Follows[]      @relation("UserFollowedBy")
+
+  @@index([address, email])
+}

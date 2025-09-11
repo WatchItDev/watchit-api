@@ -2,10 +2,7 @@ import { z } from 'zod';
 import { TagSchema } from '../../agents/harvester/types';
 
 export const Query = TagSchema.extend({
-  k: z
-    .number()
-    .default(5)
-    .describe('The number of results expected to have as result from query'),
+  k: z.number().default(5).describe('The number of results expected to have as result from query'),
   must: z.array(z.string()).describe(`
     Qdrant tag KEYS (field identifiers) that are REQUIRED to match in any result.
     - Contains only field names (e.g., "genre", "themes", "sentiment"), never literal values.

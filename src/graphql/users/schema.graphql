@@ -6,51 +6,35 @@
 #      TYPES       #
 ####################
 
-type SocialLink {
-  platform: String!
-  url: String!
+type Profile {
+  bio: String!
+  username: String!
+  picture: String
+  cover: String
 }
 
 type User {
-  id: String!
+  id: Int!
   address: String!
   email: String!
-  username: String!
   displayName: String!
-  bio: String!
-  profilePicture: String!
-  coverPicture: String!
-  socialLinks: [SocialLink!]
-  xpBalance: Int!
-  xpTotal: Int!
-  currentRank: String!
-
-  followersCount: Int!
-  followingCount: Int!
-  publicationsCount: Int!
-  bookmarksCount: Int!
-
+  profile: Profile
   verified: Boolean!
   createdAt: Timestamp!
-  updatedAt: Timestamp!
+  socialLinks: [SocialLink!]
 }
 
 ####################
 #     INPUTS       #
 ####################
 
-input SocialLinkInput {
-  platform: String! @constraint(minLength: 1)
-  url: String! @constraint(format: "uri")
-}
-
-input UserInput {
+input CreateUserInput {
   address: String! @constraint(minLength: 1)
   username: String! @constraint(minLength: 3, maxLength: 15)
   displayName: String! @constraint(minLength: 1, maxLength: 30)
   bio: String! @constraint(minLength: 10, maxLength: 200)
-  profilePicture: String @constraint(minLength: 1)
-  coverPicture: String @constraint(minLength: 1)
+  picture: String @constraint(minLength: 1)
+  cover: String @constraint(minLength: 1)
   socialLinks: [SocialLinkInput!]
 }
 
@@ -58,14 +42,20 @@ input UpdateUserInput {
   username: String @constraint(minLength: 3, maxLength: 15)
   displayName: String @constraint(minLength: 1, maxLength: 30)
   bio: String @constraint(minLength: 10, maxLength: 200)
-  profilePicture: String @constraint(minLength: 1)
-  coverPicture: String @constraint(minLength: 1)
+  picture: String @constraint(minLength: 1)
+  cover: String @constraint(minLength: 1)
   socialLinks: [SocialLinkInput!]
 }
 
-input UserByInput {
-  address: String! @constraint(minLength: 1)
-  idSession: String
+input UserByIdentifierInput {
+  id: Int
+  email: String @constraint(format: "email")
+  address: String @constraint(minLength: 1)
+}
+
+input UsersFilterInput {
+  name: String
+  verified: Boolean
 }
 
 ####################
@@ -73,20 +63,20 @@ input UserByInput {
 ####################
 
 extend type Query {
-  getUser(input: UserByInput!): User
-  getUsers(query: String!, limit: Int @constraint(min: 1, max: 100)): [User!]!
-  getUserFollowers(
-    address: String! @constraint(minLength: 1)
-    limit: Int @constraint(min: 1, max: 100)
-  ): [User!]!
-  getUserFollowing(
-    address: String! @constraint(minLength: 1)
-    limit: Int @constraint(min: 1, max: 100)
-  ): [User!]!
-  getUserBookmarks(
-    address: String! @constraint(minLength: 1)
-    limit: Int @constraint(min: 1, max: 100)
-  ): [Post!]!
+  getUser(input: UserByIdentifierInput!): User
+  # getUsers(input: UsersFilterInput!, pagination: PaginationInput): [User!]
+  # getUserFollowers(
+  #   address: String! @constraint(minLength: 1)
+  #   limit: Int @constraint(min: 1, max: 100)
+  # ): [User!]!
+  # getUserFollowing(
+  #   address: String! @constraint(minLength: 1)
+  #   limit: Int @constraint(min: 1, max: 100)
+  # ): [User!]!
+  # getUserBookmarks(
+  #   address: String! @constraint(minLength: 1)
+  #   limit: Int @constraint(min: 1, max: 100)
+  # ): [Post!]!
 }
 
 ####################
@@ -94,6 +84,6 @@ extend type Query {
 ####################
 
 extend type Mutation {
-  createUser(input: UserInput!): User!
+  createUser(input: CreateUserInput!): User!
   updateUser(input: UpdateUserInput!): User!
 }

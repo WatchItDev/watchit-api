@@ -73,9 +73,7 @@
     {
       "type": "function",
       "name": "getBalance",
-      "inputs": [
-        { "name": "currency", "type": "address", "internalType": "address" }
-      ],
+      "inputs": [{ "name": "currency", "type": "address", "internalType": "address" }],
       "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
       "stateMutability": "view"
     },
@@ -152,9 +150,7 @@
     {
       "type": "function",
       "name": "setAuthority",
-      "inputs": [
-        { "name": "newAuthority", "type": "address", "internalType": "address" }
-      ],
+      "inputs": [{ "name": "newAuthority", "type": "address", "internalType": "address" }],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
@@ -515,9 +511,7 @@
     {
       "type": "error",
       "name": "AccessManagedInvalidAuthority",
-      "inputs": [
-        { "name": "authority", "type": "address", "internalType": "address" }
-      ]
+      "inputs": [{ "name": "authority", "type": "address", "internalType": "address" }]
     },
     {
       "type": "error",
@@ -530,16 +524,12 @@
     {
       "type": "error",
       "name": "AccessManagedUnauthorized",
-      "inputs": [
-        { "name": "caller", "type": "address", "internalType": "address" }
-      ]
+      "inputs": [{ "name": "caller", "type": "address", "internalType": "address" }]
     },
     {
       "type": "error",
       "name": "AddressEmptyCode",
-      "inputs": [
-        { "name": "target", "type": "address", "internalType": "address" }
-      ]
+      "inputs": [{ "name": "target", "type": "address", "internalType": "address" }]
     },
     {
       "type": "error",
@@ -556,16 +546,12 @@
     {
       "type": "error",
       "name": "FailDuringDeposit",
-      "inputs": [
-        { "name": "reason", "type": "string", "internalType": "string" }
-      ]
+      "inputs": [{ "name": "reason", "type": "string", "internalType": "string" }]
     },
     {
       "type": "error",
       "name": "FailDuringTransfer",
-      "inputs": [
-        { "name": "reason", "type": "string", "internalType": "string" }
-      ]
+      "inputs": [{ "name": "reason", "type": "string", "internalType": "string" }]
     },
     { "type": "error", "name": "FailedCall", "inputs": [] },
     { "type": "error", "name": "InvalidInitialization", "inputs": [] },
@@ -588,17 +574,13 @@
     {
       "type": "error",
       "name": "SafeERC20FailedOperation",
-      "inputs": [
-        { "name": "token", "type": "address", "internalType": "address" }
-      ]
+      "inputs": [{ "name": "token", "type": "address", "internalType": "address" }]
     },
     { "type": "error", "name": "UUPSUnauthorizedCallContext", "inputs": [] },
     {
       "type": "error",
       "name": "UUPSUnsupportedProxiableUUID",
-      "inputs": [
-        { "name": "slot", "type": "bytes32", "internalType": "bytes32" }
-      ]
+      "inputs": [{ "name": "slot", "type": "bytes32", "internalType": "bytes32" }]
     }
   ],
   "bytecode": {
@@ -669,16 +651,12 @@
           "name": "AccessManagedRequiredDelay"
         },
         {
-          "inputs": [
-            { "internalType": "address", "name": "caller", "type": "address" }
-          ],
+          "inputs": [{ "internalType": "address", "name": "caller", "type": "address" }],
           "type": "error",
           "name": "AccessManagedUnauthorized"
         },
         {
-          "inputs": [
-            { "internalType": "address", "name": "target", "type": "address" }
-          ],
+          "inputs": [{ "internalType": "address", "name": "target", "type": "address" }],
           "type": "error",
           "name": "AddressEmptyCode"
         },
@@ -695,16 +673,12 @@
         },
         { "inputs": [], "type": "error", "name": "ERC1967NonPayable" },
         {
-          "inputs": [
-            { "internalType": "string", "name": "reason", "type": "string" }
-          ],
+          "inputs": [{ "internalType": "string", "name": "reason", "type": "string" }],
           "type": "error",
           "name": "FailDuringDeposit"
         },
         {
-          "inputs": [
-            { "internalType": "string", "name": "reason", "type": "string" }
-          ],
+          "inputs": [{ "internalType": "string", "name": "reason", "type": "string" }],
           "type": "error",
           "name": "FailDuringTransfer"
         },
@@ -712,9 +686,7 @@
         { "inputs": [], "type": "error", "name": "InvalidInitialization" },
         { "inputs": [], "type": "error", "name": "InvalidOperationParameters" },
         {
-          "inputs": [
-            { "internalType": "string", "name": "", "type": "string" }
-          ],
+          "inputs": [{ "internalType": "string", "name": "", "type": "string" }],
           "type": "error",
           "name": "InvalidUnauthorizedOperation"
         },
@@ -733,9 +705,7 @@
           "name": "ReentrancyGuardReentrantCall"
         },
         {
-          "inputs": [
-            { "internalType": "address", "name": "token", "type": "address" }
-          ],
+          "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
           "type": "error",
           "name": "SafeERC20FailedOperation"
         },
@@ -745,9 +715,7 @@
           "name": "UUPSUnauthorizedCallContext"
         },
         {
-          "inputs": [
-            { "internalType": "bytes32", "name": "slot", "type": "bytes32" }
-          ],
+          "inputs": [{ "internalType": "bytes32", "name": "slot", "type": "bytes32" }],
           "type": "error",
           "name": "UUPSUnsupportedProxiableUUID"
         },
@@ -1074,9 +1042,7 @@
           "stateMutability": "view",
           "type": "function",
           "name": "UPGRADE_INTERFACE_VERSION",
-          "outputs": [
-            { "internalType": "string", "name": "", "type": "string" }
-          ]
+          "outputs": [{ "internalType": "string", "name": "", "type": "string" }]
         },
         {
           "inputs": [
@@ -1087,18 +1053,14 @@
           "stateMutability": "nonpayable",
           "type": "function",
           "name": "approve",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [],
           "stateMutability": "view",
           "type": "function",
           "name": "authority",
-          "outputs": [
-            { "internalType": "address", "name": "", "type": "address" }
-          ]
+          "outputs": [{ "internalType": "address", "name": "", "type": "address" }]
         },
         {
           "inputs": [
@@ -1109,9 +1071,7 @@
           "stateMutability": "nonpayable",
           "type": "function",
           "name": "claim",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [
@@ -1122,9 +1082,7 @@
           "stateMutability": "nonpayable",
           "type": "function",
           "name": "collect",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [
@@ -1139,9 +1097,7 @@
           "stateMutability": "nonpayable",
           "type": "function",
           "name": "deposit",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [
@@ -1152,20 +1108,14 @@
           "stateMutability": "view",
           "type": "function",
           "name": "getApprovedAmount",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
-          "inputs": [
-            { "internalType": "address", "name": "currency", "type": "address" }
-          ],
+          "inputs": [{ "internalType": "address", "name": "currency", "type": "address" }],
           "stateMutability": "view",
           "type": "function",
           "name": "getBalance",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [
@@ -1175,9 +1125,7 @@
           "stateMutability": "view",
           "type": "function",
           "name": "getLedgerBalance",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [
@@ -1196,9 +1144,7 @@
           "stateMutability": "view",
           "type": "function",
           "name": "isConsumingScheduledOp",
-          "outputs": [
-            { "internalType": "bytes4", "name": "", "type": "bytes4" }
-          ]
+          "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }]
         },
         {
           "inputs": [
@@ -1209,18 +1155,14 @@
           "stateMutability": "nonpayable",
           "type": "function",
           "name": "lock",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [],
           "stateMutability": "view",
           "type": "function",
           "name": "proxiableUUID",
-          "outputs": [
-            { "internalType": "bytes32", "name": "", "type": "bytes32" }
-          ]
+          "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }]
         },
         {
           "inputs": [
@@ -1231,9 +1173,7 @@
           "stateMutability": "nonpayable",
           "type": "function",
           "name": "release",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [
@@ -1244,9 +1184,7 @@
           "stateMutability": "nonpayable",
           "type": "function",
           "name": "revoke",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [
@@ -1273,9 +1211,7 @@
           "stateMutability": "nonpayable",
           "type": "function",
           "name": "transfer",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         },
         {
           "inputs": [
@@ -1303,9 +1239,7 @@
           "stateMutability": "nonpayable",
           "type": "function",
           "name": "withdraw",
-          "outputs": [
-            { "internalType": "uint256", "name": "", "type": "uint256" }
-          ]
+          "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }]
         }
       ],
       "devdoc": {
@@ -5778,20 +5712,17 @@
         },
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          3366, 498, 1883, 193, 265, 134, 223, 104, 253, 161, 295, 2250, 309,
-          41559, 1385, 40992, 41681, 41474, 41428, 42250, 41246
+          3366, 498, 1883, 193, 265, 134, 223, 104, 253, 161, 295, 2250, 309, 41559, 1385, 40992,
+          41681, 41474, 41428, 42250, 41246
         ],
         "name": "LedgerVault",
         "nameLocation": "1240:11:37",
         "scope": 3367,
         "usedErrors": [
-          79, 121, 210, 240, 282, 858, 862, 1273, 2098, 3111, 3114, 3117, 41009,
-          41012, 41273, 41278, 41491, 41652, 41658, 41662, 42308, 42321, 42720,
-          43272, 43534
+          79, 121, 210, 240, 282, 858, 862, 1273, 2098, 3111, 3114, 3117, 41009, 41012, 41273,
+          41278, 41491, 41652, 41658, 41662, 42308, 42321, 42720, 43272, 43534
         ],
-        "usedEvents": [
-          76, 118, 148, 207, 237, 279, 3086, 3097, 3108, 41017, 41648, 42223
-        ]
+        "usedEvents": [76, 118, 148, 207, 237, 279, 3086, 3097, 3108, 41017, 41648, 42223]
       }
     ],
     "license": "MIT"

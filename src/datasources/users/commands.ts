@@ -1,64 +1,51 @@
+import { Repo, UserId, UserProfile } from '../../externals/prisma';
 import { DataSourceManager } from '../manager';
-import type { UpdateUserInput, User, UserInput } from '../../schema/types';
-import { makeNewUser } from '../../models/user';
-import { buildKeywords, stripNulls } from '../../externals/firebase/utils';
-import { FirestoreUser } from '../../externals/firebase/types';
-import { AuthData } from '../../types';
-import { FieldValue } from 'firebase-admin/firestore';
 
-const USER_PREFIX_FIELDS = ['username', 'displayName', 'bio'];
-const USER_WHOLE_FIELDS = ['address'];
+type ProfileCreatePayload = Repo.ProfileCreateNestedOneWithoutUserInput;
+type ProfileUpdatedPayload = Repo.ProfileUpdateOneWithoutUserNestedInput;
+export type RepoUpdateUser = Tools.Override<
+  Repo.UserUpdateInput,
+  { profile: ProfileUpdatedPayload['update'] }
+> &
+  UserId;
+export type RepoCreateUser = Tools.Override<
+  Repo.UserCreateInput,
+  { profile: ProfileCreatePayload['create'] }
+>;
 
 export class UsersCommands extends DataSourceManager {
-  async createUser(input: UserInput & AuthData): Promise<User> {
-    const user = makeNewUser(input);
-    const keywords = buildKeywords(user, USER_PREFIX_FIELDS, USER_WHOLE_FIELDS);
-    const record: FirestoreUser = { ...user, keywords };
-    await this.fs<FirestoreUser>('users').create(user.address, record);
-    return user;
+  async create({ profile, ...rest }: RepoCreateUser): Promise<UserProfile> {
+    // one-to-one relation is strict in this case create a new user and profile in one transaction
+    return this.pa.user.create({
+      data: { ...rest, profile: { create: profile } },
+      include: { profile: true },
+    });
   }
 
-  async updateUser(
-    address: string,
-    patch: Partial<Omit<UpdateUserInput, 'address' | 'createdAt'>> & {
-      currentRank?: string;
-    },
-  ): Promise<User> {
-    const dao = this.fs<FirestoreUser>('users');
-    const current = await dao.get(address);
-
-    if (!current) throw new Error(`User ${address} not found`);
-
-    const cleanPatch = stripNulls(patch);
-    const merged = { ...current, ...cleanPatch };
-    const keywords = buildKeywords(
-      merged,
-      USER_PREFIX_FIELDS,
-      USER_WHOLE_FIELDS,
-    );
-    const timestamp = Date.now();
-    const updateDoc = { ...cleanPatch, keywords, updatedAt: timestamp };
-    const { keywords: _k, ...publicUser } = { ...merged, updatedAt: timestamp };
-
-    await dao.update(address, updateDoc);
-
-    return publicUser as User;
+  async update({ userId, profile, ...patch }: RepoUpdateUser): Promise<UserProfile> {
+    return this.pa.user.update({
+      where: { id: userId },
+      include: { profile: true },
+      data: {
+        ...patch,
+        profile: { update: profile },
+      },
+    });
   }
 
-  async updateCounterField(
-    address: string,
-    field: keyof Pick<
-      User,
-      | 'followersCount'
-      | 'followingCount'
-      | 'publicationsCount'
-      | 'bookmarksCount'
-      | 'xpBalance'
-      | 'xpTotal'
-    >,
-    delta: number,
-  ): Promise<void> {
-    const dao = this.fs<User>('users') as any;
-    await dao.ref.doc(address).update({ [field]: FieldValue.increment(delta) });
-  }
+  // async updateCounterField(
+  //   address: string,
+  //   field: User,
+  //     | 'followersCount'
+  //     | 'followingCount'
+  //     | 'publicationsCount'
+  //     | 'bookmarksCount'
+  //     | 'xpBalance'
+  //     | 'xpTotal'
+  //   >,
+  //   delta: number,
+  // ): Promise<void> {
+  //   const dao = this.fs<User>('users') as any;
+  //   await dao.ref.doc(address).update({ [field]: FieldValue.increment(delta) });
+  // }
 }

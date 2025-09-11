@@ -32,7 +32,8 @@ scalar JSON
 scalar Upload
 scalar ID
 
-input FilterInput {
+input PaginationInput {
   limit: Int
   offset: Int
 }
+

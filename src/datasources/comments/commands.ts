@@ -1,56 +1,52 @@
+import { CommentContent, Id, Repo } from '../../externals/prisma';
 import { DataSourceManager } from '../manager';
-import type {
-  Comment,
-  CreateCommentInput,
-  UpdateCommentInput,
-} from '../../schema/types';
-import { makeNewComment } from '../../models/comment';
-import { FieldValue } from 'firebase-admin/firestore';
+
+type CommentCreate = Repo.ContentCreateNestedOneWithoutCommentInput;
+type CommentUpdate = Repo.ContentUpdateOneRequiredWithoutCommentNestedInput;
+
+export type RepoUpdateComment = Tools.Override<
+  Repo.CommentUpdateInput,
+  { base: CommentUpdate['update'] }
+> &
+  Id;
+
+export type RepoCreateComment = Tools.Override<
+  Repo.CommentCreateInput,
+  { base: CommentCreate['create'] }
+>;
 
 export class CommentsCommands extends DataSourceManager {
-  async createComment(
-    address: string,
-    input: CreateCommentInput,
-  ): Promise<Comment> {
-    const dao = this.fs<Comment>('comments') as any;
-    const ref = dao.ref.doc();
-    const id = ref.id;
-    const comment = makeNewComment(id, address, input);
-
-    await ref.set({
-      address,
-      postId: input.postId,
-      parentCommentId: input.parentComment ?? null,
-      ...comment,
-    });
-
-    return comment;
-  }
-
-  async updateComment(input: UpdateCommentInput): Promise<Comment | null> {
-    await this.fs<Comment>('comments').update(input.commentId, {
-      content: input.content,
-      updatedAt: Date.now(),
-    });
-
-    const raw = await this.fs<Comment>('comments').get(input.commentId);
-    return raw;
-  }
-
-  async hideComment(commentId: string): Promise<void> {
-    const dao = this.fs<Comment>('comments') as any;
-    await dao.ref.doc(commentId).update({
-      hidden: true,
-      updatedAt: Date.now(),
+  async create({ base, ...rest }: RepoCreateComment): Promise<CommentContent> {
+    // content is a base "abstract" table to handle multiple types
+    return this.pa.comment.create({
+      data: { ...rest, base: { create: base } },
+      include: { base: true },
     });
   }
 
-  async updateCounterField(
-    id: string,
-    field: keyof Pick<Comment, 'repliesCount' | 'likeCount'>,
-    delta: number,
-  ): Promise<void> {
-    const dao = (this.fs<Comment>('comments') as any).ref;
-    await dao.doc(id).update({ [field]: FieldValue.increment(delta) });
+  async update({ id, base, ...patch }: RepoUpdateComment): Promise<CommentContent> {
+    // content is a base "abstract" table to handle multiple types
+    return this.pa.comment.update({
+      where: { id },
+      data: { ...patch, base: { update: base } },
+      include: { base: true },
+    });
   }
+
+  // async hideComment(commentId: string): Promise<void> {
+  //   const dao = this.fs<Comment>('comments') as any;
+  //   await dao.ref.doc(commentId).update({
+  //     hidden: true,
+  //     updatedAt: Date.now(),
+  //   });
+  // }
+
+  // async updateCounterField(
+  //   id: string,
+  //   field: keyof Pick<Comment, 'repliesCount' | 'likeCount'>,
+  //   delta: number,
+  // ): Promise<void> {
+  //   const dao = (this.fs<Comment>('comments') as any).ref;
+  //   await dao.doc(id).update({ [field]: FieldValue.increment(delta) });
+  // }
 }

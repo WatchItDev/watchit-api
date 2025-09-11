@@ -1,6 +1,6 @@
-import { DataSourceManager } from '../manager';
 import { web3 } from '../../externals/web3';
 import LedgerVaultAbi from '../../externals/web3/config/abi/LedgerVault.json';
+import { DataSourceManager } from '../manager';
 
 export class Web3Commands extends DataSourceManager {
   /**

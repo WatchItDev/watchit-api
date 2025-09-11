@@ -1,8 +1,7 @@
-import type { RewardsLibType } from './rewards';
 import type { Ctx } from '@/functions/manager';
-import { rewards } from './rewards';
 import { PerkHook } from '@/models/perk';
-import { XPAction } from './rewards';
+import type { RewardsLibType } from './rewards';
+import { rewards, XPAction } from './rewards';
 
 type RunHooksCtx = { meta: any; user: string; state: any };
 type When = 'BEFORE' | 'AFTER';
@@ -37,11 +36,7 @@ const runHooks = async (
   }
 };
 
-const applyReward = async (
-  meta: any,
-  addr: string,
-  rewards: RewardsLibType,
-) => {
+const applyReward = async (meta: any, addr: string, rewards: RewardsLibType) => {
   const { action, amount } = meta.reward;
   if (action === 'ADD_XP') {
     await rewards.addXp(addr, amount, XPAction.PERK_REWARD, meta.name);
@@ -50,23 +45,14 @@ const applyReward = async (
   }
 };
 
-const apply = async (
-  meta: any,
-  addr: string,
-  ds: Ctx['ds'],
-  rewards: RewardsLibType,
-) => {
+const apply = async (meta: any, addr: string, ds: Ctx['ds'], rewards: RewardsLibType) => {
   const state = await ds.Perks.getState(addr, meta.id);
   await runHooks(meta.hooks, 'BEFORE', { meta, user: addr, state }, ds);
   await applyReward(meta, addr, rewards);
   await runHooks(meta.hooks, 'AFTER', { meta, user: addr, state }, ds);
 };
 
-export const perks = ({
-  ds,
-  ext,
-  activity,
-}: Pick<Ctx, 'ds' | 'ext' | 'activity'>) => {
+export const perks = ({ ds, ext, activity }: Pick<Ctx, 'ds' | 'ext' | 'activity'>) => {
   const rewardsHandler = rewards({ ds, ext, activity });
   const getMeta = async (perkId: string) =>
     (await ds.Perks.getCatalog()).find((p: any) => p.id === perkId);
@@ -80,9 +66,7 @@ export const perks = ({
       if (!state || state.status !== 'AVAILABLE') return;
       await apply(meta, addr, ds, rewardsHandler);
 
-      const hasRelock = meta.hooks?.some(
-        (h) => h.when === 'AFTER' && h.type === 'RELOCK',
-      );
+      const hasRelock = meta.hooks?.some((h) => h.when === 'AFTER' && h.type === 'RELOCK');
 
       if (!hasRelock) {
         await ds.Perks.claimPerk(addr, perkId);

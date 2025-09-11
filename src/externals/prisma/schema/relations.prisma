@@ -1,0 +1,10 @@
+model Follows {
+    followerId  Int
+    followingId Int
+    createdAt   DateTime @default(now())
+
+    follower  User @relation("UserFollows", fields: [followerId], references: [id])
+    following User @relation("UserFollowedBy", fields: [followingId], references: [id])
+
+    @@id([followerId, followingId])
+}

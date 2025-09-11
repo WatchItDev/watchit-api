@@ -1,7 +1,9 @@
 import type { MutationResolvers } from './../../../../schema/types';
-export const humanMessage: NonNullable<
-  MutationResolvers['humanMessage']
-> = async (_parent, _arg, { req, externals, pubsub }) => {
+export const humanMessage: NonNullable<MutationResolvers['humanMessage']> = async (
+  _parent,
+  _arg,
+  { req, externals, pubsub },
+) => {
   const agent = externals.RootAgent();
   const memory = await agent.memory();
   const graph = agent.graph({ checkpointer: memory });

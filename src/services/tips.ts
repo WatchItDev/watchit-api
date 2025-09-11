@@ -1,5 +1,5 @@
-import { ServiceManager } from './manager';
 import type { Tip, User } from '../schema/types';
+import { ServiceManager } from './manager';
 
 export class TipsService extends ServiceManager {
   async createTip(
@@ -40,10 +40,7 @@ export class TipsService extends ServiceManager {
     }>
   > {
     const rows = await this.ds.Tips.getTipsForPost(postId, 1000);
-    const agg = new Map<
-      string,
-      { total: number; count: number; last: number }
-    >();
+    const agg = new Map<string, { total: number; count: number; last: number }>();
 
     for (const r of rows) {
       const key = r.baker;
@@ -56,13 +53,9 @@ export class TipsService extends ServiceManager {
       agg.set(key, next);
     }
 
-    const top = [...agg.entries()]
-      .sort((a, b) => b[1].total - a[1].total)
-      .slice(0, limit);
+    const top = [...agg.entries()].sort((a, b) => b[1].total - a[1].total).slice(0, limit);
 
-    const users = await Promise.all(
-      top.map(([addr]) => this.ds.Users.getUser(addr)),
-    );
+    const users = await Promise.all(top.map(([addr]) => this.ds.Users.getUser(addr)));
     return top.map(([addr, v], i) => ({
       baker: users[i]! as User,
       totalAmount: v.total,

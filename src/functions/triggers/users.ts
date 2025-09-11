@@ -1,9 +1,7 @@
-import {
-  onDocumentCreated,
-  onDocumentUpdated,
-} from 'firebase-functions/v2/firestore';
-import { enhanceFunction } from '../manager';
+import { log } from 'firebase-functions/logger';
+import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { FirestoreUser } from '../../externals/firebase/types';
+import { enhanceFunction } from '../manager';
 
 export const logUserCreated = onDocumentCreated(
   'users/{wallet}',
@@ -11,14 +9,11 @@ export const logUserCreated = onDocumentCreated(
     const { wallet } = event.params;
     const newUser = event.data!.data() as FirestoreUser;
 
-    console.log(
-      `👤  New user ${wallet} created (email: ${newUser.email ?? 'n/a'})`,
-    );
-
     await activity.userRegistered(wallet);
-    await rank.maybeRankUp(wallet);
+    await rank.rankUp(wallet);
 
-    console.log(`🎉  ${wallet} promoted to watcher & perks seeded`);
+    log(`[USER_CREATED] New user ${wallet} created (email: ${newUser.email ?? 'n/a'})`);
+    log(`[USER_PROMOTED] ${wallet} promoted to watcher & perks seeded`);
   }),
 );
 
@@ -27,6 +22,7 @@ export const logUserUpdated = onDocumentUpdated(
   enhanceFunction(async ({ activity }, event) => {
     const { wallet } = event.params;
 
+    log(`[USER_UPDATED] User ${wallet} updated`);
     await activity.userUpdated(wallet);
   }),
 );

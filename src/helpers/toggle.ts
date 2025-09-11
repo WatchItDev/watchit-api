@@ -3,8 +3,7 @@ export async function toggle(
   add: (() => Promise<unknown>) | Array<() => Promise<unknown>>,
   del: (() => Promise<unknown>) | Array<() => Promise<unknown>>,
 ): Promise<boolean> {
-  const run = (fns: any) =>
-    Promise.all((Array.isArray(fns) ? fns : [fns]).map((fn) => fn()));
+  const run = (fns: any) => Promise.all((Array.isArray(fns) ? fns : [fns]).map((fn) => fn()));
   if (await isOn()) {
     await run(del);
     return false;

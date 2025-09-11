@@ -1,21 +1,4 @@
-directive @cacheControl(
-  inheritMaxAge: Boolean
-  maxAge: Int
-  scope: CacheControlScope
-) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
-
-enum Actor {
-  OWNER
-  SELF
-  TARGET
-}
-
-input AddXPInput {
-  action: String!
-  address: String!
-  amount: Int!
-  description: String!
-}
+directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
 input AgentInput {
   message: String!
@@ -26,18 +9,12 @@ type AgentOutput {
   message: Message
 }
 
-input BookmarkInput {
-  postId: String!
-}
-
 enum CacheControlScope {
   PRIVATE
   PUBLIC
 }
 
-"""
-A comment on a post, or a reply to another comment.
-"""
+"""A comment on a post, or a reply to another comment."""
 type Comment {
   author: User!
   content: String!
@@ -58,9 +35,7 @@ input CreateCommentInput {
 }
 
 input CreatePostInput {
-  cid: String!
-  description: String!
-  media: [MediaAttachmentInput!]!
+  body: String!
   title: String!
   visibility: VisibilitySetting!
 }
@@ -73,18 +48,20 @@ input CreateTipInput {
   txHash: String
 }
 
+input CreateUserInput {
+  address: String!
+  bio: String!
+  cover: String
+  displayName: String!
+  picture: String
+  socialLinks: [SocialLinkInput!]
+  username: String!
+}
+
 scalar Date
 
-"""
-ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)
-"""
+"""ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
 scalar DateTime
-
-enum DistinctBy {
-  NONE
-  TARGET
-  USER
-}
 
 type EventLog {
   amount: Int
@@ -99,23 +76,12 @@ type EventLog {
   type: String!
 }
 
-type ExecutionRule {
-  cooldownSec: Int!
-  type: String!
-}
-
-input ExecutionRuleInput {
-  cooldownSec: Int!
-  type: String!
-}
-
-input FilterInput {
-  limit: Int
-  offset: Int
-}
-
 input FollowInput {
   targetAddress: String!
+}
+
+input HidePostInput {
+  postId: String!
 }
 
 scalar JSON
@@ -137,14 +103,7 @@ input LogEventInput {
 
 type MediaAttachment {
   cid: String!
-  id: String!
-  title: String
-  type: String!
-  url: String
-}
-
-input MediaAttachmentInput {
-  cid: String!
+  id: Int!
   title: String
   type: String!
   url: String
@@ -155,175 +114,69 @@ type Message {
 }
 
 type Mutation {
-  claimPerk(perkId: ID!): Boolean!
   createComment(input: CreateCommentInput!): Comment!
-  createPerk(input: PerkInput!): Perk!
   createPost(input: CreatePostInput!): Post!
-  createRank(input: RankInput!): Rank!
   createTip(input: CreateTipInput!): Tip!
-  createUser(input: UserInput!): User!
-  deletePerk(id: ID!): Boolean!
-  deleteRank(id: ID!): Boolean!
+  createUser(input: CreateUserInput!): User!
   hideComment(commentId: String!): Boolean
-  hidePost(postId: String!): Boolean
+  hidePost(input: HidePostInput!): Boolean
   humanMessage(input: AgentInput!): Message
-  incrementPostView(postId: String!): Post!
   logAnonymousEvent(input: LogEventInput!): Boolean!
   logEvent(input: LogEventInput!): Boolean!
-  toggleBookmark(input: BookmarkInput!): Boolean!
   toggleFollow(input: FollowInput!): Boolean!
   toggleLike(input: LikeInput!): Boolean!
   updateComment(input: UpdateCommentInput!): Comment!
-  updatePerk(id: ID!, patch: PerkInput!): Perk!
   updatePost(input: UpdatePostInput!): Post!
-  updateRank(id: ID!, patch: RankInput!): Rank!
   updateUser(input: UpdateUserInput!): User!
 }
 
-type Perk {
-  availableAt: Timestamp
-  category: PerkCategory!
-  collectedAt: Timestamp
-  cooldownRemaining: Int!
-  enabled: Boolean!
-  executionRule: ExecutionRule!
-  hooks: [JSON]
-  id: String!
-  minRankId: String!
-  name: String!
-  reward: Reward!
-  rewardPreview: String!
-  uiHint: String
-  unlockRule: UnlockRule!
-}
-
-enum PerkCategory {
-  ACCESS
-  ECONOMY
-  GAMIFICATION
-  SOCIAL
-}
-
-input PerkInput {
-  category: PerkCategory!
-  enabled: Boolean!
-  executionRule: ExecutionRuleInput!
-  hooks: [JSON]
-  id: String!
-  minRankId: String!
-  name: String!
-  reward: RewardInput!
-  uiHint: String
-  unlockRule: UnlockRuleInput!
+input PaginationInput {
+  limit: Int
+  offset: Int
 }
 
 type Post {
-  author: User!
-  bookmarkCount: Int!
-  cid: String!
-  commentCount: Int!
-  createdAt: Timestamp!
-  description: String!
-  hidden: Boolean!
-  id: String!
-  likeCount: Int!
-  media: [MediaAttachment!]!
+  active: Boolean!
+  body: String!
+  createdAt: Date!
+  id: Int!
   title: String!
-  updatedAt: Timestamp!
-  viewCount: Int!
+  user: User
   visibility: VisibilitySetting!
-  year: Int!
+}
+
+input PostByIdentifierInput {
+  id: Int
+}
+
+input PostFilterInput {
+  id: Int
+  userId: Int
+}
+
+type Profile {
+  bio: String!
+  cover: String
+  picture: String
+  username: String!
 }
 
 type Query {
-  getAchievements(address: String!): UserAchievements!
-  getActiveUsers(limit: Int): [User!]!
-  getAllPosts(limit: Int): [Post!]!
-  getBookmarksByPost(limit: Int = 50, postId: String!): [User!]!
-  getBookmarksByUser(address: String!, limit: Int = 50): [Post!]!
   getCommentsByPost(limit: Int, postId: String!): [Comment!]!
   getCreatorTips(address: String!, limit: Int): [Tip!]!
-  getIsBookmarked(postId: String!): Boolean!
   getIsFollowing(targetAddress: String!): Boolean!
   getIsLiked(targetId: String!): Boolean!
-  getLeaderboard(limit: Int = 100): [User!]!
-  getPerks: [Perk!]!
-  getPopularPosts(limit: Int): [Post!]!
-  getPopularUsers(limit: Int): [User!]!
-  getPost(id: String!): Post
+  getPost(input: PostByIdentifierInput!): Post
   getPostViews(postId: String!): Int!
-  getPosts(limit: Int, query: String!): [Post!]!
-  getPostsByAuthor(author: String!, limit: Int): [Post!]!
+  getPosts(input: PostFilterInput!, pagination: PaginationInput): [Post!]!
   getProfileViews(address: String!): Int!
-  getRanksCatalog: [Rank!]!
-  getRecentPosts(limit: Int): [Post!]!
-  getRecentUsers(limit: Int): [User!]!
   getRepliesByComment(commentId: String!, limit: Int): [Comment!]!
-  getTargetEvents(
-    limit: Int = 50
-    offset: Int = 0
-    targetId: String!
-    targetType: String
-    type: String
-  ): [EventLog!]!
+  getTargetEvents(limit: Int = 50, offset: Int = 0, targetId: String!, targetType: String, type: String): [EventLog!]!
   getTipsByBakerForPost(limit: Int, postId: String!): [TipByBaker!]!
   getTipsForPost(limit: Int, postId: String!): [Tip!]!
-  getUnlockedPerks(
-    address: String!
-    limit: Int = 50
-    offset: Int = 0
-  ): [UnlockedPerkState!]!
-  getUser(input: UserByInput!): User
-  getUserBookmarks(address: String!, limit: Int): [Post!]!
-  getUserEvents(
-    address: String!
-    limit: Int = 50
-    offset: Int = 0
-    type: String
-  ): [EventLog!]!
-  getUserFollowers(address: String!, limit: Int): [User!]!
-  getUserFollowing(address: String!, limit: Int): [User!]!
-  getUserRanks(address: String!): [UserRank!]!
+  getUser(input: UserByIdentifierInput!): User
+  getUserEvents(address: String!, limit: Int = 50, offset: Int = 0, type: String): [EventLog!]!
   getUserTipsHistory(address: String!, limit: Int): [Tip!]!
-  getUserXPHistory(
-    address: String!
-    limit: Int = 50
-    offset: Int = 0
-  ): [XPEntry!]!
-  getUsers(limit: Int, query: String!): [User!]!
-  hasPerk(address: String!, perkId: ID!): Boolean!
-}
-
-type Rank {
-  badgeUrl: String!
-  colorTheme: String!
-  createdAt: Timestamp!
-  id: String!
-  minXp: Int!
-  name: String!
-  order: Int!
-  updatedAt: Timestamp!
-}
-
-input RankInput {
-  badgeUrl: String!
-  colorTheme: String!
-  id: String!
-  minXp: Int!
-  name: String!
-  order: Int!
-}
-
-type Reward {
-  action: String!
-  amount: Int
-  tokenId: String
-}
-
-input RewardInput {
-  action: String!
-  amount: Int
-  tokenId: String
 }
 
 type SocialLink {
@@ -336,6 +189,11 @@ input SocialLinkInput {
   url: String!
 }
 
+input SocialsFilterInput {
+  platform: String!
+  userId: Int
+}
+
 type Subscription {
   onAiMessage: AgentOutput
 }
@@ -345,9 +203,7 @@ enum TargetType {
   POST
 }
 
-"""
-Unix epoch in milliseconds (number).
-"""
+"""Unix epoch in milliseconds (number)."""
 scalar Timestamp
 
 type Tip {
@@ -368,49 +224,13 @@ type TipByBaker {
   totalAmount: Float!
 }
 
-type UnlockRule {
-  action: String
-  actor: Actor
-  distinctBy: DistinctBy
-  on: String!
-  rankId: String
-  times: Int
-  window: String
-}
-
-input UnlockRuleInput {
-  action: String
-  actor: Actor
-  distinctBy: DistinctBy
-  on: String!
-  rankId: String
-  times: Int
-  window: String
-}
-
-type UnlockedPerkState {
-  availableAt: Timestamp!
-  collectedAt: Timestamp
-  cooldownSec: Int!
-  createdAt: Timestamp!
-  id: String!
-  perk: Perk!
-  perkId: String!
-  progress: Int!
-  status: String!
-  target: Int!
-  user: String!
-}
-
 input UpdateCommentInput {
   commentId: String!
   content: String!
 }
 
 input UpdatePostInput {
-  cid: String
-  description: String
-  media: [MediaAttachmentInput!]
+  body: String
   postId: String!
   title: String
   visibility: VisibilitySetting
@@ -418,9 +238,9 @@ input UpdatePostInput {
 
 input UpdateUserInput {
   bio: String
-  coverPicture: String
+  cover: String
   displayName: String
-  profilePicture: String
+  picture: String
   socialLinks: [SocialLinkInput!]
   username: String
 }
@@ -429,70 +249,28 @@ scalar Upload
 
 type User {
   address: String!
-  bio: String!
-  bookmarksCount: Int!
-  coverPicture: String!
   createdAt: Timestamp!
-  currentRank: String!
   displayName: String!
   email: String!
-  followersCount: Int!
-  followingCount: Int!
-  id: String!
-  profilePicture: String!
-  publicationsCount: Int!
+  id: Int!
+  profile: Profile
   socialLinks: [SocialLink!]
-  updatedAt: Timestamp!
-  username: String!
   verified: Boolean!
-  xpBalance: Int!
-  xpTotal: Int!
 }
 
-type UserAchievements {
-  currentRank: Rank!
-  nextRank: Rank
-  progressPct: Float!
-  xpBalance: Int!
-  xpRemaining: Int!
-  xpTotal: Int!
+input UserByIdentifierInput {
+  address: String
+  email: String
+  id: Int
 }
 
-input UserByInput {
-  address: String!
-  idSession: String
-}
-
-input UserInput {
-  address: String!
-  bio: String!
-  coverPicture: String
-  displayName: String!
-  profilePicture: String
-  socialLinks: [SocialLinkInput!]
-  username: String!
-}
-
-type UserRank {
-  achievedAt: Timestamp!
-  rankId: String!
-  user: String!
+input UsersFilterInput {
+  name: String
+  verified: Boolean
 }
 
 enum VisibilitySetting {
   FOLLOWERS_ONLY
   PRIVATE
   PUBLIC
-}
-
-type XPEntry {
-  action: String!
-  amount: Int!
-  balanceAfter: Int!
-  balanceBefore: Int!
-  createdAt: Timestamp!
-  description: String!
-  id: ID!
-  totalAfter: Int!
-  user: String!
 }

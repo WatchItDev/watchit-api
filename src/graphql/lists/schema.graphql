@@ -1,0 +1,25 @@
+# ###########################
+# #        BOOKMARKS       #
+# ###########################
+
+# input BookmarkInput {
+#   postId: String! @constraint(minLength: 1)
+# }
+
+# extend type Mutation {
+#   toggleBookmark(input: BookmarkInput!): Boolean!
+# }
+
+# extend type Query {
+#   getIsBookmarked(postId: String!): Boolean!
+
+#   getBookmarksByUser(
+#     address: String! @constraint(minLength: 1)
+#     limit: Int = 50 @constraint(min: 1, max: 200)
+#   ): [Post!]!
+
+#   getBookmarksByPost(
+#     postId: String! @constraint(minLength: 1)
+#     limit: Int = 50 @constraint(min: 1, max: 500)
+#   ): [User!]!
+# }

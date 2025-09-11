@@ -1,6 +1,6 @@
 import { HumanMessage } from '@langchain/core/messages';
 import { Annotation, StateGraph } from '@langchain/langgraph';
-import { Schema, Harvester } from '../agents/harvester';
+import { Harvester, Schema } from '../agents/harvester';
 import { GPT4o } from '../models';
 
 const openAIKey = process.env.API_OPENAI_API_KEY;

@@ -17,7 +17,7 @@ enum VisibilitySetting {
 ####################
 
 type MediaAttachment {
-  id: String!
+  id: Int!
   url: String
   cid: String!
   title: String
@@ -25,51 +25,43 @@ type MediaAttachment {
 }
 
 type Post {
-  id: String!
-  author: User!
+  id: Int!
+  user: User
   title: String!
-  description: String!
-  cid: String!
-  media: [MediaAttachment!]!
+  body: String!
+  createdAt: Date!
   visibility: VisibilitySetting!
-  createdAt: Timestamp!
-  updatedAt: Timestamp!
-  hidden: Boolean!
-  year: Int!
-
-  #–– raw counts ––
-  commentCount: Int!
-  likeCount: Int!
-  bookmarkCount: Int!
-  viewCount: Int!
+  active: Boolean!
 }
 
 ####################
 #     INPUTS       #
 ####################
 
-input MediaAttachmentInput {
-  url: String @constraint(format: "uri")
-  cid: String! @constraint(minLength: 1)
-  title: String @constraint(maxLength: 100)
-  type: String! @constraint(minLength: 1)
+input HidePostInput {
+  postId: String! @constraint(minLength: 1)
 }
 
 input CreatePostInput {
   title: String! @constraint(minLength: 1, maxLength: 100)
-  description: String! @constraint(minLength: 10)
-  cid: String! @constraint(minLength: 1)
-  media: [MediaAttachmentInput!]!
+  body: String! @constraint(minLength: 10)
   visibility: VisibilitySetting!
 }
 
 input UpdatePostInput {
   postId: String! @constraint(minLength: 1)
   title: String @constraint(minLength: 1, maxLength: 100)
-  description: String @constraint(minLength: 10)
-  cid: String @constraint(minLength: 1)
+  body: String @constraint(minLength: 10)
   visibility: VisibilitySetting
-  media: [MediaAttachmentInput!]
+}
+
+input PostByIdentifierInput {
+  id: Int
+}
+
+input PostFilterInput {
+  id: Int
+  userId: Int
 }
 
 ####################
@@ -77,12 +69,12 @@ input UpdatePostInput {
 ####################
 
 extend type Query {
-  getPost(id: String! @constraint(minLength: 1)): Post
-  getPosts(query: String!, limit: Int @constraint(min: 1, max: 100)): [Post!]!
-  getPostsByAuthor(
-    author: String! @constraint(minLength: 1)
-    limit: Int @constraint(min: 1, max: 100)
-  ): [Post!]!
+  getPost(input: PostByIdentifierInput!): Post
+  getPosts(input: PostFilterInput!, pagination: PaginationInput): [Post!]!
+  # getPostsByAuthor(
+  #   author: String! @constraint(minLength: 1)
+  #   limit: Int @constraint(min: 1, max: 100)
+  # ): [Post!]!
 }
 
 ####################
@@ -92,6 +84,6 @@ extend type Query {
 extend type Mutation {
   createPost(input: CreatePostInput!): Post!
   updatePost(input: UpdatePostInput!): Post!
-  hidePost(postId: String! @constraint(minLength: 1)): Boolean
-  incrementPostView(postId: String! @constraint(minLength: 1)): Post!
+  hidePost(input: HidePostInput!): Boolean
+  # incrementPostView(postId: String! @constraint(minLength: 1)): Post!
 }

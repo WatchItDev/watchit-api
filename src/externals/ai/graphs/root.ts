@@ -1,10 +1,9 @@
 import type { BaseMessage } from '@langchain/core/messages';
-import { trimMessages } from '@langchain/core/messages';
-import { HumanMessage } from '@langchain/core/messages';
+import { HumanMessage, trimMessages } from '@langchain/core/messages';
+import { Annotation, MemorySaver, StateGraph } from '@langchain/langgraph';
 import { createReactAgent } from '@langchain/langgraph/prebuilt';
-import { Annotation, StateGraph } from '@langchain/langgraph';
 import { IntentDiscoveryGraph } from './intent';
-import { PostgresCheckpoint } from '../memory';
+// import { PostgresCheckpoint } from '../memory';
 import { Query } from '../agents/compiler';
 import { GPT4oMini } from '../models';
 
@@ -141,7 +140,7 @@ export const RootAgent = () => {
   return {
     name: 'RootAgent',
     graph: (c: any) => RootGraph(c),
-    memory: () => PostgresCheckpoint(),
+    memory: () => new MemorySaver(),
   };
 };
 

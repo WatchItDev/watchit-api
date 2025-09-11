@@ -1,3 +1,3 @@
-export { RootAgent } from './root';
-export { IntentDiscoveryGraph } from './intent';
 export { HarvestingGraph } from './harvesting';
+export { IntentDiscoveryGraph } from './intent';
+export { RootAgent } from './root';

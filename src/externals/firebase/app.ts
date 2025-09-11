@@ -1,19 +1,15 @@
 import type { ServiceAccount } from 'firebase-admin';
-import { initializeApp, cert, getApp } from 'firebase-admin/app';
+import { cert, getApp, initializeApp } from 'firebase-admin/app';
 import {
-  initializeApp as clientInitialize,
-  getApps as clientApps,
   getApp as clientApp,
+  getApps as clientApps,
+  initializeApp as clientInitialize,
 } from 'firebase/app';
 
 import { adminKey, clientKey } from './credentials';
 
-const {
-  API_FIREBASE_PROJECT_ID,
-  API_FIREBASE_DATABASE,
-  API_EMULATOR_HOST,
-  API_EMULATOR_PORT,
-} = process.env;
+const { API_FIREBASE_PROJECT_ID, API_FIREBASE_DATABASE, API_EMULATOR_HOST, API_EMULATOR_PORT } =
+  process.env;
 
 // This is for the Firebase Emulator Suite
 if (process.env.NODE_ENV !== 'production') {

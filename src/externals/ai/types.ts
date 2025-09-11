@@ -1,11 +1,11 @@
-import { z, ZodTypeAny } from 'zod';
+import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import type { BaseMessage } from '@langchain/core/messages';
 import {
   ChatPromptTemplate,
   MessagesPlaceholder,
   SystemMessagePromptTemplate,
 } from '@langchain/core/prompts';
-import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
-import type { BaseMessage } from '@langchain/core/messages';
+import { z, ZodTypeAny } from 'zod';
 
 export interface Model {
   build(): BaseChatModel;

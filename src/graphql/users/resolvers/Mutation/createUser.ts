@@ -1,11 +1,11 @@
+import { injectEmail } from '@/graphql/_base/hof/inject';
 import type { MutationResolvers } from './../../../../schema/types';
-import { requireSocial } from '@/graphql/hof/social';
 
-export const createUser: NonNullable<MutationResolvers['createUser']> =
-  requireSocial(async (_parent, { input }, ctx) => {
-    return ctx.services.Profile.createProfile({
+export const createUser: NonNullable<MutationResolvers['createUser']> = injectEmail(
+  async (_parent, { input }, ctx) => {
+    return ctx.services.Users.createUser({
       ...input,
-      email: ctx.user.email,
-      id: ctx.user.id,
+      email: ctx.email,
     });
-  });
+  },
+);

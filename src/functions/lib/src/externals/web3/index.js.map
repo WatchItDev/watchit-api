@@ -1,1 +1,0 @@
-{"version":3,"file":"index.js","sourceRoot":"/","sources":["src/externals/web3/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA,iDAAiC","sourcesContent":["export * as web3 from \"./client\";\n"]}

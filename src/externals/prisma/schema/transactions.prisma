@@ -1,0 +1,19 @@
+enum TxType {
+    DEPOSIT
+    WITHDRAW
+    TRADE
+    TIP
+}
+
+model Transactions {
+    id          Int      @id @default(autoincrement())
+    userId      Int
+    type        TxType
+    amount      Float
+    balance     Float
+    currency    String
+    description String
+    createdAt   DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id])
+}

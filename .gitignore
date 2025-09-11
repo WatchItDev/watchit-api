@@ -4,3 +4,7 @@ node_modules
 .sentryclirc
 build/
 scripts/
+
+/generated/prisma
+
+/generated/prisma

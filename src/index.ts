@@ -1,37 +1,36 @@
+import compression from 'compression';
+import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
-import http from 'http';
-import cors from 'cors';
-import helmet from 'helmet';
-import compression from 'compression';
 import { rateLimit } from 'express-rate-limit';
+import helmet from 'helmet';
+import http from 'http';
 
 import { ApolloServer } from '@apollo/server';
-import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
-import { ApolloServerPluginInlineTraceDisabled } from '@apollo/server/plugin/disabled';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4';
 import {
-  ExpressContextFunctionArgument,
-  expressMiddleware,
-} from '@apollo/server/express4';
+  ApolloServerPluginInlineTraceDisabled,
+  ApolloServerPluginLandingPageDisabled,
+} from '@apollo/server/plugin/disabled';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 
 import {
-  createApollo4QueryValidationPlugin,
   constraintDirectiveTypeDefsGql,
+  createApollo4QueryValidationPlugin,
 } from 'graphql-constraint-directive/apollo4.js';
 
-import { webcrypto } from 'crypto';
-import { typeDefs } from '@/schema/typeDefs.generated';
 import { resolvers } from '@/schema/resolvers.generated';
-import { WebSocketServer } from 'ws';
-import { useServer } from 'graphql-ws/use/ws';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import { PubSub } from 'graphql-subscriptions';
+import { typeDefs } from '@/schema/typeDefs.generated';
 import { User } from '@/schema/types';
 import { GQL } from '@/types';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { webcrypto } from 'crypto';
+import { PubSub } from 'graphql-subscriptions';
+import { useServer } from 'graphql-ws/use/ws';
+import { WebSocketServer } from 'ws';
 
-import Externals from './externals';
 import { DataSources } from './datasources';
+import Externals from './externals';
 import { Services } from './services';
 
 // import SentryPlugin from '@/sentry'
@@ -42,7 +41,10 @@ if (!(globalThis as any).crypto) {
 
 const startServer = async (): Promise<{ url: string; server: http.Server }> => {
   const externals = Externals();
-  const dataSources = DataSources(externals.FireStore());
+  const dataSources = DataSources({
+    fs: externals.FireStore(),
+    pa: externals.Prisma(),
+  });
   const services = Services({ ds: dataSources, ext: externals });
   const pubsub = new PubSub();
 
@@ -116,15 +118,13 @@ const startServer = async (): Promise<{ url: string; server: http.Server }> => {
   app.use(express.json({ limit: '50mb' }));
   app.use(
     expressMiddleware<GQL.ContextType>(server, {
-      context: async ({
-        req,
-      }: ExpressContextFunctionArgument): Promise<GQL.ContextType> => {
+      context: async ({ req }: ExpressContextFunctionArgument): Promise<GQL.ContextType> => {
         return {
+          req,
           services,
           dataSources,
           pubsub,
           externals,
-          req,
           user: {} as User,
         };
       },

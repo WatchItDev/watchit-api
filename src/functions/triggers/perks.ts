@@ -1,7 +1,5 @@
-import {
-  onDocumentCreated,
-  onDocumentUpdated,
-} from 'firebase-functions/v2/firestore';
+import { log } from 'firebase-functions/logger';
+import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { enhanceFunction } from '../manager';
 
 export const unlockedPerkCreated = onDocumentCreated(
@@ -19,11 +17,10 @@ export const unlockedPerkClaimed = onDocumentUpdated(
     const after = e.data!.after.data();
 
     if (before.collectedAt || !after.collectedAt) return;
-    const meta = (await ds.Perks.getCatalog()).find(
-      (p: any) => p.id === after.perkId,
-    );
+    const meta = (await ds.Perks.getCatalog()).find((p: any) => p.id === after.perkId);
 
     if (!meta || meta.executionRule.type === 'IMMEDIATE') return;
+    log(`[ACTION_UNLOCKED_PERK_CLAIMED] Claiming perkId: ${after.perkId} for user: ${after.user}`);
     await perk.claim(after.perkId, after.user);
   }),
 );

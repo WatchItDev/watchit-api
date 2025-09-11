@@ -1,6 +1,6 @@
 import { HumanMessage } from '@langchain/core/messages';
 import { Annotation, StateGraph } from '@langchain/langgraph';
-import { Query, Compiler } from '../agents/compiler';
+import { Compiler, Query } from '../agents/compiler';
 import { GPT4o } from '../models';
 
 const openAIKey = process.env.API_OPENAI_API_KEY;

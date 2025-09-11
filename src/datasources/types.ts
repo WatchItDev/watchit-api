@@ -1,5 +1,7 @@
-import type { CollectionDAO } from '../externals/firebase/firestore';
+import type { FireStore } from '../externals/firebase';
+import type { PrismaClient } from '../externals/prisma';
 
-export interface FireStore {
-  fs: <T>(collection: string) => CollectionDAO<T>;
+export interface Store {
+  fs: FireStore;
+  pa: PrismaClient;
 }

@@ -1,4 +1,4 @@
-import type { Post, CreatePostInput } from '@/schema/types';
+import type { CreatePostInput, Post } from '@/schema/types';
 
 export function defaultPostData(): Omit<
   Post,
@@ -22,11 +22,7 @@ export function defaultPostData(): Omit<
   };
 }
 
-export function makeNewPost(
-  id: string,
-  address: string,
-  input: CreatePostInput,
-): Post {
+export function makeNewPost(id: string, address: string, input: CreatePostInput): Post {
   const now = Date.now();
 
   return {

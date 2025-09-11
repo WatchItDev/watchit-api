@@ -1,6 +1,6 @@
-import { DataSourceManager } from '../manager';
-import { Tip as FirestoreTip } from '../../schema/types';
 import crypto from 'crypto';
+import { Tip as FirestoreTip } from '../../schema/types';
+import { DataSourceManager } from '../manager';
 
 export class TipsCommands extends DataSourceManager {
   async createTip(

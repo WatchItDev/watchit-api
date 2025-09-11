@@ -2,6 +2,6 @@ import type { QueryResolvers } from './../../../../schema/types';
 
 export const getUsers: NonNullable<QueryResolvers['getUsers']> = (
   _parent,
-  { query, limit },
+  { input, pagination },
   { services },
-) => services.Profile.getUsers(query, limit);
+) => services.Users.getUsers(input, pagination);

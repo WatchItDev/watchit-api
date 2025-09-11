@@ -175,12 +175,8 @@ export const activity = ({ ds }: Pick<Ctx, 'ds'>) => {
     emit,
 
     // Likes
-    likeCreated: (
-      author: string,
-      targetId: string,
-      targetType: TargetType,
-      meta: Meta = {},
-    ) => emit(EventType.LIKE_CREATED, { author, targetId, targetType, meta }),
+    likeCreated: (author: string, targetId: string, targetType: TargetType, meta: Meta = {}) =>
+      emit(EventType.LIKE_CREATED, { author, targetId, targetType, meta }),
     likeRemoved: (author: string, targetId: string, targetType: TargetType) =>
       emit(EventType.LIKE_REMOVED, { author, targetId, targetType }),
 
@@ -255,8 +251,7 @@ export const activity = ({ ds }: Pick<Ctx, 'ds'>) => {
       }),
 
     // Users
-    userRegistered: (author: string) =>
-      emit(EventType.USER_REGISTERED, { author }),
+    userRegistered: (author: string) => emit(EventType.USER_REGISTERED, { author }),
     userUpdated: (author: string) => emit(EventType.USER_UPDATED, { author }),
 
     // Ranks / Perks

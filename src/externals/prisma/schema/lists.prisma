@@ -1,0 +1,11 @@
+// model Bookmarks {
+//     id        Int      @id @default(autoincrement())
+//     createdAt DateTime @default(now())
+//     postId    Int
+//     userId    Int
+
+//     user User @relation(fields: [userId], references: [id])
+//     post Post @relation(fields: [postId], references: [id])
+
+//     @@unique([userId, postId])
+// }

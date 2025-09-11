@@ -1,7 +1,0 @@
-####################################
-#          LEADERBOARD             #
-####################################
-
-extend type Query {
-  getLeaderboard(limit: Int = 100): [User!]!
-}

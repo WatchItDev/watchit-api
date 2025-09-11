@@ -1,0 +1,43 @@
+model Socials {
+    id       Int    @id @default(autoincrement())
+    userId   Int
+    platform String
+    url      String
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@index([platform(sort: Asc)])
+}
+
+model Profile {
+    id       Int     @id @default(autoincrement())
+    userId   Int     @unique
+    username String  @unique
+    bio      String
+    picture  String?
+    cover    String?
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@index([username(sort: Asc)])
+}
+
+model User {
+    id          Int      @id @default(autoincrement())
+    email       String   @unique
+    address     String   @unique
+    displayName String
+    verified    Boolean  @default(false)
+    createdAt   DateTime @default(now())
+
+    profile      Profile?
+    socials      Socials[]
+    contents     Content[]
+    reactions    Reactions[]
+    // bookmarks    Bookmarks[]
+    transactions Transactions[]
+    follower     Follows[]      @relation("UserFollows")
+    following    Follows[]      @relation("UserFollowedBy")
+
+    @@index([address, email])
+}

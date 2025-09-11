@@ -1,10 +1,10 @@
 // rankEngine.ts
-import { rewards, XPAction } from './rewards';
-import type { Ctx } from '@/functions/manager';
 import type { PerksDSType } from '@/datasources/perks';
 import type { RanksDSType } from '@/datasources/ranks';
-import type { UsersDSType } from '@/datasources/users';
+import type { UsersDsType } from '@/datasources/users';
+import type { Ctx } from '@/functions/manager';
 import type { ActivityLibType } from '../library/activity';
+import { rewards, XPAction } from './rewards';
 
 // ---------- Minimal domain shapes used here ----------
 type Rank = {
@@ -15,7 +15,7 @@ type Rank = {
 };
 
 // ---------- DS ports narrowed to what we use ----------
-type DSUsersPort = Pick<UsersDSType, 'getUser' | 'updateUser'>;
+type DSUsersPort = Pick<UsersDsType, 'getUser' | 'updateUser'>;
 type DSRanksPort = Pick<RanksDSType, 'catalog' | 'addUserRank'>;
 type DSPerksPort = Pick<PerksDSType, 'getCatalog' | 'getState' | 'upsertState'>;
 
@@ -54,11 +54,7 @@ const tryActivity = async <K extends keyof ActivityLibType>(
  * - Unlocks perks based on rank progression and configured rules.
  * - Ensures rank and perk state consistency across user actions.
  */
-export const ranks = ({
-  ds,
-  ext,
-  activity,
-}: Pick<Ctx, 'ds' | 'ext' | 'activity'>) => {
+export const ranks = ({ ds, ext, activity }: Pick<Ctx, 'ds' | 'ext' | 'activity'>) => {
   // Locally narrow ports for this module
   const ports = ds as unknown as DS;
   const rewardsHandler = rewards({ ds, ext, activity });
@@ -76,10 +72,7 @@ export const ranks = ({
   };
 
   const unlockPerksForRank = async (rankId: string, user: string) => {
-    const [catalog, ranks] = await Promise.all([
-      ports.Perks.getCatalog(),
-      getRanks(),
-    ]);
+    const [catalog, ranks] = await Promise.all([ports.Perks.getCatalog(), getRanks()]);
     if (!orderById || Object.keys(orderById).length === 0) {
       for (const r of ranks) orderById[r.id] = r.order;
     }
@@ -90,8 +83,7 @@ export const ranks = ({
 
     const seed = catalog.filter(
       (p) =>
-        (orderById[p.minRankId] ?? 0) <= (orderById[rankId] ?? 0) &&
-        p.unlockRule.on !== 'RANK_UP',
+        (orderById[p.minRankId] ?? 0) <= (orderById[rankId] ?? 0) && p.unlockRule.on !== 'RANK_UP',
     );
 
     const now = Date.now();
@@ -106,9 +98,7 @@ export const ranks = ({
           status: 'AVAILABLE',
           availableAt: now,
           cooldownSec:
-            p.executionRule.type === 'ON_COOLDOWN'
-              ? (p.executionRule.cooldownSec ?? 0)
-              : 0,
+            p.executionRule.type === 'ON_COOLDOWN' ? (p.executionRule.cooldownSec ?? 0) : 0,
           seen: [],
         }),
       ),
@@ -119,8 +109,7 @@ export const ranks = ({
         const exists = await ports.Perks.getState(user, p.id);
         if (exists) return;
 
-        const initTarget =
-          p.unlockRule.on === 'ACTION_COUNT' ? (p.unlockRule.times ?? 1) : 1;
+        const initTarget = p.unlockRule.on === 'ACTION_COUNT' ? (p.unlockRule.times ?? 1) : 1;
         await ports.Perks.upsertState({
           user,
           perkId: p.id,
@@ -165,16 +154,11 @@ export const ranks = ({
 
     await unlockPerksForRank(next.id, userAddr);
     await tryActivity(acts, 'rankUp', userAddr, next.id);
-    await rewardsHandler.addXp(
-      userAddr,
-      10,
-      XPAction.RANK_UP_BONUS,
-      `Reached ${next.name}`,
-    );
+    await rewardsHandler.addXp(userAddr, 10, XPAction.RANK_UP_BONUS, `Reached ${next.name}`);
   };
 
   return {
-    maybeRankUp: async (userAddr: string) => {
+    rankUp: async (userAddr: string) => {
       const u = await ports.Users.getUser(userAddr);
       if (!u) return;
 
@@ -182,11 +166,7 @@ export const ranks = ({
       if (!u.currentRank) {
         await bootstrapFirstRank(userAddr, ranks);
       } else {
-        await promoteNextRank(
-          userAddr,
-          { xpTotal: u.xpTotal, currentRank: u.currentRank },
-          ranks,
-        );
+        await promoteNextRank(userAddr, { xpTotal: u.xpTotal, currentRank: u.currentRank }, ranks);
       }
     },
 

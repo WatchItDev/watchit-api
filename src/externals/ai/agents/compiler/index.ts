@@ -1,5 +1,5 @@
-import { StructuredAgent } from '../../types';
 import type { Query } from '../../agents/compiler/types';
+import { StructuredAgent } from '../../types';
 export * from './types';
 
 // Reflex compiler agent that interprets user input to generate structured queries for film recommendations.

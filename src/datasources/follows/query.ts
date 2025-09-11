@@ -1,5 +1,5 @@
-import { DataSourceManager } from '../manager';
 import type { User } from '../../schema/types';
+import { DataSourceManager } from '../manager';
 
 export class FollowsQuery extends DataSourceManager {
   isFollowing(follower: string, following: string) {
@@ -12,9 +12,7 @@ export class FollowsQuery extends DataSourceManager {
       { limit },
     );
     if (!rows.length) return [];
-    const users = await Promise.all(
-      rows.map((r) => this.fs<User>('users').get(r.follower)),
-    );
+    const users = await Promise.all(rows.map((r) => this.fs<User>('users').get(r.follower)));
     return users.filter(Boolean) as User[];
   }
 
@@ -24,9 +22,7 @@ export class FollowsQuery extends DataSourceManager {
       { limit },
     );
     if (!rows.length) return [];
-    const users = await Promise.all(
-      rows.map((r) => this.fs<User>('users').get(r.following)),
-    );
+    const users = await Promise.all(rows.map((r) => this.fs<User>('users').get(r.following)));
     return users.filter(Boolean) as User[];
   }
 }

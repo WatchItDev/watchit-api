@@ -1,6 +1,6 @@
+import { Actor, DistinctBy } from '../../models/perk';
 import type { Ctx } from '../manager';
 import { perks } from './perk';
-import { Actor, DistinctBy } from '../../models/perk';
 
 const REFRESH_INTERVAL = +(process.env.API_REFRESH_PERK_CACHE_SECONDS || 5_000);
 
@@ -12,10 +12,7 @@ export interface LogEvt {
   meta?: Record<string, any>;
 }
 
-const fingerprint = (
-  log: LogEvt,
-  distinctBy?: DistinctBy | null,
-): string | null => {
+const fingerprint = (log: LogEvt, distinctBy?: DistinctBy | null): string | null => {
   switch (distinctBy) {
     case 'TARGET':
       return log.targetId ?? null;
@@ -28,19 +25,12 @@ const fingerprint = (
 
 const isRepeatable = (meta: any): boolean =>
   meta.executionRule.type === 'ON_COOLDOWN' ||
-  (meta.hooks ?? []).some(
-    (h: any) => h.type === 'RELOCK' || h.type === 'RESET_PROGRESS',
-  );
+  (meta.hooks ?? []).some((h: any) => h.type === 'RELOCK' || h.type === 'RESET_PROGRESS');
 
-const getBeneficiary = async (
-  log: LogEvt,
-  rule: any,
-  ds: Ctx['ds'],
-): Promise<string | null> => {
+const getBeneficiary = async (log: LogEvt, rule: any, ds: Ctx['ds']): Promise<string | null> => {
   const actor = (rule.actor as Actor) ?? 'SELF';
   if (actor === 'SELF') return log.author;
-  if (actor === 'TARGET')
-    return log.targetType === 'USER' ? (log.targetId ?? null) : null;
+  if (actor === 'TARGET') return log.targetType === 'USER' ? (log.targetId ?? null) : null;
   if (actor === 'OWNER') {
     if (log.meta?.owner) return log.meta.owner;
     if (log.targetType === 'POST') {
@@ -56,17 +46,11 @@ const getBeneficiary = async (
   return null;
 };
 
-const ensureRanks = async (
-  ds: Ctx['ds'],
-  rankOrder: Record<string, number>,
-) => {
+const ensureRanks = async (ds: Ctx['ds'], rankOrder: Record<string, number>) => {
   if (Object.keys(rankOrder).length) return;
   const ranks = await ds.Ranks.catalog();
   ranks.sort((a, b) => a.order - b.order);
-  Object.assign(
-    rankOrder,
-    Object.fromEntries(ranks.map((r) => [r.id, r.order])),
-  );
+  Object.assign(rankOrder, Object.fromEntries(ranks.map((r) => [r.id, r.order])));
 };
 
 const refreshPerkCache = async (
@@ -159,10 +143,7 @@ export const progress = ({ ds, activity }: Pick<Ctx, 'ds' | 'activity'>) => {
   const lastLoadRef = { value: 0 };
 
   const consume = async (log: LogEvt) => {
-    await Promise.all([
-      ensureRanks(ds, rankOrder),
-      refreshPerkCache(ds, perkCache, lastLoadRef),
-    ]);
+    await Promise.all([ensureRanks(ds, rankOrder), refreshPerkCache(ds, perkCache, lastLoadRef)]);
     const perksForAction = perkCache[log.type] ?? [];
     if (!perksForAction.length) return;
 

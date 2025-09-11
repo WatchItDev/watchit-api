@@ -1,6 +1,6 @@
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
-import { enhanceFunction } from '../manager';
 import type { LogEvt } from '../library/progress';
+import { enhanceFunction } from '../manager';
 
 export const eventLogProgress = onDocumentCreated(
   'eventLogs/{id}',

@@ -1,1 +1,0 @@
-{"version":3,"file":"commands.js","sourceRoot":"/","sources":["src/datasources/feeds/commands.ts"],"names":[],"mappings":";;;AAAA,wCAA+C;AAE/C,yBAAyB;AACzB,MAAa,aAAc,SAAQ,2BAAiB;CAAG;AAAvD,sCAAuD","sourcesContent":["import { DataSourceManager } from \"../manager\";\n\n/** No writes in feeds */\nexport class FeedsCommands extends DataSourceManager {}\n"]}

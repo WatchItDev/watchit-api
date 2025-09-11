@@ -1,5 +1,5 @@
-import '@sentry/tracing';
 import * as Sentry from '@sentry/node';
+import '@sentry/tracing';
 // import pj from '@/package.json'
 import pluginTracing from '@/sentry/tracing';
 
@@ -9,9 +9,7 @@ Sentry.init({
   // https://docs.sentry.io/platforms/javascript/configuration/options/
   // debug: process.env.SENTRY_ENV !== 'production',
   dsn: process.env.SENTRY_DSN,
-  integrations: [
-    Sentry.captureConsoleIntegration({ levels: ['error', 'debug'] }),
-  ],
+  integrations: [Sentry.captureConsoleIntegration({ levels: ['error', 'debug'] })],
   // release: pj.version,
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for performance monitoring.

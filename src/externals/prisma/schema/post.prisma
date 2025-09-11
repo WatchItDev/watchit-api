@@ -1,0 +1,24 @@
+model MediaAttachments {
+    id     Int    @id @default(autoincrement())
+    postId Int
+    url    String
+    cid    String @unique
+    title  String
+    type   String
+
+    post Post @relation(fields: [postId], references: [id])
+
+    @@index([cid])
+}
+
+model Post {
+    id        Int    @id @default(autoincrement())
+    title     String
+    body      String
+    contentId Int    @unique
+
+    comments    Comment[]
+    attachments MediaAttachments[]
+    base        Content        @relation(fields: [contentId], references: [id])
+}
+

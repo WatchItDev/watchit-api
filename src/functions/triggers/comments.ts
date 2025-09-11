@@ -1,45 +1,33 @@
-import {
-  onDocumentCreated,
-  onDocumentUpdated,
-} from 'firebase-functions/v2/firestore';
+import { log, warn } from 'firebase-functions/logger';
+import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { type Ctx, enhanceFunction } from '../manager';
 
-async function handleCommentCreated(
-  { ds, activity }: Pick<Ctx, 'ds' | 'activity'>,
-  event: any,
-) {
+async function handleCommentCreated({ ds, activity }: Pick<Ctx, 'ds' | 'activity'>, event: any) {
   const commentId = event.params.commentId;
-  const comment = await ds.Comments.getComment(commentId);
-  if (!comment) return;
-
+  const comment = event.data?.after?.data();
   const parentCommentId = comment.parentComment?.id;
   const postId = comment.post?.id;
 
   if (parentCommentId) {
     await ds.Comments.updateCounterField(parentCommentId, 'repliesCount', 1);
-    console.log(`replyCreated ${commentId} → parent ${parentCommentId}`);
+    log(`[COMMENT_CREATED] Reply ${commentId} created for parent ${parentCommentId}`);
     return;
   }
 
   if (!postId) {
-    console.warn(`commentCreated without postId on ${commentId}`);
+    warn(`[COMMENT_CREATED] Comment ${commentId} created without postId`);
     return;
   }
 
   await ds.Posts.updateCounterField(postId, 'commentCount', 1);
   await activity.commentCreated(comment.author.address, commentId);
-  console.log(`commentCreated ${commentId} → post ${postId}`);
+  log(`[COMMENT_CREATED] Comment ${commentId} created for post ${postId}`);
 }
 
-async function handleCommentHidden(
-  { ds, activity }: Pick<Ctx, 'ds' | 'activity'>,
-  event: any,
-) {
+async function handleCommentHidden({ ds, activity }: Pick<Ctx, 'ds' | 'activity'>, event: any) {
   const change = event.data;
   if (!change?.before || !change?.after) {
-    console.warn(
-      `commentHidden: without change data for ${event.params.commentId}`,
-    );
+    warn(`[COMMENT_HIDDEN] Missing change data for comment ${event.params.commentId}`);
     return;
   }
 
@@ -50,20 +38,16 @@ async function handleCommentHidden(
   const parentCommentId = after.parentCommentId;
   const postId = after.postId;
 
-  if (!before.hidden && after.hidden) {
-    if (parentCommentId) {
-      await ds.Comments.updateCounterField(parentCommentId, 'repliesCount', -1);
-      await activity.commentHidden(auth, commentId);
-      console.log(`replyHidden ${commentId} → parent ${parentCommentId}`);
-    } else if (postId) {
-      await ds.Posts.updateCounterField(postId, 'commentCount', -1);
-      await activity.commentHidden(auth, commentId);
-      console.log(`commentHidden ${commentId} → post ${postId}`);
-    } else {
-      console.warn(
-        `commentHidden without parentCommentId and postId on ${commentId}`,
-      );
-    }
+  // if the comment is already hidden, do nothing
+  if (before.hidden) return;
+  if (parentCommentId) {
+    await ds.Comments.updateCounterField(parentCommentId, 'repliesCount', -1);
+    await activity.commentHidden(auth, commentId);
+    log(`[COMMENT_HIDDEN] Reply ${commentId} hidden for parent ${parentCommentId}`);
+  } else if (postId) {
+    await ds.Posts.updateCounterField(postId, 'commentCount', -1);
+    await activity.commentHidden(auth, commentId);
+    log(`[COMMENT_HIDDEN] Comment ${commentId} hidden for post ${postId}`);
   }
 
   await activity.commentUpdated(auth ?? '', commentId);
