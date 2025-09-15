@@ -9,6 +9,13 @@ export class CommentsQuery extends DataSourceManager {
     });
   }
 
+  async getComments(where: Repo.CommentWhereInput): Promise<CommentContent[]> {
+    return this.pa.comment.findMany({
+      include: { base: true },
+      where,
+    });
+  }
+
   async getCommentOrThrow(where: Repo.CommentWhereUniqueInput): Promise<CommentContent> {
     return this.pa.comment.findUniqueOrThrow({
       include: { base: true },
