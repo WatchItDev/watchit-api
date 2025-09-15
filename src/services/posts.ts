@@ -1,6 +1,5 @@
-import { ContentKind, PostId, UserId } from '@/externals/prisma';
+import { ContentKind, PostContent, PostId, UserId } from '@/externals/prisma';
 import type { CreatePostInput, PostByIdentifierInput, UpdatePostInput } from '@/schema/types';
-import type { PostContent } from '@/externals/prisma';
 import { ServiceManager } from './manager';
 
 export type CreatePostDTO = CreatePostInput & UserId;
@@ -34,8 +33,7 @@ export class PostService extends ServiceManager {
 
   /** Read-only fetches */
   getPost(input: PostByIdentifierInput): Promise<PostContent | null> {
-    const identifier = input.id ?? undefined;
-    return this.ds.Posts.getPost({ id: identifier });
+    return this.ds.Posts.getPost(input);
   }
 
   // getPosts(query: string, limit?: number): Promise<Post[]> {

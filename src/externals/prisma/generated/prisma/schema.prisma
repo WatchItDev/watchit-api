@@ -1,3 +1,16 @@
+model Comment {
+  id        Int    @id @default(autoincrement())
+  body      String
+  postId    Int
+  contentId Int    @unique
+  parentId  Int?
+
+  post          Post      @relation(fields: [postId], references: [id])
+  base          Content   @relation(fields: [contentId], references: [id])
+  parent        Comment[] @relation("CommentReply")
+  parentComment Comment?  @relation("CommentReply", fields: [parentId], references: [id])
+}
+
 enum Visibility {
   PUBLIC
   FOLLOWERS_ONLY
@@ -27,43 +40,6 @@ model Content {
   @@map("Content")
 }
 
-model MediaAttachments {
-  id     Int    @id @default(autoincrement())
-  postId Int
-  url    String
-  cid    String @unique
-  title  String
-  type   String
-
-  post Post @relation(fields: [postId], references: [id])
-
-  @@index([cid])
-}
-
-model Post {
-  id        Int    @id @default(autoincrement())
-  title     String
-  body      String
-  contentId Int    @unique
-
-  comments    Comment[]
-  attachments MediaAttachments[]
-  base        Content            @relation(fields: [contentId], references: [id])
-}
-
-model Comment {
-  id        Int    @id @default(autoincrement())
-  body      String
-  postId    Int
-  contentId Int    @unique
-  parentId  Int
-
-  post          Post      @relation(fields: [postId], references: [id])
-  parent        Comment[] @relation("CommentReply")
-  base          Content   @relation(fields: [contentId], references: [id])
-  parentComment Comment?  @relation("CommentReply", fields: [parentId], references: [id])
-}
-
 // model Bookmarks {
 //     id        Int      @id @default(autoincrement())
 //     createdAt DateTime @default(now())
@@ -91,6 +67,30 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("API_DATABASE_URL")
+}
+
+model MediaAttachments {
+  id     Int    @id @default(autoincrement())
+  postId Int
+  url    String
+  cid    String @unique
+  title  String
+  type   String
+
+  post Post @relation(fields: [postId], references: [id])
+
+  @@index([cid])
+}
+
+model Post {
+  id        Int    @id @default(autoincrement())
+  title     String
+  body      String
+  contentId Int    @unique
+
+  comments    Comment[]
+  attachments MediaAttachments[]
+  base        Content            @relation(fields: [contentId], references: [id])
 }
 
 enum ReactionType {

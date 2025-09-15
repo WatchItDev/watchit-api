@@ -1,3 +1,4 @@
+import CommentsDs from './comments';
 import PostsDs from './posts';
 import SocialDs from './social';
 import type { Store } from './types';
@@ -6,7 +7,7 @@ import UsersDs from './users';
 export const DataSources = (store: Store) => ({
   Users: new UsersDs(store),
   Posts: new PostsDs(store),
-  // Comments: new CommentsDs(store),
+  Comments: new CommentsDs(store),
   // =Bookmarks: new BookmarksDs(store),
   // Follows: new FollowsDs(store),
   // Likes: new LikesDs(store),

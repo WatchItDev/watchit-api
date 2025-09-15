@@ -8,4 +8,11 @@ export class CommentsQuery extends DataSourceManager {
       where,
     });
   }
+
+  async getCommentOrThrow(where: Repo.CommentWhereUniqueInput): Promise<CommentContent> {
+    return this.pa.comment.findUniqueOrThrow({
+      include: { base: true },
+      where,
+    });
+  }
 }

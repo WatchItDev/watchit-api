@@ -1,17 +1,6 @@
 ###########################
 #        POSTS            #
 ###########################
-
-####################
-#     ENUMS        #
-####################
-
-enum VisibilitySetting {
-  PUBLIC
-  FOLLOWERS_ONLY
-  PRIVATE
-}
-
 ####################
 #     TYPES        #
 ####################
@@ -26,12 +15,9 @@ type MediaAttachment {
 
 type Post {
   id: Int!
-  user: User
   title: String!
   body: String!
-  createdAt: Date!
-  visibility: VisibilitySetting!
-  active: Boolean!
+  base: BaseContent!
 }
 
 ####################
@@ -39,7 +25,7 @@ type Post {
 ####################
 
 input HidePostInput {
-  postId: String! @constraint(minLength: 1)
+  postId: Int! @constraint(min: 1)
 }
 
 input CreatePostInput {
@@ -49,13 +35,13 @@ input CreatePostInput {
 }
 
 input UpdatePostInput {
-  postId: String! @constraint(minLength: 1)
+  id: Int! @constraint(min: 1)
   title: String @constraint(minLength: 1, maxLength: 100)
   body: String @constraint(minLength: 10)
   visibility: VisibilitySetting
 }
 
-input PostByIdentifierInput {
+input PostByIdentifierInput @oneOf {
   id: Int
 }
 

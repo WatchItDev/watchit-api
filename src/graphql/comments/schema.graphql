@@ -2,22 +2,12 @@
 #       COMMENTS          #
 ###########################
 
-"""
-A comment on a post, or a reply to another comment.
-"""
 type Comment {
   id: String!
-  author: User!
-  content: String!
+  body: String!
   post: Post!
-  parentComment: Comment
-  createdAt: Timestamp!
-  updatedAt: Timestamp!
-  hidden: Boolean!
-
-  #–– raw count ––
-  likeCount: Int!
-  repliesCount: Int!
+  parent: Comment
+  base: BaseContent!
 }
 
 ####################
@@ -25,14 +15,24 @@ type Comment {
 ####################
 
 input CreateCommentInput {
-  postId: String! @constraint(minLength: 1)
-  parentComment: String @constraint(minLength: 1)
-  content: String! @constraint(minLength: 1, maxLength: 500)
+  postId: Int! @constraint(min: 1)
+  parentId: Int @constraint(min: 1)
+  body: String! @constraint(minLength: 1, maxLength: 500)
 }
 
 input UpdateCommentInput {
-  commentId: String! @constraint(minLength: 1)
-  content: String! @constraint(minLength: 1, maxLength: 500)
+  id: Int! @constraint(min: 1)
+  body: String! @constraint(minLength: 1, maxLength: 500)
+}
+
+input CommentByIdentifierInput @oneOf {
+  id: Int
+}
+
+input CommentsFilterInput {
+  userId: Int
+  postId: Int
+  parentId: Int
 }
 
 ####################
@@ -40,15 +40,8 @@ input UpdateCommentInput {
 ####################
 
 extend type Query {
-  getCommentsByPost(
-    postId: String! @constraint(minLength: 1)
-    limit: Int @constraint(min: 1, max: 100)
-  ): [Comment!]!
-
-  getRepliesByComment(
-    commentId: String! @constraint(minLength: 1)
-    limit: Int @constraint(min: 1, max: 100)
-  ): [Comment!]!
+  getComment(input: CommentByIdentifierInput!): Comment
+  getComments(input: CommentsFilterInput!, pagination: PaginationInput): [Comment!]
 }
 
 ####################
@@ -58,5 +51,5 @@ extend type Query {
 extend type Mutation {
   createComment(input: CreateCommentInput!): Comment!
   updateComment(input: UpdateCommentInput!): Comment!
-  hideComment(commentId: String! @constraint(minLength: 1)): Boolean
+  # hideComment(commentId: String! @constraint(minLength: 1)): Boolean
 }

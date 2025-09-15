@@ -47,7 +47,7 @@ input UpdateUserInput {
   socialLinks: [SocialLinkInput!]
 }
 
-input UserByIdentifierInput {
+input UserByIdentifierInput @oneOf {
   id: Int
   email: String @constraint(format: "email")
   address: String @constraint(minLength: 1)

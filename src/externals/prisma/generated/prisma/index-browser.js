@@ -120,6 +120,14 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  body: 'body',
+  postId: 'postId',
+  contentId: 'contentId',
+  parentId: 'parentId'
+};
+
 exports.Prisma.ContentScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -144,14 +152,6 @@ exports.Prisma.PostScalarFieldEnum = {
   title: 'title',
   body: 'body',
   contentId: 'contentId'
-};
-
-exports.Prisma.CommentScalarFieldEnum = {
-  id: 'id',
-  body: 'body',
-  postId: 'postId',
-  contentId: 'contentId',
-  parentId: 'parentId'
 };
 
 exports.Prisma.ReactionsScalarFieldEnum = {
@@ -214,12 +214,6 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
-};
-
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -228,6 +222,16 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.CommentOrderByRelevanceFieldEnum = {
+  body: 'body'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 
 exports.Prisma.MediaAttachmentsOrderByRelevanceFieldEnum = {
@@ -239,10 +243,6 @@ exports.Prisma.MediaAttachmentsOrderByRelevanceFieldEnum = {
 
 exports.Prisma.PostOrderByRelevanceFieldEnum = {
   title: 'title',
-  body: 'body'
-};
-
-exports.Prisma.CommentOrderByRelevanceFieldEnum = {
   body: 'body'
 };
 
@@ -293,10 +293,10 @@ exports.TxType = exports.$Enums.TxType = {
 };
 
 exports.Prisma.ModelName = {
+  Comment: 'Comment',
   Content: 'Content',
   MediaAttachments: 'MediaAttachments',
   Post: 'Post',
-  Comment: 'Comment',
   Reactions: 'Reactions',
   Follows: 'Follows',
   Transactions: 'Transactions',

@@ -1,26 +1,41 @@
 import { CommentContent, Id, Repo } from '../../externals/prisma';
 import { DataSourceManager } from '../manager';
 
-type CommentCreate = Repo.ContentCreateNestedOneWithoutCommentInput;
-type CommentUpdate = Repo.ContentUpdateOneRequiredWithoutCommentNestedInput;
+type PostConnect = Repo.CommentCreateInput['post'];
+type ContentCreate = Repo.CommentCreateInput['base'];
+type ParentCommentConnect = NonNullable<Repo.CommentCreateInput['parentComment']>;
+type ContentUpdate = NonNullable<Repo.CommentUpdateInput['base']>;
 
 export type RepoUpdateComment = Tools.Override<
   Repo.CommentUpdateInput,
-  { base: CommentUpdate['update'] }
+  { base: ContentUpdate['update'] }
 > &
   Id;
 
 export type RepoCreateComment = Tools.Override<
   Repo.CommentCreateInput,
-  { base: CommentCreate['create'] }
+  {
+    base: ContentCreate['create'];
+    post: NonNullable<PostConnect['connect']>;
+    parentComment?: ParentCommentConnect['connect'];
+  }
 >;
 
 export class CommentsCommands extends DataSourceManager {
-  async create({ base, ...rest }: RepoCreateComment): Promise<CommentContent> {
+  async create(input: RepoCreateComment): Promise<CommentContent> {
     // content is a base "abstract" table to handle multiple types
+    const { base, post, parentComment: parent, body } = input;
+    const parentComment = parent ? { connect: { id: parent.id } } : undefined;
+    const parentPost = { connect: { id: post.id } };
+
     return this.pa.comment.create({
-      data: { ...rest, base: { create: base } },
       include: { base: true },
+      data: {
+        body,
+        parentComment,
+        post: parentPost,
+        base: { create: base },
+      },
     });
   }
 

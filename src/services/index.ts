@@ -2,10 +2,10 @@ import { CommentService } from './comments';
 import { PostService } from './posts';
 import { UsersService } from './users';
 
-import { BookmarkService } from './lists';
-import { FollowService } from './reactions';
 import { LikesService } from './likes';
+import { BookmarkService } from './lists';
 import { LogService } from './logs';
+import { FollowService } from './reactions';
 import { TipsService } from './tips';
 
 export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({

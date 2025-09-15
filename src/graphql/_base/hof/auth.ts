@@ -1,4 +1,3 @@
-import { GQL } from '@/types';
 import { GraphQLError } from 'graphql';
 import type { JWTPayload, JWTVerifyResult } from 'jose';
 import { createRemoteJWKSet, jwtVerify } from 'jose';

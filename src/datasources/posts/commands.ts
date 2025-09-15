@@ -1,8 +1,8 @@
 import { Id, PostContent, Repo } from '../../externals/prisma';
 import { DataSourceManager } from '../manager';
 
-type ContentCreate = Repo.ContentCreateNestedOneWithoutPostInput;
-type ContentUpdate = Repo.ContentUpdateOneRequiredWithoutPostNestedInput;
+type ContentCreate = Repo.PostCreateInput['base'];
+type ContentUpdate = NonNullable<Repo.PostUpdateInput['base']>;
 
 export type RepoUpdatePost = Tools.Override<
   Repo.PostUpdateInput,
@@ -24,7 +24,7 @@ export class PostsCommands extends DataSourceManager {
     });
   }
 
-  async update({ id,  base, ...patch }: RepoUpdatePost): Promise<PostContent> {
+  async update({ id, base, ...patch }: RepoUpdatePost): Promise<PostContent> {
     // content is a base "abstract" table to handle multiple types
     return this.pa.post.update({
       where: { id },

@@ -8,4 +8,11 @@ export class UsersQuery extends DataSourceManager {
       where,
     });
   }
+
+  async getUserOrThrow(where: Repo.UserWhereUniqueInput): Promise<UserProfile> {
+    return this.pa.user.findUniqueOrThrow({
+      include: { profile: true },
+      where,
+    });
+  }
 }

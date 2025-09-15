@@ -4,6 +4,9 @@ import { User } from '@/schema/types';
 import type { ServicesType } from '@/services';
 import { Request } from 'express';
 import { PubSub } from 'graphql-subscriptions';
+import { useServer } from 'graphql-ws/use/ws';
+
+export type Disposable = ReturnType<typeof useServer>;
 
 declare global {
   declare namespace NodeJS {

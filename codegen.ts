@@ -8,6 +8,9 @@ const config: CodegenConfig = {
     'src/schema': defineConfig({
       resolverTypesPath: './types.ts',
       mode: 'modules',
+      typesPluginsConfig: {
+        contextType: 'GQL.ContextType',
+      },
     }),
   },
 };

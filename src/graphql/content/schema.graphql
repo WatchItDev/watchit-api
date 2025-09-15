@@ -1,0 +1,13 @@
+enum VisibilitySetting {
+  PUBLIC
+  FOLLOWERS_ONLY
+  PRIVATE
+}
+
+type BaseContent {
+  id: Int!
+  user: User!
+  createdAt: Date!
+  visibility: VisibilitySetting!
+  active: Boolean!
+}

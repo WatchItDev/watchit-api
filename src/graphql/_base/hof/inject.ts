@@ -1,4 +1,3 @@
-import { GQL } from '@/types';
 import { parseToken } from './auth';
 
 export function injectEmail<T extends (...a: any[]) => any>(resolver: T): T {

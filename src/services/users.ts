@@ -1,3 +1,4 @@
+import type { UserProfile } from '@/externals/prisma';
 import type { CreateUserInput, UpdateUserInput, User, UserByIdentifierInput } from '@/schema/types';
 
 import { ServiceManager } from './manager';
@@ -7,7 +8,7 @@ type UpdateProfileDTO = UpdateUserInput & Pick<User, 'id'>;
 
 export class UsersService extends ServiceManager {
   /** Create a new user via Cloud Function */
-  async createUser(input: CreateProfileDTO): Promise<User> {
+  async createUser(input: CreateProfileDTO): Promise<UserProfile> {
     const { socialLinks, ...userData } = input;
     const { email, address, displayName, ...profile } = userData;
 
@@ -30,7 +31,7 @@ export class UsersService extends ServiceManager {
   }
 
   /** Update current user via Cloud Function */
-  async updateUser(input: UpdateProfileDTO): Promise<User> {
+  async updateUser(input: UpdateProfileDTO): Promise<UserProfile> {
     const { socialLinks, ...userData } = input;
     const { id: userId, displayName: name, ...profile } = userData;
     const { username, bio, picture, cover } = profile;
@@ -60,10 +61,8 @@ export class UsersService extends ServiceManager {
   }
 
   /** Read operations directly against the datasource */
-  getUser(input: UserByIdentifierInput): Promise<User | null> {
-    const id = input.id ?? undefined;
-    const email = input.email ?? undefined;
-    const address = input.address ?? undefined;
-    return this.ds.Users.getUser({ id, email, address });
+  getUser(input: UserByIdentifierInput): Promise<UserProfile | null> {
+    // mutual-exclusion filtering, only one identifier is used during
+    return this.ds.Users.getUser(input);
   }
 }
