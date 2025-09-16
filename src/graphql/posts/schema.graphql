@@ -17,7 +17,7 @@ type Post {
   id: Int!
   title: String!
   body: String!
-  comments: [Comment!]
+  comments(page: PaginationInput): [Comment!]
   base: BaseContent!
 }
 
@@ -47,7 +47,6 @@ input PostByIdentifierInput @oneOf {
 }
 
 input PostFilterInput {
-  id: Int
   userId: Int
 }
 
@@ -57,7 +56,7 @@ input PostFilterInput {
 
 extend type Query {
   getPost(input: PostByIdentifierInput!): Post
-  getPosts(input: PostFilterInput!, pagination: PaginationInput): [Post!]!
+  getPosts(input: PostFilterInput!, page: PaginationInput): [Post!]!
   # getPostsByAuthor(
   #   author: String! @constraint(minLength: 1)
   #   limit: Int @constraint(min: 1, max: 100)

@@ -162,10 +162,12 @@ exports.Prisma.ReactionsScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.FollowsScalarFieldEnum = {
-  followerId: 'followerId',
-  followingId: 'followingId',
-  createdAt: 'createdAt'
+exports.Prisma.RelationScalarFieldEnum = {
+  fromUserId: 'fromUserId',
+  toUserId: 'toUserId',
+  state: 'state',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.TransactionsScalarFieldEnum = {
@@ -201,7 +203,8 @@ exports.Prisma.UserScalarFieldEnum = {
   address: 'address',
   displayName: 'displayName',
   verified: 'verified',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -285,6 +288,12 @@ exports.ReactionType = exports.$Enums.ReactionType = {
   LOVE: 'LOVE'
 };
 
+exports.RelationState = exports.$Enums.RelationState = {
+  NONE: 'NONE',
+  FOLLOW: 'FOLLOW',
+  BLOCK: 'BLOCK'
+};
+
 exports.TxType = exports.$Enums.TxType = {
   DEPOSIT: 'DEPOSIT',
   WITHDRAW: 'WITHDRAW',
@@ -298,7 +307,7 @@ exports.Prisma.ModelName = {
   MediaAttachments: 'MediaAttachments',
   Post: 'Post',
   Reactions: 'Reactions',
-  Follows: 'Follows',
+  Relation: 'Relation',
   Transactions: 'Transactions',
   Socials: 'Socials',
   Profile: 'Profile',

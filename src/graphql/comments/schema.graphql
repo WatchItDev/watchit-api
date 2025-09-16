@@ -7,7 +7,7 @@ type Comment {
   body: String!
   post: Post!
   parent: Comment
-  replies: [Comment!]
+  replies(page: PaginationInput): [Comment!]
   base: BaseContent!
 }
 
@@ -42,7 +42,7 @@ input CommentsFilterInput {
 
 extend type Query {
   getComment(input: CommentByIdentifierInput!): Comment
-  getComments(input: CommentsFilterInput!, pagination: PaginationInput): [Comment!]
+  getComments(input: CommentsFilterInput!, page: PaginationInput): [Comment!]
 }
 
 ####################

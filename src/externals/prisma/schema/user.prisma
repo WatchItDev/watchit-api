@@ -29,6 +29,7 @@ model User {
     displayName String
     verified    Boolean  @default(false)
     createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
 
     profile      Profile?
     socials      Socials[]
@@ -36,8 +37,8 @@ model User {
     reactions    Reactions[]
     // bookmarks    Bookmarks[]
     transactions Transactions[]
-    follower     Follows[]      @relation("UserFollows")
-    following    Follows[]      @relation("UserFollowedBy")
+    from         Relation[]     @relation("UserFrom")
+    to           Relation[]     @relation("UserTo")
 
     @@index([address, email])
 }

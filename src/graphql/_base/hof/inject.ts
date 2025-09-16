@@ -1,6 +1,6 @@
 import { parseToken } from './auth';
 
-export function injectEmail<T extends (...a: any[]) => any>(resolver: T): T {
+export function withEmail<T extends (...a: any[]) => any>(resolver: T): T {
   return (async (parent, args, ctx: GQL.ContextType, info) => {
     const {
       payload: { email },

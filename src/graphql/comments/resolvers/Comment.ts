@@ -12,11 +12,9 @@ export const Comment: CommentResolvers = {
       id: c.parentId,
     });
   },
-  replies: (c, _args, { dataSources }) => {
+  replies: (c, { page }, { dataSources }) => {
     // TODO fix n+1 query problem
-    return dataSources.Comments.getComments({
-      parentId: c.id,
-    });
+    return dataSources.Comments.getComments({ parentId: c.id }, page ?? undefined);
   },
   base: ({ base }, _arg, _ctx) => {
     /* Comment.base resolver is required because Comment.base and CommentMapper.base are not compatible */

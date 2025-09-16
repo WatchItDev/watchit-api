@@ -39,10 +39,10 @@ export type Post = $Result.DefaultSelection<Prisma.$PostPayload>
  */
 export type Reactions = $Result.DefaultSelection<Prisma.$ReactionsPayload>
 /**
- * Model Follows
+ * Model Relation
  * 
  */
-export type Follows = $Result.DefaultSelection<Prisma.$FollowsPayload>
+export type Relation = $Result.DefaultSelection<Prisma.$RelationPayload>
 /**
  * Model Transactions
  * 
@@ -94,6 +94,15 @@ export const ReactionType: {
 export type ReactionType = (typeof ReactionType)[keyof typeof ReactionType]
 
 
+export const RelationState: {
+  NONE: 'NONE',
+  FOLLOW: 'FOLLOW',
+  BLOCK: 'BLOCK'
+};
+
+export type RelationState = (typeof RelationState)[keyof typeof RelationState]
+
+
 export const TxType: {
   DEPOSIT: 'DEPOSIT',
   WITHDRAW: 'WITHDRAW',
@@ -116,6 +125,10 @@ export const ContentKind: typeof $Enums.ContentKind
 export type ReactionType = $Enums.ReactionType
 
 export const ReactionType: typeof $Enums.ReactionType
+
+export type RelationState = $Enums.RelationState
+
+export const RelationState: typeof $Enums.RelationState
 
 export type TxType = $Enums.TxType
 
@@ -290,14 +303,14 @@ export class PrismaClient<
   get reactions(): Prisma.ReactionsDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.follows`: Exposes CRUD operations for the **Follows** model.
+   * `prisma.relation`: Exposes CRUD operations for the **Relation** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Follows
-    * const follows = await prisma.follows.findMany()
+    * // Fetch zero or more Relations
+    * const relations = await prisma.relation.findMany()
     * ```
     */
-  get follows(): Prisma.FollowsDelegate<ExtArgs, ClientOptions>;
+  get relation(): Prisma.RelationDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.transactions`: Exposes CRUD operations for the **Transactions** model.
@@ -783,7 +796,7 @@ export namespace Prisma {
     MediaAttachments: 'MediaAttachments',
     Post: 'Post',
     Reactions: 'Reactions',
-    Follows: 'Follows',
+    Relation: 'Relation',
     Transactions: 'Transactions',
     Socials: 'Socials',
     Profile: 'Profile',
@@ -806,7 +819,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "comment" | "content" | "mediaAttachments" | "post" | "reactions" | "follows" | "transactions" | "socials" | "profile" | "user"
+      modelProps: "comment" | "content" | "mediaAttachments" | "post" | "reactions" | "relation" | "transactions" | "socials" | "profile" | "user"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1180,77 +1193,77 @@ export namespace Prisma {
           }
         }
       }
-      Follows: {
-        payload: Prisma.$FollowsPayload<ExtArgs>
-        fields: Prisma.FollowsFieldRefs
+      Relation: {
+        payload: Prisma.$RelationPayload<ExtArgs>
+        fields: Prisma.RelationFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.FollowsFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload> | null
+            args: Prisma.RelationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.FollowsFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload>
+            args: Prisma.RelationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload>
           }
           findFirst: {
-            args: Prisma.FollowsFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload> | null
+            args: Prisma.RelationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.FollowsFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload>
+            args: Prisma.RelationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload>
           }
           findMany: {
-            args: Prisma.FollowsFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload>[]
+            args: Prisma.RelationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload>[]
           }
           create: {
-            args: Prisma.FollowsCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload>
+            args: Prisma.RelationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload>
           }
           createMany: {
-            args: Prisma.FollowsCreateManyArgs<ExtArgs>
+            args: Prisma.RelationCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.FollowsCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload>[]
+            args: Prisma.RelationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload>[]
           }
           delete: {
-            args: Prisma.FollowsDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload>
+            args: Prisma.RelationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload>
           }
           update: {
-            args: Prisma.FollowsUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload>
+            args: Prisma.RelationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload>
           }
           deleteMany: {
-            args: Prisma.FollowsDeleteManyArgs<ExtArgs>
+            args: Prisma.RelationDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.FollowsUpdateManyArgs<ExtArgs>
+            args: Prisma.RelationUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.FollowsUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload>[]
+            args: Prisma.RelationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload>[]
           }
           upsert: {
-            args: Prisma.FollowsUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FollowsPayload>
+            args: Prisma.RelationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RelationPayload>
           }
           aggregate: {
-            args: Prisma.FollowsAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateFollows>
+            args: Prisma.RelationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRelation>
           }
           groupBy: {
-            args: Prisma.FollowsGroupByArgs<ExtArgs>
-            result: $Utils.Optional<FollowsGroupByOutputType>[]
+            args: Prisma.RelationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RelationGroupByOutputType>[]
           }
           count: {
-            args: Prisma.FollowsCountArgs<ExtArgs>
-            result: $Utils.Optional<FollowsCountAggregateOutputType> | number
+            args: Prisma.RelationCountArgs<ExtArgs>
+            result: $Utils.Optional<RelationCountAggregateOutputType> | number
           }
         }
       }
@@ -1647,7 +1660,7 @@ export namespace Prisma {
     mediaAttachments?: MediaAttachmentsOmit
     post?: PostOmit
     reactions?: ReactionsOmit
-    follows?: FollowsOmit
+    relation?: RelationOmit
     transactions?: TransactionsOmit
     socials?: SocialsOmit
     profile?: ProfileOmit
@@ -1838,8 +1851,8 @@ export namespace Prisma {
     contents: number
     reactions: number
     transactions: number
-    follower: number
-    following: number
+    from: number
+    to: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1847,8 +1860,8 @@ export namespace Prisma {
     contents?: boolean | UserCountOutputTypeCountContentsArgs
     reactions?: boolean | UserCountOutputTypeCountReactionsArgs
     transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
-    follower?: boolean | UserCountOutputTypeCountFollowerArgs
-    following?: boolean | UserCountOutputTypeCountFollowingArgs
+    from?: boolean | UserCountOutputTypeCountFromArgs
+    to?: boolean | UserCountOutputTypeCountToArgs
   }
 
   // Custom InputTypes
@@ -1893,15 +1906,15 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountFollowerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FollowsWhereInput
+  export type UserCountOutputTypeCountFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RelationWhereInput
   }
 
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountFollowingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FollowsWhereInput
+  export type UserCountOutputTypeCountToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RelationWhereInput
   }
 
 
@@ -7631,372 +7644,396 @@ export namespace Prisma {
 
 
   /**
-   * Model Follows
+   * Model Relation
    */
 
-  export type AggregateFollows = {
-    _count: FollowsCountAggregateOutputType | null
-    _avg: FollowsAvgAggregateOutputType | null
-    _sum: FollowsSumAggregateOutputType | null
-    _min: FollowsMinAggregateOutputType | null
-    _max: FollowsMaxAggregateOutputType | null
+  export type AggregateRelation = {
+    _count: RelationCountAggregateOutputType | null
+    _avg: RelationAvgAggregateOutputType | null
+    _sum: RelationSumAggregateOutputType | null
+    _min: RelationMinAggregateOutputType | null
+    _max: RelationMaxAggregateOutputType | null
   }
 
-  export type FollowsAvgAggregateOutputType = {
-    followerId: number | null
-    followingId: number | null
+  export type RelationAvgAggregateOutputType = {
+    fromUserId: number | null
+    toUserId: number | null
   }
 
-  export type FollowsSumAggregateOutputType = {
-    followerId: number | null
-    followingId: number | null
+  export type RelationSumAggregateOutputType = {
+    fromUserId: number | null
+    toUserId: number | null
   }
 
-  export type FollowsMinAggregateOutputType = {
-    followerId: number | null
-    followingId: number | null
+  export type RelationMinAggregateOutputType = {
+    fromUserId: number | null
+    toUserId: number | null
+    state: $Enums.RelationState | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
-  export type FollowsMaxAggregateOutputType = {
-    followerId: number | null
-    followingId: number | null
+  export type RelationMaxAggregateOutputType = {
+    fromUserId: number | null
+    toUserId: number | null
+    state: $Enums.RelationState | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
-  export type FollowsCountAggregateOutputType = {
-    followerId: number
-    followingId: number
+  export type RelationCountAggregateOutputType = {
+    fromUserId: number
+    toUserId: number
+    state: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
 
-  export type FollowsAvgAggregateInputType = {
-    followerId?: true
-    followingId?: true
+  export type RelationAvgAggregateInputType = {
+    fromUserId?: true
+    toUserId?: true
   }
 
-  export type FollowsSumAggregateInputType = {
-    followerId?: true
-    followingId?: true
+  export type RelationSumAggregateInputType = {
+    fromUserId?: true
+    toUserId?: true
   }
 
-  export type FollowsMinAggregateInputType = {
-    followerId?: true
-    followingId?: true
+  export type RelationMinAggregateInputType = {
+    fromUserId?: true
+    toUserId?: true
+    state?: true
     createdAt?: true
+    updatedAt?: true
   }
 
-  export type FollowsMaxAggregateInputType = {
-    followerId?: true
-    followingId?: true
+  export type RelationMaxAggregateInputType = {
+    fromUserId?: true
+    toUserId?: true
+    state?: true
     createdAt?: true
+    updatedAt?: true
   }
 
-  export type FollowsCountAggregateInputType = {
-    followerId?: true
-    followingId?: true
+  export type RelationCountAggregateInputType = {
+    fromUserId?: true
+    toUserId?: true
+    state?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
-  export type FollowsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Follows to aggregate.
+     * Filter which Relation to aggregate.
      */
-    where?: FollowsWhereInput
+    where?: RelationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Follows to fetch.
+     * Determine the order of Relations to fetch.
      */
-    orderBy?: FollowsOrderByWithRelationInput | FollowsOrderByWithRelationInput[]
+    orderBy?: RelationOrderByWithRelationInput | RelationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: FollowsWhereUniqueInput
+    cursor?: RelationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Follows from the position of the cursor.
+     * Take `±n` Relations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Follows.
+     * Skip the first `n` Relations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Follows
+     * Count returned Relations
     **/
-    _count?: true | FollowsCountAggregateInputType
+    _count?: true | RelationCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: FollowsAvgAggregateInputType
+    _avg?: RelationAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: FollowsSumAggregateInputType
+    _sum?: RelationSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: FollowsMinAggregateInputType
+    _min?: RelationMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: FollowsMaxAggregateInputType
+    _max?: RelationMaxAggregateInputType
   }
 
-  export type GetFollowsAggregateType<T extends FollowsAggregateArgs> = {
-        [P in keyof T & keyof AggregateFollows]: P extends '_count' | 'count'
+  export type GetRelationAggregateType<T extends RelationAggregateArgs> = {
+        [P in keyof T & keyof AggregateRelation]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateFollows[P]>
-      : GetScalarType<T[P], AggregateFollows[P]>
+        : GetScalarType<T[P], AggregateRelation[P]>
+      : GetScalarType<T[P], AggregateRelation[P]>
   }
 
 
 
 
-  export type FollowsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FollowsWhereInput
-    orderBy?: FollowsOrderByWithAggregationInput | FollowsOrderByWithAggregationInput[]
-    by: FollowsScalarFieldEnum[] | FollowsScalarFieldEnum
-    having?: FollowsScalarWhereWithAggregatesInput
+  export type RelationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RelationWhereInput
+    orderBy?: RelationOrderByWithAggregationInput | RelationOrderByWithAggregationInput[]
+    by: RelationScalarFieldEnum[] | RelationScalarFieldEnum
+    having?: RelationScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: FollowsCountAggregateInputType | true
-    _avg?: FollowsAvgAggregateInputType
-    _sum?: FollowsSumAggregateInputType
-    _min?: FollowsMinAggregateInputType
-    _max?: FollowsMaxAggregateInputType
+    _count?: RelationCountAggregateInputType | true
+    _avg?: RelationAvgAggregateInputType
+    _sum?: RelationSumAggregateInputType
+    _min?: RelationMinAggregateInputType
+    _max?: RelationMaxAggregateInputType
   }
 
-  export type FollowsGroupByOutputType = {
-    followerId: number
-    followingId: number
+  export type RelationGroupByOutputType = {
+    fromUserId: number
+    toUserId: number
+    state: $Enums.RelationState
     createdAt: Date
-    _count: FollowsCountAggregateOutputType | null
-    _avg: FollowsAvgAggregateOutputType | null
-    _sum: FollowsSumAggregateOutputType | null
-    _min: FollowsMinAggregateOutputType | null
-    _max: FollowsMaxAggregateOutputType | null
+    updatedAt: Date
+    _count: RelationCountAggregateOutputType | null
+    _avg: RelationAvgAggregateOutputType | null
+    _sum: RelationSumAggregateOutputType | null
+    _min: RelationMinAggregateOutputType | null
+    _max: RelationMaxAggregateOutputType | null
   }
 
-  type GetFollowsGroupByPayload<T extends FollowsGroupByArgs> = Prisma.PrismaPromise<
+  type GetRelationGroupByPayload<T extends RelationGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<FollowsGroupByOutputType, T['by']> &
+      PickEnumerable<RelationGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof FollowsGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof RelationGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], FollowsGroupByOutputType[P]>
-            : GetScalarType<T[P], FollowsGroupByOutputType[P]>
+              : GetScalarType<T[P], RelationGroupByOutputType[P]>
+            : GetScalarType<T[P], RelationGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type FollowsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    followerId?: boolean
-    followingId?: boolean
+  export type RelationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    fromUserId?: boolean
+    toUserId?: boolean
+    state?: boolean
     createdAt?: boolean
-    follower?: boolean | UserDefaultArgs<ExtArgs>
-    following?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["follows"]>
+    updatedAt?: boolean
+    from?: boolean | UserDefaultArgs<ExtArgs>
+    to?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["relation"]>
 
-  export type FollowsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    followerId?: boolean
-    followingId?: boolean
+  export type RelationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    fromUserId?: boolean
+    toUserId?: boolean
+    state?: boolean
     createdAt?: boolean
-    follower?: boolean | UserDefaultArgs<ExtArgs>
-    following?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["follows"]>
+    updatedAt?: boolean
+    from?: boolean | UserDefaultArgs<ExtArgs>
+    to?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["relation"]>
 
-  export type FollowsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    followerId?: boolean
-    followingId?: boolean
+  export type RelationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    fromUserId?: boolean
+    toUserId?: boolean
+    state?: boolean
     createdAt?: boolean
-    follower?: boolean | UserDefaultArgs<ExtArgs>
-    following?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["follows"]>
+    updatedAt?: boolean
+    from?: boolean | UserDefaultArgs<ExtArgs>
+    to?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["relation"]>
 
-  export type FollowsSelectScalar = {
-    followerId?: boolean
-    followingId?: boolean
+  export type RelationSelectScalar = {
+    fromUserId?: boolean
+    toUserId?: boolean
+    state?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type FollowsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"followerId" | "followingId" | "createdAt", ExtArgs["result"]["follows"]>
-  export type FollowsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    follower?: boolean | UserDefaultArgs<ExtArgs>
-    following?: boolean | UserDefaultArgs<ExtArgs>
+  export type RelationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"fromUserId" | "toUserId" | "state" | "createdAt" | "updatedAt", ExtArgs["result"]["relation"]>
+  export type RelationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    from?: boolean | UserDefaultArgs<ExtArgs>
+    to?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type FollowsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    follower?: boolean | UserDefaultArgs<ExtArgs>
-    following?: boolean | UserDefaultArgs<ExtArgs>
+  export type RelationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    from?: boolean | UserDefaultArgs<ExtArgs>
+    to?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type FollowsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    follower?: boolean | UserDefaultArgs<ExtArgs>
-    following?: boolean | UserDefaultArgs<ExtArgs>
+  export type RelationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    from?: boolean | UserDefaultArgs<ExtArgs>
+    to?: boolean | UserDefaultArgs<ExtArgs>
   }
 
-  export type $FollowsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Follows"
+  export type $RelationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Relation"
     objects: {
-      follower: Prisma.$UserPayload<ExtArgs>
-      following: Prisma.$UserPayload<ExtArgs>
+      from: Prisma.$UserPayload<ExtArgs>
+      to: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      followerId: number
-      followingId: number
+      fromUserId: number
+      toUserId: number
+      state: $Enums.RelationState
       createdAt: Date
-    }, ExtArgs["result"]["follows"]>
+      updatedAt: Date
+    }, ExtArgs["result"]["relation"]>
     composites: {}
   }
 
-  type FollowsGetPayload<S extends boolean | null | undefined | FollowsDefaultArgs> = $Result.GetResult<Prisma.$FollowsPayload, S>
+  type RelationGetPayload<S extends boolean | null | undefined | RelationDefaultArgs> = $Result.GetResult<Prisma.$RelationPayload, S>
 
-  type FollowsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<FollowsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: FollowsCountAggregateInputType | true
+  type RelationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RelationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RelationCountAggregateInputType | true
     }
 
-  export interface FollowsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Follows'], meta: { name: 'Follows' } }
+  export interface RelationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Relation'], meta: { name: 'Relation' } }
     /**
-     * Find zero or one Follows that matches the filter.
-     * @param {FollowsFindUniqueArgs} args - Arguments to find a Follows
+     * Find zero or one Relation that matches the filter.
+     * @param {RelationFindUniqueArgs} args - Arguments to find a Relation
      * @example
-     * // Get one Follows
-     * const follows = await prisma.follows.findUnique({
+     * // Get one Relation
+     * const relation = await prisma.relation.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends FollowsFindUniqueArgs>(args: SelectSubset<T, FollowsFindUniqueArgs<ExtArgs>>): Prisma__FollowsClient<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends RelationFindUniqueArgs>(args: SelectSubset<T, RelationFindUniqueArgs<ExtArgs>>): Prisma__RelationClient<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Follows that matches the filter or throw an error with `error.code='P2025'`
+     * Find one Relation that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {FollowsFindUniqueOrThrowArgs} args - Arguments to find a Follows
+     * @param {RelationFindUniqueOrThrowArgs} args - Arguments to find a Relation
      * @example
-     * // Get one Follows
-     * const follows = await prisma.follows.findUniqueOrThrow({
+     * // Get one Relation
+     * const relation = await prisma.relation.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends FollowsFindUniqueOrThrowArgs>(args: SelectSubset<T, FollowsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FollowsClient<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends RelationFindUniqueOrThrowArgs>(args: SelectSubset<T, RelationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RelationClient<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Follows that matches the filter.
+     * Find the first Relation that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FollowsFindFirstArgs} args - Arguments to find a Follows
+     * @param {RelationFindFirstArgs} args - Arguments to find a Relation
      * @example
-     * // Get one Follows
-     * const follows = await prisma.follows.findFirst({
+     * // Get one Relation
+     * const relation = await prisma.relation.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends FollowsFindFirstArgs>(args?: SelectSubset<T, FollowsFindFirstArgs<ExtArgs>>): Prisma__FollowsClient<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends RelationFindFirstArgs>(args?: SelectSubset<T, RelationFindFirstArgs<ExtArgs>>): Prisma__RelationClient<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Follows that matches the filter or
+     * Find the first Relation that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FollowsFindFirstOrThrowArgs} args - Arguments to find a Follows
+     * @param {RelationFindFirstOrThrowArgs} args - Arguments to find a Relation
      * @example
-     * // Get one Follows
-     * const follows = await prisma.follows.findFirstOrThrow({
+     * // Get one Relation
+     * const relation = await prisma.relation.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends FollowsFindFirstOrThrowArgs>(args?: SelectSubset<T, FollowsFindFirstOrThrowArgs<ExtArgs>>): Prisma__FollowsClient<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends RelationFindFirstOrThrowArgs>(args?: SelectSubset<T, RelationFindFirstOrThrowArgs<ExtArgs>>): Prisma__RelationClient<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Follows that matches the filter.
+     * Find zero or more Relations that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FollowsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {RelationFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Follows
-     * const follows = await prisma.follows.findMany()
+     * // Get all Relations
+     * const relations = await prisma.relation.findMany()
      * 
-     * // Get first 10 Follows
-     * const follows = await prisma.follows.findMany({ take: 10 })
+     * // Get first 10 Relations
+     * const relations = await prisma.relation.findMany({ take: 10 })
      * 
-     * // Only select the `followerId`
-     * const followsWithFollowerIdOnly = await prisma.follows.findMany({ select: { followerId: true } })
+     * // Only select the `fromUserId`
+     * const relationWithFromUserIdOnly = await prisma.relation.findMany({ select: { fromUserId: true } })
      * 
      */
-    findMany<T extends FollowsFindManyArgs>(args?: SelectSubset<T, FollowsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends RelationFindManyArgs>(args?: SelectSubset<T, RelationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Follows.
-     * @param {FollowsCreateArgs} args - Arguments to create a Follows.
+     * Create a Relation.
+     * @param {RelationCreateArgs} args - Arguments to create a Relation.
      * @example
-     * // Create one Follows
-     * const Follows = await prisma.follows.create({
+     * // Create one Relation
+     * const Relation = await prisma.relation.create({
      *   data: {
-     *     // ... data to create a Follows
+     *     // ... data to create a Relation
      *   }
      * })
      * 
      */
-    create<T extends FollowsCreateArgs>(args: SelectSubset<T, FollowsCreateArgs<ExtArgs>>): Prisma__FollowsClient<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends RelationCreateArgs>(args: SelectSubset<T, RelationCreateArgs<ExtArgs>>): Prisma__RelationClient<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Follows.
-     * @param {FollowsCreateManyArgs} args - Arguments to create many Follows.
+     * Create many Relations.
+     * @param {RelationCreateManyArgs} args - Arguments to create many Relations.
      * @example
-     * // Create many Follows
-     * const follows = await prisma.follows.createMany({
+     * // Create many Relations
+     * const relation = await prisma.relation.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends FollowsCreateManyArgs>(args?: SelectSubset<T, FollowsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends RelationCreateManyArgs>(args?: SelectSubset<T, RelationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Follows and returns the data saved in the database.
-     * @param {FollowsCreateManyAndReturnArgs} args - Arguments to create many Follows.
+     * Create many Relations and returns the data saved in the database.
+     * @param {RelationCreateManyAndReturnArgs} args - Arguments to create many Relations.
      * @example
-     * // Create many Follows
-     * const follows = await prisma.follows.createManyAndReturn({
+     * // Create many Relations
+     * const relation = await prisma.relation.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Follows and only return the `followerId`
-     * const followsWithFollowerIdOnly = await prisma.follows.createManyAndReturn({
-     *   select: { followerId: true },
+     * // Create many Relations and only return the `fromUserId`
+     * const relationWithFromUserIdOnly = await prisma.relation.createManyAndReturn({
+     *   select: { fromUserId: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -8005,28 +8042,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends FollowsCreateManyAndReturnArgs>(args?: SelectSubset<T, FollowsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends RelationCreateManyAndReturnArgs>(args?: SelectSubset<T, RelationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Follows.
-     * @param {FollowsDeleteArgs} args - Arguments to delete one Follows.
+     * Delete a Relation.
+     * @param {RelationDeleteArgs} args - Arguments to delete one Relation.
      * @example
-     * // Delete one Follows
-     * const Follows = await prisma.follows.delete({
+     * // Delete one Relation
+     * const Relation = await prisma.relation.delete({
      *   where: {
-     *     // ... filter to delete one Follows
+     *     // ... filter to delete one Relation
      *   }
      * })
      * 
      */
-    delete<T extends FollowsDeleteArgs>(args: SelectSubset<T, FollowsDeleteArgs<ExtArgs>>): Prisma__FollowsClient<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends RelationDeleteArgs>(args: SelectSubset<T, RelationDeleteArgs<ExtArgs>>): Prisma__RelationClient<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Follows.
-     * @param {FollowsUpdateArgs} args - Arguments to update one Follows.
+     * Update one Relation.
+     * @param {RelationUpdateArgs} args - Arguments to update one Relation.
      * @example
-     * // Update one Follows
-     * const follows = await prisma.follows.update({
+     * // Update one Relation
+     * const relation = await prisma.relation.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -8036,30 +8073,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends FollowsUpdateArgs>(args: SelectSubset<T, FollowsUpdateArgs<ExtArgs>>): Prisma__FollowsClient<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends RelationUpdateArgs>(args: SelectSubset<T, RelationUpdateArgs<ExtArgs>>): Prisma__RelationClient<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Follows.
-     * @param {FollowsDeleteManyArgs} args - Arguments to filter Follows to delete.
+     * Delete zero or more Relations.
+     * @param {RelationDeleteManyArgs} args - Arguments to filter Relations to delete.
      * @example
-     * // Delete a few Follows
-     * const { count } = await prisma.follows.deleteMany({
+     * // Delete a few Relations
+     * const { count } = await prisma.relation.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends FollowsDeleteManyArgs>(args?: SelectSubset<T, FollowsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends RelationDeleteManyArgs>(args?: SelectSubset<T, RelationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Follows.
+     * Update zero or more Relations.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FollowsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {RelationUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Follows
-     * const follows = await prisma.follows.updateMany({
+     * // Update many Relations
+     * const relation = await prisma.relation.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -8069,14 +8106,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends FollowsUpdateManyArgs>(args: SelectSubset<T, FollowsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends RelationUpdateManyArgs>(args: SelectSubset<T, RelationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Follows and returns the data updated in the database.
-     * @param {FollowsUpdateManyAndReturnArgs} args - Arguments to update many Follows.
+     * Update zero or more Relations and returns the data updated in the database.
+     * @param {RelationUpdateManyAndReturnArgs} args - Arguments to update many Relations.
      * @example
-     * // Update many Follows
-     * const follows = await prisma.follows.updateManyAndReturn({
+     * // Update many Relations
+     * const relation = await prisma.relation.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -8085,9 +8122,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Follows and only return the `followerId`
-     * const followsWithFollowerIdOnly = await prisma.follows.updateManyAndReturn({
-     *   select: { followerId: true },
+     * // Update zero or more Relations and only return the `fromUserId`
+     * const relationWithFromUserIdOnly = await prisma.relation.updateManyAndReturn({
+     *   select: { fromUserId: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -8099,56 +8136,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends FollowsUpdateManyAndReturnArgs>(args: SelectSubset<T, FollowsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends RelationUpdateManyAndReturnArgs>(args: SelectSubset<T, RelationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Follows.
-     * @param {FollowsUpsertArgs} args - Arguments to update or create a Follows.
+     * Create or update one Relation.
+     * @param {RelationUpsertArgs} args - Arguments to update or create a Relation.
      * @example
-     * // Update or create a Follows
-     * const follows = await prisma.follows.upsert({
+     * // Update or create a Relation
+     * const relation = await prisma.relation.upsert({
      *   create: {
-     *     // ... data to create a Follows
+     *     // ... data to create a Relation
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Follows we want to update
+     *     // ... the filter for the Relation we want to update
      *   }
      * })
      */
-    upsert<T extends FollowsUpsertArgs>(args: SelectSubset<T, FollowsUpsertArgs<ExtArgs>>): Prisma__FollowsClient<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends RelationUpsertArgs>(args: SelectSubset<T, RelationUpsertArgs<ExtArgs>>): Prisma__RelationClient<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Follows.
+     * Count the number of Relations.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FollowsCountArgs} args - Arguments to filter Follows to count.
+     * @param {RelationCountArgs} args - Arguments to filter Relations to count.
      * @example
-     * // Count the number of Follows
-     * const count = await prisma.follows.count({
+     * // Count the number of Relations
+     * const count = await prisma.relation.count({
      *   where: {
-     *     // ... the filter for the Follows we want to count
+     *     // ... the filter for the Relations we want to count
      *   }
      * })
     **/
-    count<T extends FollowsCountArgs>(
-      args?: Subset<T, FollowsCountArgs>,
+    count<T extends RelationCountArgs>(
+      args?: Subset<T, RelationCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], FollowsCountAggregateOutputType>
+          : GetScalarType<T['select'], RelationCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Follows.
+     * Allows you to perform aggregations operations on a Relation.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FollowsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {RelationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -8168,13 +8205,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends FollowsAggregateArgs>(args: Subset<T, FollowsAggregateArgs>): Prisma.PrismaPromise<GetFollowsAggregateType<T>>
+    aggregate<T extends RelationAggregateArgs>(args: Subset<T, RelationAggregateArgs>): Prisma.PrismaPromise<GetRelationAggregateType<T>>
 
     /**
-     * Group by Follows.
+     * Group by Relation.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FollowsGroupByArgs} args - Group by arguments.
+     * @param {RelationGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -8189,14 +8226,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends FollowsGroupByArgs,
+      T extends RelationGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: FollowsGroupByArgs['orderBy'] }
-        : { orderBy?: FollowsGroupByArgs['orderBy'] },
+        ? { orderBy: RelationGroupByArgs['orderBy'] }
+        : { orderBy?: RelationGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -8245,23 +8282,23 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, FollowsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFollowsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, RelationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRelationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the Follows model
+   * Fields of the Relation model
    */
-  readonly fields: FollowsFieldRefs;
+  readonly fields: RelationFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Follows.
+   * The delegate class that acts as a "Promise-like" for Relation.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__FollowsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__RelationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    follower<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    following<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    from<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    to<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8288,423 +8325,425 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the Follows model
+   * Fields of the Relation model
    */
-  interface FollowsFieldRefs {
-    readonly followerId: FieldRef<"Follows", 'Int'>
-    readonly followingId: FieldRef<"Follows", 'Int'>
-    readonly createdAt: FieldRef<"Follows", 'DateTime'>
+  interface RelationFieldRefs {
+    readonly fromUserId: FieldRef<"Relation", 'Int'>
+    readonly toUserId: FieldRef<"Relation", 'Int'>
+    readonly state: FieldRef<"Relation", 'RelationState'>
+    readonly createdAt: FieldRef<"Relation", 'DateTime'>
+    readonly updatedAt: FieldRef<"Relation", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * Follows findUnique
+   * Relation findUnique
    */
-  export type FollowsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
     /**
-     * Filter, which Follows to fetch.
+     * Filter, which Relation to fetch.
      */
-    where: FollowsWhereUniqueInput
+    where: RelationWhereUniqueInput
   }
 
   /**
-   * Follows findUniqueOrThrow
+   * Relation findUniqueOrThrow
    */
-  export type FollowsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
     /**
-     * Filter, which Follows to fetch.
+     * Filter, which Relation to fetch.
      */
-    where: FollowsWhereUniqueInput
+    where: RelationWhereUniqueInput
   }
 
   /**
-   * Follows findFirst
+   * Relation findFirst
    */
-  export type FollowsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
     /**
-     * Filter, which Follows to fetch.
+     * Filter, which Relation to fetch.
      */
-    where?: FollowsWhereInput
+    where?: RelationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Follows to fetch.
+     * Determine the order of Relations to fetch.
      */
-    orderBy?: FollowsOrderByWithRelationInput | FollowsOrderByWithRelationInput[]
+    orderBy?: RelationOrderByWithRelationInput | RelationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Follows.
+     * Sets the position for searching for Relations.
      */
-    cursor?: FollowsWhereUniqueInput
+    cursor?: RelationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Follows from the position of the cursor.
+     * Take `±n` Relations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Follows.
+     * Skip the first `n` Relations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Follows.
+     * Filter by unique combinations of Relations.
      */
-    distinct?: FollowsScalarFieldEnum | FollowsScalarFieldEnum[]
+    distinct?: RelationScalarFieldEnum | RelationScalarFieldEnum[]
   }
 
   /**
-   * Follows findFirstOrThrow
+   * Relation findFirstOrThrow
    */
-  export type FollowsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
     /**
-     * Filter, which Follows to fetch.
+     * Filter, which Relation to fetch.
      */
-    where?: FollowsWhereInput
+    where?: RelationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Follows to fetch.
+     * Determine the order of Relations to fetch.
      */
-    orderBy?: FollowsOrderByWithRelationInput | FollowsOrderByWithRelationInput[]
+    orderBy?: RelationOrderByWithRelationInput | RelationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Follows.
+     * Sets the position for searching for Relations.
      */
-    cursor?: FollowsWhereUniqueInput
+    cursor?: RelationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Follows from the position of the cursor.
+     * Take `±n` Relations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Follows.
+     * Skip the first `n` Relations.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Follows.
+     * Filter by unique combinations of Relations.
      */
-    distinct?: FollowsScalarFieldEnum | FollowsScalarFieldEnum[]
+    distinct?: RelationScalarFieldEnum | RelationScalarFieldEnum[]
   }
 
   /**
-   * Follows findMany
+   * Relation findMany
    */
-  export type FollowsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
     /**
-     * Filter, which Follows to fetch.
+     * Filter, which Relations to fetch.
      */
-    where?: FollowsWhereInput
+    where?: RelationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Follows to fetch.
+     * Determine the order of Relations to fetch.
      */
-    orderBy?: FollowsOrderByWithRelationInput | FollowsOrderByWithRelationInput[]
+    orderBy?: RelationOrderByWithRelationInput | RelationOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Follows.
+     * Sets the position for listing Relations.
      */
-    cursor?: FollowsWhereUniqueInput
+    cursor?: RelationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Follows from the position of the cursor.
+     * Take `±n` Relations from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Follows.
+     * Skip the first `n` Relations.
      */
     skip?: number
-    distinct?: FollowsScalarFieldEnum | FollowsScalarFieldEnum[]
+    distinct?: RelationScalarFieldEnum | RelationScalarFieldEnum[]
   }
 
   /**
-   * Follows create
+   * Relation create
    */
-  export type FollowsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
     /**
-     * The data needed to create a Follows.
+     * The data needed to create a Relation.
      */
-    data: XOR<FollowsCreateInput, FollowsUncheckedCreateInput>
+    data: XOR<RelationCreateInput, RelationUncheckedCreateInput>
   }
 
   /**
-   * Follows createMany
+   * Relation createMany
    */
-  export type FollowsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Follows.
+     * The data used to create many Relations.
      */
-    data: FollowsCreateManyInput | FollowsCreateManyInput[]
+    data: RelationCreateManyInput | RelationCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * Follows createManyAndReturn
+   * Relation createManyAndReturn
    */
-  export type FollowsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelectCreateManyAndReturn<ExtArgs> | null
+    select?: RelationSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
-     * The data used to create many Follows.
+     * The data used to create many Relations.
      */
-    data: FollowsCreateManyInput | FollowsCreateManyInput[]
+    data: RelationCreateManyInput | RelationCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: RelationIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Follows update
+   * Relation update
    */
-  export type FollowsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
     /**
-     * The data needed to update a Follows.
+     * The data needed to update a Relation.
      */
-    data: XOR<FollowsUpdateInput, FollowsUncheckedUpdateInput>
+    data: XOR<RelationUpdateInput, RelationUncheckedUpdateInput>
     /**
-     * Choose, which Follows to update.
+     * Choose, which Relation to update.
      */
-    where: FollowsWhereUniqueInput
+    where: RelationWhereUniqueInput
   }
 
   /**
-   * Follows updateMany
+   * Relation updateMany
    */
-  export type FollowsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update Follows.
+     * The data used to update Relations.
      */
-    data: XOR<FollowsUpdateManyMutationInput, FollowsUncheckedUpdateManyInput>
+    data: XOR<RelationUpdateManyMutationInput, RelationUncheckedUpdateManyInput>
     /**
-     * Filter which Follows to update
+     * Filter which Relations to update
      */
-    where?: FollowsWhereInput
+    where?: RelationWhereInput
     /**
-     * Limit how many Follows to update.
+     * Limit how many Relations to update.
      */
     limit?: number
   }
 
   /**
-   * Follows updateManyAndReturn
+   * Relation updateManyAndReturn
    */
-  export type FollowsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: RelationSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
-     * The data used to update Follows.
+     * The data used to update Relations.
      */
-    data: XOR<FollowsUpdateManyMutationInput, FollowsUncheckedUpdateManyInput>
+    data: XOR<RelationUpdateManyMutationInput, RelationUncheckedUpdateManyInput>
     /**
-     * Filter which Follows to update
+     * Filter which Relations to update
      */
-    where?: FollowsWhereInput
+    where?: RelationWhereInput
     /**
-     * Limit how many Follows to update.
+     * Limit how many Relations to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: RelationIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Follows upsert
+   * Relation upsert
    */
-  export type FollowsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
     /**
-     * The filter to search for the Follows to update in case it exists.
+     * The filter to search for the Relation to update in case it exists.
      */
-    where: FollowsWhereUniqueInput
+    where: RelationWhereUniqueInput
     /**
-     * In case the Follows found by the `where` argument doesn't exist, create a new Follows with this data.
+     * In case the Relation found by the `where` argument doesn't exist, create a new Relation with this data.
      */
-    create: XOR<FollowsCreateInput, FollowsUncheckedCreateInput>
+    create: XOR<RelationCreateInput, RelationUncheckedCreateInput>
     /**
-     * In case the Follows was found with the provided `where` argument, update it with this data.
+     * In case the Relation was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<FollowsUpdateInput, FollowsUncheckedUpdateInput>
+    update: XOR<RelationUpdateInput, RelationUncheckedUpdateInput>
   }
 
   /**
-   * Follows delete
+   * Relation delete
    */
-  export type FollowsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
     /**
-     * Filter which Follows to delete.
+     * Filter which Relation to delete.
      */
-    where: FollowsWhereUniqueInput
+    where: RelationWhereUniqueInput
   }
 
   /**
-   * Follows deleteMany
+   * Relation deleteMany
    */
-  export type FollowsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Follows to delete
+     * Filter which Relations to delete
      */
-    where?: FollowsWhereInput
+    where?: RelationWhereInput
     /**
-     * Limit how many Follows to delete.
+     * Limit how many Relations to delete.
      */
     limit?: number
   }
 
   /**
-   * Follows without action
+   * Relation without action
    */
-  export type FollowsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type RelationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
+    include?: RelationInclude<ExtArgs> | null
   }
 
 
@@ -12070,6 +12109,7 @@ export namespace Prisma {
     displayName: string | null
     verified: boolean | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -12079,6 +12119,7 @@ export namespace Prisma {
     displayName: string | null
     verified: boolean | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -12088,6 +12129,7 @@ export namespace Prisma {
     displayName: number
     verified: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -12107,6 +12149,7 @@ export namespace Prisma {
     displayName?: true
     verified?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -12116,6 +12159,7 @@ export namespace Prisma {
     displayName?: true
     verified?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -12125,6 +12169,7 @@ export namespace Prisma {
     displayName?: true
     verified?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -12221,6 +12266,7 @@ export namespace Prisma {
     displayName: string
     verified: boolean
     createdAt: Date
+    updatedAt: Date
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -12249,13 +12295,14 @@ export namespace Prisma {
     displayName?: boolean
     verified?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     profile?: boolean | User$profileArgs<ExtArgs>
     socials?: boolean | User$socialsArgs<ExtArgs>
     contents?: boolean | User$contentsArgs<ExtArgs>
     reactions?: boolean | User$reactionsArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
-    follower?: boolean | User$followerArgs<ExtArgs>
-    following?: boolean | User$followingArgs<ExtArgs>
+    from?: boolean | User$fromArgs<ExtArgs>
+    to?: boolean | User$toArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -12266,6 +12313,7 @@ export namespace Prisma {
     displayName?: boolean
     verified?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12275,6 +12323,7 @@ export namespace Prisma {
     displayName?: boolean
     verified?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -12284,17 +12333,18 @@ export namespace Prisma {
     displayName?: boolean
     verified?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "address" | "displayName" | "verified" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "address" | "displayName" | "verified" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     profile?: boolean | User$profileArgs<ExtArgs>
     socials?: boolean | User$socialsArgs<ExtArgs>
     contents?: boolean | User$contentsArgs<ExtArgs>
     reactions?: boolean | User$reactionsArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
-    follower?: boolean | User$followerArgs<ExtArgs>
-    following?: boolean | User$followingArgs<ExtArgs>
+    from?: boolean | User$fromArgs<ExtArgs>
+    to?: boolean | User$toArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -12308,8 +12358,8 @@ export namespace Prisma {
       contents: Prisma.$ContentPayload<ExtArgs>[]
       reactions: Prisma.$ReactionsPayload<ExtArgs>[]
       transactions: Prisma.$TransactionsPayload<ExtArgs>[]
-      follower: Prisma.$FollowsPayload<ExtArgs>[]
-      following: Prisma.$FollowsPayload<ExtArgs>[]
+      from: Prisma.$RelationPayload<ExtArgs>[]
+      to: Prisma.$RelationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12318,6 +12368,7 @@ export namespace Prisma {
       displayName: string
       verified: boolean
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -12717,8 +12768,8 @@ export namespace Prisma {
     contents<T extends User$contentsArgs<ExtArgs> = {}>(args?: Subset<T, User$contentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reactions<T extends User$reactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$reactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    follower<T extends User$followerArgs<ExtArgs> = {}>(args?: Subset<T, User$followerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    following<T extends User$followingArgs<ExtArgs> = {}>(args?: Subset<T, User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    from<T extends User$fromArgs<ExtArgs> = {}>(args?: Subset<T, User$fromArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    to<T extends User$toArgs<ExtArgs> = {}>(args?: Subset<T, User$toArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12754,6 +12805,7 @@ export namespace Prisma {
     readonly displayName: FieldRef<"User", 'String'>
     readonly verified: FieldRef<"User", 'Boolean'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -13257,51 +13309,51 @@ export namespace Prisma {
   }
 
   /**
-   * User.follower
+   * User.from
    */
-  export type User$followerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$fromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
-    where?: FollowsWhereInput
-    orderBy?: FollowsOrderByWithRelationInput | FollowsOrderByWithRelationInput[]
-    cursor?: FollowsWhereUniqueInput
+    include?: RelationInclude<ExtArgs> | null
+    where?: RelationWhereInput
+    orderBy?: RelationOrderByWithRelationInput | RelationOrderByWithRelationInput[]
+    cursor?: RelationWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: FollowsScalarFieldEnum | FollowsScalarFieldEnum[]
+    distinct?: RelationScalarFieldEnum | RelationScalarFieldEnum[]
   }
 
   /**
-   * User.following
+   * User.to
    */
-  export type User$followingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$toArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Follows
+     * Select specific fields to fetch from the Relation
      */
-    select?: FollowsSelect<ExtArgs> | null
+    select?: RelationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Follows
+     * Omit specific fields from the Relation
      */
-    omit?: FollowsOmit<ExtArgs> | null
+    omit?: RelationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FollowsInclude<ExtArgs> | null
-    where?: FollowsWhereInput
-    orderBy?: FollowsOrderByWithRelationInput | FollowsOrderByWithRelationInput[]
-    cursor?: FollowsWhereUniqueInput
+    include?: RelationInclude<ExtArgs> | null
+    where?: RelationWhereInput
+    orderBy?: RelationOrderByWithRelationInput | RelationOrderByWithRelationInput[]
+    cursor?: RelationWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: FollowsScalarFieldEnum | FollowsScalarFieldEnum[]
+    distinct?: RelationScalarFieldEnum | RelationScalarFieldEnum[]
   }
 
   /**
@@ -13394,13 +13446,15 @@ export namespace Prisma {
   export type ReactionsScalarFieldEnum = (typeof ReactionsScalarFieldEnum)[keyof typeof ReactionsScalarFieldEnum]
 
 
-  export const FollowsScalarFieldEnum: {
-    followerId: 'followerId',
-    followingId: 'followingId',
-    createdAt: 'createdAt'
+  export const RelationScalarFieldEnum: {
+    fromUserId: 'fromUserId',
+    toUserId: 'toUserId',
+    state: 'state',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
-  export type FollowsScalarFieldEnum = (typeof FollowsScalarFieldEnum)[keyof typeof FollowsScalarFieldEnum]
+  export type RelationScalarFieldEnum = (typeof RelationScalarFieldEnum)[keyof typeof RelationScalarFieldEnum]
 
 
   export const TransactionsScalarFieldEnum: {
@@ -13445,7 +13499,8 @@ export namespace Prisma {
     address: 'address',
     displayName: 'displayName',
     verified: 'verified',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -13659,6 +13714,20 @@ export namespace Prisma {
    * Reference to a field of type 'ReactionType[]'
    */
   export type ListEnumReactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReactionType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RelationState'
+   */
+  export type EnumRelationStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RelationState'>
+    
+
+
+  /**
+   * Reference to a field of type 'RelationState[]'
+   */
+  export type ListEnumRelationStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RelationState[]'>
     
 
 
@@ -14019,55 +14088,65 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Reactions"> | Date | string
   }
 
-  export type FollowsWhereInput = {
-    AND?: FollowsWhereInput | FollowsWhereInput[]
-    OR?: FollowsWhereInput[]
-    NOT?: FollowsWhereInput | FollowsWhereInput[]
-    followerId?: IntFilter<"Follows"> | number
-    followingId?: IntFilter<"Follows"> | number
-    createdAt?: DateTimeFilter<"Follows"> | Date | string
-    follower?: XOR<UserScalarRelationFilter, UserWhereInput>
-    following?: XOR<UserScalarRelationFilter, UserWhereInput>
+  export type RelationWhereInput = {
+    AND?: RelationWhereInput | RelationWhereInput[]
+    OR?: RelationWhereInput[]
+    NOT?: RelationWhereInput | RelationWhereInput[]
+    fromUserId?: IntFilter<"Relation"> | number
+    toUserId?: IntFilter<"Relation"> | number
+    state?: EnumRelationStateFilter<"Relation"> | $Enums.RelationState
+    createdAt?: DateTimeFilter<"Relation"> | Date | string
+    updatedAt?: DateTimeFilter<"Relation"> | Date | string
+    from?: XOR<UserScalarRelationFilter, UserWhereInput>
+    to?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
-  export type FollowsOrderByWithRelationInput = {
-    followerId?: SortOrder
-    followingId?: SortOrder
+  export type RelationOrderByWithRelationInput = {
+    fromUserId?: SortOrder
+    toUserId?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
-    follower?: UserOrderByWithRelationInput
-    following?: UserOrderByWithRelationInput
+    updatedAt?: SortOrder
+    from?: UserOrderByWithRelationInput
+    to?: UserOrderByWithRelationInput
   }
 
-  export type FollowsWhereUniqueInput = Prisma.AtLeast<{
-    followerId_followingId?: FollowsFollowerIdFollowingIdCompoundUniqueInput
-    AND?: FollowsWhereInput | FollowsWhereInput[]
-    OR?: FollowsWhereInput[]
-    NOT?: FollowsWhereInput | FollowsWhereInput[]
-    followerId?: IntFilter<"Follows"> | number
-    followingId?: IntFilter<"Follows"> | number
-    createdAt?: DateTimeFilter<"Follows"> | Date | string
-    follower?: XOR<UserScalarRelationFilter, UserWhereInput>
-    following?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "followerId_followingId">
+  export type RelationWhereUniqueInput = Prisma.AtLeast<{
+    fromUserId_toUserId?: RelationFromUserIdToUserIdCompoundUniqueInput
+    AND?: RelationWhereInput | RelationWhereInput[]
+    OR?: RelationWhereInput[]
+    NOT?: RelationWhereInput | RelationWhereInput[]
+    fromUserId?: IntFilter<"Relation"> | number
+    toUserId?: IntFilter<"Relation"> | number
+    state?: EnumRelationStateFilter<"Relation"> | $Enums.RelationState
+    createdAt?: DateTimeFilter<"Relation"> | Date | string
+    updatedAt?: DateTimeFilter<"Relation"> | Date | string
+    from?: XOR<UserScalarRelationFilter, UserWhereInput>
+    to?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "fromUserId_toUserId">
 
-  export type FollowsOrderByWithAggregationInput = {
-    followerId?: SortOrder
-    followingId?: SortOrder
+  export type RelationOrderByWithAggregationInput = {
+    fromUserId?: SortOrder
+    toUserId?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
-    _count?: FollowsCountOrderByAggregateInput
-    _avg?: FollowsAvgOrderByAggregateInput
-    _max?: FollowsMaxOrderByAggregateInput
-    _min?: FollowsMinOrderByAggregateInput
-    _sum?: FollowsSumOrderByAggregateInput
+    updatedAt?: SortOrder
+    _count?: RelationCountOrderByAggregateInput
+    _avg?: RelationAvgOrderByAggregateInput
+    _max?: RelationMaxOrderByAggregateInput
+    _min?: RelationMinOrderByAggregateInput
+    _sum?: RelationSumOrderByAggregateInput
   }
 
-  export type FollowsScalarWhereWithAggregatesInput = {
-    AND?: FollowsScalarWhereWithAggregatesInput | FollowsScalarWhereWithAggregatesInput[]
-    OR?: FollowsScalarWhereWithAggregatesInput[]
-    NOT?: FollowsScalarWhereWithAggregatesInput | FollowsScalarWhereWithAggregatesInput[]
-    followerId?: IntWithAggregatesFilter<"Follows"> | number
-    followingId?: IntWithAggregatesFilter<"Follows"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Follows"> | Date | string
+  export type RelationScalarWhereWithAggregatesInput = {
+    AND?: RelationScalarWhereWithAggregatesInput | RelationScalarWhereWithAggregatesInput[]
+    OR?: RelationScalarWhereWithAggregatesInput[]
+    NOT?: RelationScalarWhereWithAggregatesInput | RelationScalarWhereWithAggregatesInput[]
+    fromUserId?: IntWithAggregatesFilter<"Relation"> | number
+    toUserId?: IntWithAggregatesFilter<"Relation"> | number
+    state?: EnumRelationStateWithAggregatesFilter<"Relation"> | $Enums.RelationState
+    createdAt?: DateTimeWithAggregatesFilter<"Relation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Relation"> | Date | string
   }
 
   export type TransactionsWhereInput = {
@@ -14269,13 +14348,14 @@ export namespace Prisma {
     displayName?: StringFilter<"User"> | string
     verified?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     profile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
     socials?: SocialsListRelationFilter
     contents?: ContentListRelationFilter
     reactions?: ReactionsListRelationFilter
     transactions?: TransactionsListRelationFilter
-    follower?: FollowsListRelationFilter
-    following?: FollowsListRelationFilter
+    from?: RelationListRelationFilter
+    to?: RelationListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -14285,13 +14365,14 @@ export namespace Prisma {
     displayName?: SortOrder
     verified?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     profile?: ProfileOrderByWithRelationInput
     socials?: SocialsOrderByRelationAggregateInput
     contents?: ContentOrderByRelationAggregateInput
     reactions?: ReactionsOrderByRelationAggregateInput
     transactions?: TransactionsOrderByRelationAggregateInput
-    follower?: FollowsOrderByRelationAggregateInput
-    following?: FollowsOrderByRelationAggregateInput
+    from?: RelationOrderByRelationAggregateInput
+    to?: RelationOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -14305,13 +14386,14 @@ export namespace Prisma {
     displayName?: StringFilter<"User"> | string
     verified?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     profile?: XOR<ProfileNullableScalarRelationFilter, ProfileWhereInput> | null
     socials?: SocialsListRelationFilter
     contents?: ContentListRelationFilter
     reactions?: ReactionsListRelationFilter
     transactions?: TransactionsListRelationFilter
-    follower?: FollowsListRelationFilter
-    following?: FollowsListRelationFilter
+    from?: RelationListRelationFilter
+    to?: RelationListRelationFilter
   }, "id" | "email" | "address">
 
   export type UserOrderByWithAggregationInput = {
@@ -14321,6 +14403,7 @@ export namespace Prisma {
     displayName?: SortOrder
     verified?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -14338,6 +14421,7 @@ export namespace Prisma {
     displayName?: StringWithAggregatesFilter<"User"> | string
     verified?: BoolWithAggregatesFilter<"User"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
   export type CommentCreateInput = {
@@ -14635,44 +14719,58 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FollowsCreateInput = {
+  export type RelationCreateInput = {
+    state: $Enums.RelationState
     createdAt?: Date | string
-    follower: UserCreateNestedOneWithoutFollowerInput
-    following: UserCreateNestedOneWithoutFollowingInput
+    updatedAt?: Date | string
+    from: UserCreateNestedOneWithoutFromInput
+    to: UserCreateNestedOneWithoutToInput
   }
 
-  export type FollowsUncheckedCreateInput = {
-    followerId: number
-    followingId: number
+  export type RelationUncheckedCreateInput = {
+    fromUserId: number
+    toUserId: number
+    state: $Enums.RelationState
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type FollowsUpdateInput = {
+  export type RelationUpdateInput = {
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    follower?: UserUpdateOneRequiredWithoutFollowerNestedInput
-    following?: UserUpdateOneRequiredWithoutFollowingNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    from?: UserUpdateOneRequiredWithoutFromNestedInput
+    to?: UserUpdateOneRequiredWithoutToNestedInput
   }
 
-  export type FollowsUncheckedUpdateInput = {
-    followerId?: IntFieldUpdateOperationsInput | number
-    followingId?: IntFieldUpdateOperationsInput | number
+  export type RelationUncheckedUpdateInput = {
+    fromUserId?: IntFieldUpdateOperationsInput | number
+    toUserId?: IntFieldUpdateOperationsInput | number
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FollowsCreateManyInput = {
-    followerId: number
-    followingId: number
+  export type RelationCreateManyInput = {
+    fromUserId: number
+    toUserId: number
+    state: $Enums.RelationState
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type FollowsUpdateManyMutationInput = {
+  export type RelationUpdateManyMutationInput = {
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FollowsUncheckedUpdateManyInput = {
-    followerId?: IntFieldUpdateOperationsInput | number
-    followingId?: IntFieldUpdateOperationsInput | number
+  export type RelationUncheckedUpdateManyInput = {
+    fromUserId?: IntFieldUpdateOperationsInput | number
+    toUserId?: IntFieldUpdateOperationsInput | number
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TransactionsCreateInput = {
@@ -14858,13 +14956,14 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileCreateNestedOneWithoutUserInput
     socials?: SocialsCreateNestedManyWithoutUserInput
     contents?: ContentCreateNestedManyWithoutUserInput
     reactions?: ReactionsCreateNestedManyWithoutUserInput
     transactions?: TransactionsCreateNestedManyWithoutUserInput
-    follower?: FollowsCreateNestedManyWithoutFollowerInput
-    following?: FollowsCreateNestedManyWithoutFollowingInput
+    from?: RelationCreateNestedManyWithoutFromInput
+    to?: RelationCreateNestedManyWithoutToInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -14874,13 +14973,14 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
     socials?: SocialsUncheckedCreateNestedManyWithoutUserInput
     contents?: ContentUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionsUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutUserInput
-    follower?: FollowsUncheckedCreateNestedManyWithoutFollowerInput
-    following?: FollowsUncheckedCreateNestedManyWithoutFollowingInput
+    from?: RelationUncheckedCreateNestedManyWithoutFromInput
+    to?: RelationUncheckedCreateNestedManyWithoutToInput
   }
 
   export type UserUpdateInput = {
@@ -14889,13 +14989,14 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneWithoutUserNestedInput
     socials?: SocialsUpdateManyWithoutUserNestedInput
     contents?: ContentUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUpdateManyWithoutUserNestedInput
-    follower?: FollowsUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUpdateManyWithoutFollowingNestedInput
+    from?: RelationUpdateManyWithoutFromNestedInput
+    to?: RelationUpdateManyWithoutToNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -14905,13 +15006,14 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
     socials?: SocialsUncheckedUpdateManyWithoutUserNestedInput
     contents?: ContentUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutUserNestedInput
-    follower?: FollowsUncheckedUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUncheckedUpdateManyWithoutFollowingNestedInput
+    from?: RelationUncheckedUpdateManyWithoutFromNestedInput
+    to?: RelationUncheckedUpdateManyWithoutToNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -14921,6 +15023,7 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -14929,6 +15032,7 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -14938,6 +15042,7 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -15430,37 +15535,60 @@ export namespace Prisma {
     _max?: NestedEnumReactionTypeFilter<$PrismaModel>
   }
 
-  export type FollowsFollowerIdFollowingIdCompoundUniqueInput = {
-    followerId: number
-    followingId: number
+  export type EnumRelationStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.RelationState | EnumRelationStateFieldRefInput<$PrismaModel>
+    in?: $Enums.RelationState[] | ListEnumRelationStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RelationState[] | ListEnumRelationStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumRelationStateFilter<$PrismaModel> | $Enums.RelationState
   }
 
-  export type FollowsCountOrderByAggregateInput = {
-    followerId?: SortOrder
-    followingId?: SortOrder
+  export type RelationFromUserIdToUserIdCompoundUniqueInput = {
+    fromUserId: number
+    toUserId: number
+  }
+
+  export type RelationCountOrderByAggregateInput = {
+    fromUserId?: SortOrder
+    toUserId?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
-  export type FollowsAvgOrderByAggregateInput = {
-    followerId?: SortOrder
-    followingId?: SortOrder
+  export type RelationAvgOrderByAggregateInput = {
+    fromUserId?: SortOrder
+    toUserId?: SortOrder
   }
 
-  export type FollowsMaxOrderByAggregateInput = {
-    followerId?: SortOrder
-    followingId?: SortOrder
+  export type RelationMaxOrderByAggregateInput = {
+    fromUserId?: SortOrder
+    toUserId?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
-  export type FollowsMinOrderByAggregateInput = {
-    followerId?: SortOrder
-    followingId?: SortOrder
+  export type RelationMinOrderByAggregateInput = {
+    fromUserId?: SortOrder
+    toUserId?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
-  export type FollowsSumOrderByAggregateInput = {
-    followerId?: SortOrder
-    followingId?: SortOrder
+  export type RelationSumOrderByAggregateInput = {
+    fromUserId?: SortOrder
+    toUserId?: SortOrder
+  }
+
+  export type EnumRelationStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RelationState | EnumRelationStateFieldRefInput<$PrismaModel>
+    in?: $Enums.RelationState[] | ListEnumRelationStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RelationState[] | ListEnumRelationStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumRelationStateWithAggregatesFilter<$PrismaModel> | $Enums.RelationState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRelationStateFilter<$PrismaModel>
+    _max?: NestedEnumRelationStateFilter<$PrismaModel>
   }
 
   export type EnumTxTypeFilter<$PrismaModel = never> = {
@@ -15698,10 +15826,10 @@ export namespace Prisma {
     none?: TransactionsWhereInput
   }
 
-  export type FollowsListRelationFilter = {
-    every?: FollowsWhereInput
-    some?: FollowsWhereInput
-    none?: FollowsWhereInput
+  export type RelationListRelationFilter = {
+    every?: RelationWhereInput
+    some?: RelationWhereInput
+    none?: RelationWhereInput
   }
 
   export type SocialsOrderByRelationAggregateInput = {
@@ -15716,7 +15844,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type FollowsOrderByRelationAggregateInput = {
+  export type RelationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15733,6 +15861,7 @@ export namespace Prisma {
     displayName?: SortOrder
     verified?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -15746,6 +15875,7 @@ export namespace Prisma {
     displayName?: SortOrder
     verified?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -15755,6 +15885,7 @@ export namespace Prisma {
     displayName?: SortOrder
     verified?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -16147,32 +16278,36 @@ export namespace Prisma {
     update?: XOR<XOR<ContentUpdateToOneWithWhereWithoutReactionsInput, ContentUpdateWithoutReactionsInput>, ContentUncheckedUpdateWithoutReactionsInput>
   }
 
-  export type UserCreateNestedOneWithoutFollowerInput = {
-    create?: XOR<UserCreateWithoutFollowerInput, UserUncheckedCreateWithoutFollowerInput>
-    connectOrCreate?: UserCreateOrConnectWithoutFollowerInput
+  export type UserCreateNestedOneWithoutFromInput = {
+    create?: XOR<UserCreateWithoutFromInput, UserUncheckedCreateWithoutFromInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFromInput
     connect?: UserWhereUniqueInput
   }
 
-  export type UserCreateNestedOneWithoutFollowingInput = {
-    create?: XOR<UserCreateWithoutFollowingInput, UserUncheckedCreateWithoutFollowingInput>
-    connectOrCreate?: UserCreateOrConnectWithoutFollowingInput
+  export type UserCreateNestedOneWithoutToInput = {
+    create?: XOR<UserCreateWithoutToInput, UserUncheckedCreateWithoutToInput>
+    connectOrCreate?: UserCreateOrConnectWithoutToInput
     connect?: UserWhereUniqueInput
   }
 
-  export type UserUpdateOneRequiredWithoutFollowerNestedInput = {
-    create?: XOR<UserCreateWithoutFollowerInput, UserUncheckedCreateWithoutFollowerInput>
-    connectOrCreate?: UserCreateOrConnectWithoutFollowerInput
-    upsert?: UserUpsertWithoutFollowerInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFollowerInput, UserUpdateWithoutFollowerInput>, UserUncheckedUpdateWithoutFollowerInput>
+  export type EnumRelationStateFieldUpdateOperationsInput = {
+    set?: $Enums.RelationState
   }
 
-  export type UserUpdateOneRequiredWithoutFollowingNestedInput = {
-    create?: XOR<UserCreateWithoutFollowingInput, UserUncheckedCreateWithoutFollowingInput>
-    connectOrCreate?: UserCreateOrConnectWithoutFollowingInput
-    upsert?: UserUpsertWithoutFollowingInput
+  export type UserUpdateOneRequiredWithoutFromNestedInput = {
+    create?: XOR<UserCreateWithoutFromInput, UserUncheckedCreateWithoutFromInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFromInput
+    upsert?: UserUpsertWithoutFromInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFollowingInput, UserUpdateWithoutFollowingInput>, UserUncheckedUpdateWithoutFollowingInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFromInput, UserUpdateWithoutFromInput>, UserUncheckedUpdateWithoutFromInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutToNestedInput = {
+    create?: XOR<UserCreateWithoutToInput, UserUncheckedCreateWithoutToInput>
+    connectOrCreate?: UserCreateOrConnectWithoutToInput
+    upsert?: UserUpsertWithoutToInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutToInput, UserUpdateWithoutToInput>, UserUncheckedUpdateWithoutToInput>
   }
 
   export type UserCreateNestedOneWithoutTransactionsInput = {
@@ -16267,18 +16402,18 @@ export namespace Prisma {
     connect?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
   }
 
-  export type FollowsCreateNestedManyWithoutFollowerInput = {
-    create?: XOR<FollowsCreateWithoutFollowerInput, FollowsUncheckedCreateWithoutFollowerInput> | FollowsCreateWithoutFollowerInput[] | FollowsUncheckedCreateWithoutFollowerInput[]
-    connectOrCreate?: FollowsCreateOrConnectWithoutFollowerInput | FollowsCreateOrConnectWithoutFollowerInput[]
-    createMany?: FollowsCreateManyFollowerInputEnvelope
-    connect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
+  export type RelationCreateNestedManyWithoutFromInput = {
+    create?: XOR<RelationCreateWithoutFromInput, RelationUncheckedCreateWithoutFromInput> | RelationCreateWithoutFromInput[] | RelationUncheckedCreateWithoutFromInput[]
+    connectOrCreate?: RelationCreateOrConnectWithoutFromInput | RelationCreateOrConnectWithoutFromInput[]
+    createMany?: RelationCreateManyFromInputEnvelope
+    connect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
   }
 
-  export type FollowsCreateNestedManyWithoutFollowingInput = {
-    create?: XOR<FollowsCreateWithoutFollowingInput, FollowsUncheckedCreateWithoutFollowingInput> | FollowsCreateWithoutFollowingInput[] | FollowsUncheckedCreateWithoutFollowingInput[]
-    connectOrCreate?: FollowsCreateOrConnectWithoutFollowingInput | FollowsCreateOrConnectWithoutFollowingInput[]
-    createMany?: FollowsCreateManyFollowingInputEnvelope
-    connect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
+  export type RelationCreateNestedManyWithoutToInput = {
+    create?: XOR<RelationCreateWithoutToInput, RelationUncheckedCreateWithoutToInput> | RelationCreateWithoutToInput[] | RelationUncheckedCreateWithoutToInput[]
+    connectOrCreate?: RelationCreateOrConnectWithoutToInput | RelationCreateOrConnectWithoutToInput[]
+    createMany?: RelationCreateManyToInputEnvelope
+    connect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
   }
 
   export type ProfileUncheckedCreateNestedOneWithoutUserInput = {
@@ -16315,18 +16450,18 @@ export namespace Prisma {
     connect?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
   }
 
-  export type FollowsUncheckedCreateNestedManyWithoutFollowerInput = {
-    create?: XOR<FollowsCreateWithoutFollowerInput, FollowsUncheckedCreateWithoutFollowerInput> | FollowsCreateWithoutFollowerInput[] | FollowsUncheckedCreateWithoutFollowerInput[]
-    connectOrCreate?: FollowsCreateOrConnectWithoutFollowerInput | FollowsCreateOrConnectWithoutFollowerInput[]
-    createMany?: FollowsCreateManyFollowerInputEnvelope
-    connect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
+  export type RelationUncheckedCreateNestedManyWithoutFromInput = {
+    create?: XOR<RelationCreateWithoutFromInput, RelationUncheckedCreateWithoutFromInput> | RelationCreateWithoutFromInput[] | RelationUncheckedCreateWithoutFromInput[]
+    connectOrCreate?: RelationCreateOrConnectWithoutFromInput | RelationCreateOrConnectWithoutFromInput[]
+    createMany?: RelationCreateManyFromInputEnvelope
+    connect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
   }
 
-  export type FollowsUncheckedCreateNestedManyWithoutFollowingInput = {
-    create?: XOR<FollowsCreateWithoutFollowingInput, FollowsUncheckedCreateWithoutFollowingInput> | FollowsCreateWithoutFollowingInput[] | FollowsUncheckedCreateWithoutFollowingInput[]
-    connectOrCreate?: FollowsCreateOrConnectWithoutFollowingInput | FollowsCreateOrConnectWithoutFollowingInput[]
-    createMany?: FollowsCreateManyFollowingInputEnvelope
-    connect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
+  export type RelationUncheckedCreateNestedManyWithoutToInput = {
+    create?: XOR<RelationCreateWithoutToInput, RelationUncheckedCreateWithoutToInput> | RelationCreateWithoutToInput[] | RelationUncheckedCreateWithoutToInput[]
+    connectOrCreate?: RelationCreateOrConnectWithoutToInput | RelationCreateOrConnectWithoutToInput[]
+    createMany?: RelationCreateManyToInputEnvelope
+    connect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
   }
 
   export type ProfileUpdateOneWithoutUserNestedInput = {
@@ -16395,32 +16530,32 @@ export namespace Prisma {
     deleteMany?: TransactionsScalarWhereInput | TransactionsScalarWhereInput[]
   }
 
-  export type FollowsUpdateManyWithoutFollowerNestedInput = {
-    create?: XOR<FollowsCreateWithoutFollowerInput, FollowsUncheckedCreateWithoutFollowerInput> | FollowsCreateWithoutFollowerInput[] | FollowsUncheckedCreateWithoutFollowerInput[]
-    connectOrCreate?: FollowsCreateOrConnectWithoutFollowerInput | FollowsCreateOrConnectWithoutFollowerInput[]
-    upsert?: FollowsUpsertWithWhereUniqueWithoutFollowerInput | FollowsUpsertWithWhereUniqueWithoutFollowerInput[]
-    createMany?: FollowsCreateManyFollowerInputEnvelope
-    set?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    disconnect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    delete?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    connect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    update?: FollowsUpdateWithWhereUniqueWithoutFollowerInput | FollowsUpdateWithWhereUniqueWithoutFollowerInput[]
-    updateMany?: FollowsUpdateManyWithWhereWithoutFollowerInput | FollowsUpdateManyWithWhereWithoutFollowerInput[]
-    deleteMany?: FollowsScalarWhereInput | FollowsScalarWhereInput[]
+  export type RelationUpdateManyWithoutFromNestedInput = {
+    create?: XOR<RelationCreateWithoutFromInput, RelationUncheckedCreateWithoutFromInput> | RelationCreateWithoutFromInput[] | RelationUncheckedCreateWithoutFromInput[]
+    connectOrCreate?: RelationCreateOrConnectWithoutFromInput | RelationCreateOrConnectWithoutFromInput[]
+    upsert?: RelationUpsertWithWhereUniqueWithoutFromInput | RelationUpsertWithWhereUniqueWithoutFromInput[]
+    createMany?: RelationCreateManyFromInputEnvelope
+    set?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    disconnect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    delete?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    connect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    update?: RelationUpdateWithWhereUniqueWithoutFromInput | RelationUpdateWithWhereUniqueWithoutFromInput[]
+    updateMany?: RelationUpdateManyWithWhereWithoutFromInput | RelationUpdateManyWithWhereWithoutFromInput[]
+    deleteMany?: RelationScalarWhereInput | RelationScalarWhereInput[]
   }
 
-  export type FollowsUpdateManyWithoutFollowingNestedInput = {
-    create?: XOR<FollowsCreateWithoutFollowingInput, FollowsUncheckedCreateWithoutFollowingInput> | FollowsCreateWithoutFollowingInput[] | FollowsUncheckedCreateWithoutFollowingInput[]
-    connectOrCreate?: FollowsCreateOrConnectWithoutFollowingInput | FollowsCreateOrConnectWithoutFollowingInput[]
-    upsert?: FollowsUpsertWithWhereUniqueWithoutFollowingInput | FollowsUpsertWithWhereUniqueWithoutFollowingInput[]
-    createMany?: FollowsCreateManyFollowingInputEnvelope
-    set?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    disconnect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    delete?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    connect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    update?: FollowsUpdateWithWhereUniqueWithoutFollowingInput | FollowsUpdateWithWhereUniqueWithoutFollowingInput[]
-    updateMany?: FollowsUpdateManyWithWhereWithoutFollowingInput | FollowsUpdateManyWithWhereWithoutFollowingInput[]
-    deleteMany?: FollowsScalarWhereInput | FollowsScalarWhereInput[]
+  export type RelationUpdateManyWithoutToNestedInput = {
+    create?: XOR<RelationCreateWithoutToInput, RelationUncheckedCreateWithoutToInput> | RelationCreateWithoutToInput[] | RelationUncheckedCreateWithoutToInput[]
+    connectOrCreate?: RelationCreateOrConnectWithoutToInput | RelationCreateOrConnectWithoutToInput[]
+    upsert?: RelationUpsertWithWhereUniqueWithoutToInput | RelationUpsertWithWhereUniqueWithoutToInput[]
+    createMany?: RelationCreateManyToInputEnvelope
+    set?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    disconnect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    delete?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    connect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    update?: RelationUpdateWithWhereUniqueWithoutToInput | RelationUpdateWithWhereUniqueWithoutToInput[]
+    updateMany?: RelationUpdateManyWithWhereWithoutToInput | RelationUpdateManyWithWhereWithoutToInput[]
+    deleteMany?: RelationScalarWhereInput | RelationScalarWhereInput[]
   }
 
   export type ProfileUncheckedUpdateOneWithoutUserNestedInput = {
@@ -16489,32 +16624,32 @@ export namespace Prisma {
     deleteMany?: TransactionsScalarWhereInput | TransactionsScalarWhereInput[]
   }
 
-  export type FollowsUncheckedUpdateManyWithoutFollowerNestedInput = {
-    create?: XOR<FollowsCreateWithoutFollowerInput, FollowsUncheckedCreateWithoutFollowerInput> | FollowsCreateWithoutFollowerInput[] | FollowsUncheckedCreateWithoutFollowerInput[]
-    connectOrCreate?: FollowsCreateOrConnectWithoutFollowerInput | FollowsCreateOrConnectWithoutFollowerInput[]
-    upsert?: FollowsUpsertWithWhereUniqueWithoutFollowerInput | FollowsUpsertWithWhereUniqueWithoutFollowerInput[]
-    createMany?: FollowsCreateManyFollowerInputEnvelope
-    set?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    disconnect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    delete?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    connect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    update?: FollowsUpdateWithWhereUniqueWithoutFollowerInput | FollowsUpdateWithWhereUniqueWithoutFollowerInput[]
-    updateMany?: FollowsUpdateManyWithWhereWithoutFollowerInput | FollowsUpdateManyWithWhereWithoutFollowerInput[]
-    deleteMany?: FollowsScalarWhereInput | FollowsScalarWhereInput[]
+  export type RelationUncheckedUpdateManyWithoutFromNestedInput = {
+    create?: XOR<RelationCreateWithoutFromInput, RelationUncheckedCreateWithoutFromInput> | RelationCreateWithoutFromInput[] | RelationUncheckedCreateWithoutFromInput[]
+    connectOrCreate?: RelationCreateOrConnectWithoutFromInput | RelationCreateOrConnectWithoutFromInput[]
+    upsert?: RelationUpsertWithWhereUniqueWithoutFromInput | RelationUpsertWithWhereUniqueWithoutFromInput[]
+    createMany?: RelationCreateManyFromInputEnvelope
+    set?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    disconnect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    delete?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    connect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    update?: RelationUpdateWithWhereUniqueWithoutFromInput | RelationUpdateWithWhereUniqueWithoutFromInput[]
+    updateMany?: RelationUpdateManyWithWhereWithoutFromInput | RelationUpdateManyWithWhereWithoutFromInput[]
+    deleteMany?: RelationScalarWhereInput | RelationScalarWhereInput[]
   }
 
-  export type FollowsUncheckedUpdateManyWithoutFollowingNestedInput = {
-    create?: XOR<FollowsCreateWithoutFollowingInput, FollowsUncheckedCreateWithoutFollowingInput> | FollowsCreateWithoutFollowingInput[] | FollowsUncheckedCreateWithoutFollowingInput[]
-    connectOrCreate?: FollowsCreateOrConnectWithoutFollowingInput | FollowsCreateOrConnectWithoutFollowingInput[]
-    upsert?: FollowsUpsertWithWhereUniqueWithoutFollowingInput | FollowsUpsertWithWhereUniqueWithoutFollowingInput[]
-    createMany?: FollowsCreateManyFollowingInputEnvelope
-    set?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    disconnect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    delete?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    connect?: FollowsWhereUniqueInput | FollowsWhereUniqueInput[]
-    update?: FollowsUpdateWithWhereUniqueWithoutFollowingInput | FollowsUpdateWithWhereUniqueWithoutFollowingInput[]
-    updateMany?: FollowsUpdateManyWithWhereWithoutFollowingInput | FollowsUpdateManyWithWhereWithoutFollowingInput[]
-    deleteMany?: FollowsScalarWhereInput | FollowsScalarWhereInput[]
+  export type RelationUncheckedUpdateManyWithoutToNestedInput = {
+    create?: XOR<RelationCreateWithoutToInput, RelationUncheckedCreateWithoutToInput> | RelationCreateWithoutToInput[] | RelationUncheckedCreateWithoutToInput[]
+    connectOrCreate?: RelationCreateOrConnectWithoutToInput | RelationCreateOrConnectWithoutToInput[]
+    upsert?: RelationUpsertWithWhereUniqueWithoutToInput | RelationUpsertWithWhereUniqueWithoutToInput[]
+    createMany?: RelationCreateManyToInputEnvelope
+    set?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    disconnect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    delete?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    connect?: RelationWhereUniqueInput | RelationWhereUniqueInput[]
+    update?: RelationUpdateWithWhereUniqueWithoutToInput | RelationUpdateWithWhereUniqueWithoutToInput[]
+    updateMany?: RelationUpdateManyWithWhereWithoutToInput | RelationUpdateManyWithWhereWithoutToInput[]
+    deleteMany?: RelationScalarWhereInput | RelationScalarWhereInput[]
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -16736,6 +16871,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumReactionTypeFilter<$PrismaModel>
     _max?: NestedEnumReactionTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRelationStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.RelationState | EnumRelationStateFieldRefInput<$PrismaModel>
+    in?: $Enums.RelationState[] | ListEnumRelationStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RelationState[] | ListEnumRelationStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumRelationStateFilter<$PrismaModel> | $Enums.RelationState
+  }
+
+  export type NestedEnumRelationStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RelationState | EnumRelationStateFieldRefInput<$PrismaModel>
+    in?: $Enums.RelationState[] | ListEnumRelationStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RelationState[] | ListEnumRelationStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumRelationStateWithAggregatesFilter<$PrismaModel> | $Enums.RelationState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRelationStateFilter<$PrismaModel>
+    _max?: NestedEnumRelationStateFilter<$PrismaModel>
   }
 
   export type NestedEnumTxTypeFilter<$PrismaModel = never> = {
@@ -17079,12 +17231,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileCreateNestedOneWithoutUserInput
     socials?: SocialsCreateNestedManyWithoutUserInput
     reactions?: ReactionsCreateNestedManyWithoutUserInput
     transactions?: TransactionsCreateNestedManyWithoutUserInput
-    follower?: FollowsCreateNestedManyWithoutFollowerInput
-    following?: FollowsCreateNestedManyWithoutFollowingInput
+    from?: RelationCreateNestedManyWithoutFromInput
+    to?: RelationCreateNestedManyWithoutToInput
   }
 
   export type UserUncheckedCreateWithoutContentsInput = {
@@ -17094,12 +17247,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
     socials?: SocialsUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionsUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutUserInput
-    follower?: FollowsUncheckedCreateNestedManyWithoutFollowerInput
-    following?: FollowsUncheckedCreateNestedManyWithoutFollowingInput
+    from?: RelationUncheckedCreateNestedManyWithoutFromInput
+    to?: RelationUncheckedCreateNestedManyWithoutToInput
   }
 
   export type UserCreateOrConnectWithoutContentsInput = {
@@ -17203,12 +17357,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneWithoutUserNestedInput
     socials?: SocialsUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUpdateManyWithoutUserNestedInput
-    follower?: FollowsUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUpdateManyWithoutFollowingNestedInput
+    from?: RelationUpdateManyWithoutFromNestedInput
+    to?: RelationUpdateManyWithoutToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutContentsInput = {
@@ -17218,12 +17373,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
     socials?: SocialsUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutUserNestedInput
-    follower?: FollowsUncheckedUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUncheckedUpdateManyWithoutFollowingNestedInput
+    from?: RelationUncheckedUpdateManyWithoutFromNestedInput
+    to?: RelationUncheckedUpdateManyWithoutToNestedInput
   }
 
   export type PostCreateWithoutAttachmentsInput = {
@@ -17434,12 +17590,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileCreateNestedOneWithoutUserInput
     socials?: SocialsCreateNestedManyWithoutUserInput
     contents?: ContentCreateNestedManyWithoutUserInput
     transactions?: TransactionsCreateNestedManyWithoutUserInput
-    follower?: FollowsCreateNestedManyWithoutFollowerInput
-    following?: FollowsCreateNestedManyWithoutFollowingInput
+    from?: RelationCreateNestedManyWithoutFromInput
+    to?: RelationCreateNestedManyWithoutToInput
   }
 
   export type UserUncheckedCreateWithoutReactionsInput = {
@@ -17449,12 +17606,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
     socials?: SocialsUncheckedCreateNestedManyWithoutUserInput
     contents?: ContentUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutUserInput
-    follower?: FollowsUncheckedCreateNestedManyWithoutFollowerInput
-    following?: FollowsUncheckedCreateNestedManyWithoutFollowingInput
+    from?: RelationUncheckedCreateNestedManyWithoutFromInput
+    to?: RelationUncheckedCreateNestedManyWithoutToInput
   }
 
   export type UserCreateOrConnectWithoutReactionsInput = {
@@ -17507,12 +17665,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneWithoutUserNestedInput
     socials?: SocialsUpdateManyWithoutUserNestedInput
     contents?: ContentUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUpdateManyWithoutUserNestedInput
-    follower?: FollowsUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUpdateManyWithoutFollowingNestedInput
+    from?: RelationUpdateManyWithoutFromNestedInput
+    to?: RelationUpdateManyWithoutToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReactionsInput = {
@@ -17522,12 +17681,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
     socials?: SocialsUncheckedUpdateManyWithoutUserNestedInput
     contents?: ContentUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutUserNestedInput
-    follower?: FollowsUncheckedUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUncheckedUpdateManyWithoutFollowingNestedInput
+    from?: RelationUncheckedUpdateManyWithoutFromNestedInput
+    to?: RelationUncheckedUpdateManyWithoutToNestedInput
   }
 
   export type ContentUpsertWithoutReactionsInput = {
@@ -17564,152 +17724,160 @@ export namespace Prisma {
     comment?: CommentUncheckedUpdateOneWithoutBaseNestedInput
   }
 
-  export type UserCreateWithoutFollowerInput = {
+  export type UserCreateWithoutFromInput = {
     email: string
     address: string
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileCreateNestedOneWithoutUserInput
     socials?: SocialsCreateNestedManyWithoutUserInput
     contents?: ContentCreateNestedManyWithoutUserInput
     reactions?: ReactionsCreateNestedManyWithoutUserInput
     transactions?: TransactionsCreateNestedManyWithoutUserInput
-    following?: FollowsCreateNestedManyWithoutFollowingInput
+    to?: RelationCreateNestedManyWithoutToInput
   }
 
-  export type UserUncheckedCreateWithoutFollowerInput = {
+  export type UserUncheckedCreateWithoutFromInput = {
     id?: number
     email: string
     address: string
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
     socials?: SocialsUncheckedCreateNestedManyWithoutUserInput
     contents?: ContentUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionsUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutUserInput
-    following?: FollowsUncheckedCreateNestedManyWithoutFollowingInput
+    to?: RelationUncheckedCreateNestedManyWithoutToInput
   }
 
-  export type UserCreateOrConnectWithoutFollowerInput = {
+  export type UserCreateOrConnectWithoutFromInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutFollowerInput, UserUncheckedCreateWithoutFollowerInput>
+    create: XOR<UserCreateWithoutFromInput, UserUncheckedCreateWithoutFromInput>
   }
 
-  export type UserCreateWithoutFollowingInput = {
+  export type UserCreateWithoutToInput = {
     email: string
     address: string
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileCreateNestedOneWithoutUserInput
     socials?: SocialsCreateNestedManyWithoutUserInput
     contents?: ContentCreateNestedManyWithoutUserInput
     reactions?: ReactionsCreateNestedManyWithoutUserInput
     transactions?: TransactionsCreateNestedManyWithoutUserInput
-    follower?: FollowsCreateNestedManyWithoutFollowerInput
+    from?: RelationCreateNestedManyWithoutFromInput
   }
 
-  export type UserUncheckedCreateWithoutFollowingInput = {
+  export type UserUncheckedCreateWithoutToInput = {
     id?: number
     email: string
     address: string
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
     socials?: SocialsUncheckedCreateNestedManyWithoutUserInput
     contents?: ContentUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionsUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutUserInput
-    follower?: FollowsUncheckedCreateNestedManyWithoutFollowerInput
+    from?: RelationUncheckedCreateNestedManyWithoutFromInput
   }
 
-  export type UserCreateOrConnectWithoutFollowingInput = {
+  export type UserCreateOrConnectWithoutToInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutFollowingInput, UserUncheckedCreateWithoutFollowingInput>
+    create: XOR<UserCreateWithoutToInput, UserUncheckedCreateWithoutToInput>
   }
 
-  export type UserUpsertWithoutFollowerInput = {
-    update: XOR<UserUpdateWithoutFollowerInput, UserUncheckedUpdateWithoutFollowerInput>
-    create: XOR<UserCreateWithoutFollowerInput, UserUncheckedCreateWithoutFollowerInput>
+  export type UserUpsertWithoutFromInput = {
+    update: XOR<UserUpdateWithoutFromInput, UserUncheckedUpdateWithoutFromInput>
+    create: XOR<UserCreateWithoutFromInput, UserUncheckedCreateWithoutFromInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutFollowerInput = {
+  export type UserUpdateToOneWithWhereWithoutFromInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutFollowerInput, UserUncheckedUpdateWithoutFollowerInput>
+    data: XOR<UserUpdateWithoutFromInput, UserUncheckedUpdateWithoutFromInput>
   }
 
-  export type UserUpdateWithoutFollowerInput = {
+  export type UserUpdateWithoutFromInput = {
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneWithoutUserNestedInput
     socials?: SocialsUpdateManyWithoutUserNestedInput
     contents?: ContentUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUpdateManyWithoutUserNestedInput
-    following?: FollowsUpdateManyWithoutFollowingNestedInput
+    to?: RelationUpdateManyWithoutToNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutFollowerInput = {
+  export type UserUncheckedUpdateWithoutFromInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
     socials?: SocialsUncheckedUpdateManyWithoutUserNestedInput
     contents?: ContentUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutUserNestedInput
-    following?: FollowsUncheckedUpdateManyWithoutFollowingNestedInput
+    to?: RelationUncheckedUpdateManyWithoutToNestedInput
   }
 
-  export type UserUpsertWithoutFollowingInput = {
-    update: XOR<UserUpdateWithoutFollowingInput, UserUncheckedUpdateWithoutFollowingInput>
-    create: XOR<UserCreateWithoutFollowingInput, UserUncheckedCreateWithoutFollowingInput>
+  export type UserUpsertWithoutToInput = {
+    update: XOR<UserUpdateWithoutToInput, UserUncheckedUpdateWithoutToInput>
+    create: XOR<UserCreateWithoutToInput, UserUncheckedCreateWithoutToInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutFollowingInput = {
+  export type UserUpdateToOneWithWhereWithoutToInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutFollowingInput, UserUncheckedUpdateWithoutFollowingInput>
+    data: XOR<UserUpdateWithoutToInput, UserUncheckedUpdateWithoutToInput>
   }
 
-  export type UserUpdateWithoutFollowingInput = {
+  export type UserUpdateWithoutToInput = {
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneWithoutUserNestedInput
     socials?: SocialsUpdateManyWithoutUserNestedInput
     contents?: ContentUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUpdateManyWithoutUserNestedInput
-    follower?: FollowsUpdateManyWithoutFollowerNestedInput
+    from?: RelationUpdateManyWithoutFromNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutFollowingInput = {
+  export type UserUncheckedUpdateWithoutToInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
     socials?: SocialsUncheckedUpdateManyWithoutUserNestedInput
     contents?: ContentUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutUserNestedInput
-    follower?: FollowsUncheckedUpdateManyWithoutFollowerNestedInput
+    from?: RelationUncheckedUpdateManyWithoutFromNestedInput
   }
 
   export type UserCreateWithoutTransactionsInput = {
@@ -17718,12 +17886,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileCreateNestedOneWithoutUserInput
     socials?: SocialsCreateNestedManyWithoutUserInput
     contents?: ContentCreateNestedManyWithoutUserInput
     reactions?: ReactionsCreateNestedManyWithoutUserInput
-    follower?: FollowsCreateNestedManyWithoutFollowerInput
-    following?: FollowsCreateNestedManyWithoutFollowingInput
+    from?: RelationCreateNestedManyWithoutFromInput
+    to?: RelationCreateNestedManyWithoutToInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -17733,12 +17902,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
     socials?: SocialsUncheckedCreateNestedManyWithoutUserInput
     contents?: ContentUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionsUncheckedCreateNestedManyWithoutUserInput
-    follower?: FollowsUncheckedCreateNestedManyWithoutFollowerInput
-    following?: FollowsUncheckedCreateNestedManyWithoutFollowingInput
+    from?: RelationUncheckedCreateNestedManyWithoutFromInput
+    to?: RelationUncheckedCreateNestedManyWithoutToInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -17763,12 +17933,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneWithoutUserNestedInput
     socials?: SocialsUpdateManyWithoutUserNestedInput
     contents?: ContentUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUpdateManyWithoutUserNestedInput
-    follower?: FollowsUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUpdateManyWithoutFollowingNestedInput
+    from?: RelationUpdateManyWithoutFromNestedInput
+    to?: RelationUpdateManyWithoutToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -17778,12 +17949,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
     socials?: SocialsUncheckedUpdateManyWithoutUserNestedInput
     contents?: ContentUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUncheckedUpdateManyWithoutUserNestedInput
-    follower?: FollowsUncheckedUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUncheckedUpdateManyWithoutFollowingNestedInput
+    from?: RelationUncheckedUpdateManyWithoutFromNestedInput
+    to?: RelationUncheckedUpdateManyWithoutToNestedInput
   }
 
   export type UserCreateWithoutSocialsInput = {
@@ -17792,12 +17964,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileCreateNestedOneWithoutUserInput
     contents?: ContentCreateNestedManyWithoutUserInput
     reactions?: ReactionsCreateNestedManyWithoutUserInput
     transactions?: TransactionsCreateNestedManyWithoutUserInput
-    follower?: FollowsCreateNestedManyWithoutFollowerInput
-    following?: FollowsCreateNestedManyWithoutFollowingInput
+    from?: RelationCreateNestedManyWithoutFromInput
+    to?: RelationCreateNestedManyWithoutToInput
   }
 
   export type UserUncheckedCreateWithoutSocialsInput = {
@@ -17807,12 +17980,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     profile?: ProfileUncheckedCreateNestedOneWithoutUserInput
     contents?: ContentUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionsUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutUserInput
-    follower?: FollowsUncheckedCreateNestedManyWithoutFollowerInput
-    following?: FollowsUncheckedCreateNestedManyWithoutFollowingInput
+    from?: RelationUncheckedCreateNestedManyWithoutFromInput
+    to?: RelationUncheckedCreateNestedManyWithoutToInput
   }
 
   export type UserCreateOrConnectWithoutSocialsInput = {
@@ -17837,12 +18011,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUpdateOneWithoutUserNestedInput
     contents?: ContentUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUpdateManyWithoutUserNestedInput
-    follower?: FollowsUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUpdateManyWithoutFollowingNestedInput
+    from?: RelationUpdateManyWithoutFromNestedInput
+    to?: RelationUpdateManyWithoutToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSocialsInput = {
@@ -17852,12 +18027,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     profile?: ProfileUncheckedUpdateOneWithoutUserNestedInput
     contents?: ContentUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutUserNestedInput
-    follower?: FollowsUncheckedUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUncheckedUpdateManyWithoutFollowingNestedInput
+    from?: RelationUncheckedUpdateManyWithoutFromNestedInput
+    to?: RelationUncheckedUpdateManyWithoutToNestedInput
   }
 
   export type UserCreateWithoutProfileInput = {
@@ -17866,12 +18042,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     socials?: SocialsCreateNestedManyWithoutUserInput
     contents?: ContentCreateNestedManyWithoutUserInput
     reactions?: ReactionsCreateNestedManyWithoutUserInput
     transactions?: TransactionsCreateNestedManyWithoutUserInput
-    follower?: FollowsCreateNestedManyWithoutFollowerInput
-    following?: FollowsCreateNestedManyWithoutFollowingInput
+    from?: RelationCreateNestedManyWithoutFromInput
+    to?: RelationCreateNestedManyWithoutToInput
   }
 
   export type UserUncheckedCreateWithoutProfileInput = {
@@ -17881,12 +18058,13 @@ export namespace Prisma {
     displayName: string
     verified?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
     socials?: SocialsUncheckedCreateNestedManyWithoutUserInput
     contents?: ContentUncheckedCreateNestedManyWithoutUserInput
     reactions?: ReactionsUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutUserInput
-    follower?: FollowsUncheckedCreateNestedManyWithoutFollowerInput
-    following?: FollowsUncheckedCreateNestedManyWithoutFollowingInput
+    from?: RelationUncheckedCreateNestedManyWithoutFromInput
+    to?: RelationUncheckedCreateNestedManyWithoutToInput
   }
 
   export type UserCreateOrConnectWithoutProfileInput = {
@@ -17911,12 +18089,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     socials?: SocialsUpdateManyWithoutUserNestedInput
     contents?: ContentUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUpdateManyWithoutUserNestedInput
-    follower?: FollowsUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUpdateManyWithoutFollowingNestedInput
+    from?: RelationUpdateManyWithoutFromNestedInput
+    to?: RelationUpdateManyWithoutToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProfileInput = {
@@ -17926,12 +18105,13 @@ export namespace Prisma {
     displayName?: StringFieldUpdateOperationsInput | string
     verified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     socials?: SocialsUncheckedUpdateManyWithoutUserNestedInput
     contents?: ContentUncheckedUpdateManyWithoutUserNestedInput
     reactions?: ReactionsUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutUserNestedInput
-    follower?: FollowsUncheckedUpdateManyWithoutFollowerNestedInput
-    following?: FollowsUncheckedUpdateManyWithoutFollowingNestedInput
+    from?: RelationUncheckedUpdateManyWithoutFromNestedInput
+    to?: RelationUncheckedUpdateManyWithoutToNestedInput
   }
 
   export type ProfileCreateWithoutUserInput = {
@@ -18060,43 +18240,51 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type FollowsCreateWithoutFollowerInput = {
+  export type RelationCreateWithoutFromInput = {
+    state: $Enums.RelationState
     createdAt?: Date | string
-    following: UserCreateNestedOneWithoutFollowingInput
+    updatedAt?: Date | string
+    to: UserCreateNestedOneWithoutToInput
   }
 
-  export type FollowsUncheckedCreateWithoutFollowerInput = {
-    followingId: number
+  export type RelationUncheckedCreateWithoutFromInput = {
+    toUserId: number
+    state: $Enums.RelationState
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type FollowsCreateOrConnectWithoutFollowerInput = {
-    where: FollowsWhereUniqueInput
-    create: XOR<FollowsCreateWithoutFollowerInput, FollowsUncheckedCreateWithoutFollowerInput>
+  export type RelationCreateOrConnectWithoutFromInput = {
+    where: RelationWhereUniqueInput
+    create: XOR<RelationCreateWithoutFromInput, RelationUncheckedCreateWithoutFromInput>
   }
 
-  export type FollowsCreateManyFollowerInputEnvelope = {
-    data: FollowsCreateManyFollowerInput | FollowsCreateManyFollowerInput[]
+  export type RelationCreateManyFromInputEnvelope = {
+    data: RelationCreateManyFromInput | RelationCreateManyFromInput[]
     skipDuplicates?: boolean
   }
 
-  export type FollowsCreateWithoutFollowingInput = {
+  export type RelationCreateWithoutToInput = {
+    state: $Enums.RelationState
     createdAt?: Date | string
-    follower: UserCreateNestedOneWithoutFollowerInput
+    updatedAt?: Date | string
+    from: UserCreateNestedOneWithoutFromInput
   }
 
-  export type FollowsUncheckedCreateWithoutFollowingInput = {
-    followerId: number
+  export type RelationUncheckedCreateWithoutToInput = {
+    fromUserId: number
+    state: $Enums.RelationState
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type FollowsCreateOrConnectWithoutFollowingInput = {
-    where: FollowsWhereUniqueInput
-    create: XOR<FollowsCreateWithoutFollowingInput, FollowsUncheckedCreateWithoutFollowingInput>
+  export type RelationCreateOrConnectWithoutToInput = {
+    where: RelationWhereUniqueInput
+    create: XOR<RelationCreateWithoutToInput, RelationUncheckedCreateWithoutToInput>
   }
 
-  export type FollowsCreateManyFollowingInputEnvelope = {
-    data: FollowsCreateManyFollowingInput | FollowsCreateManyFollowingInput[]
+  export type RelationCreateManyToInputEnvelope = {
+    data: RelationCreateManyToInput | RelationCreateManyToInput[]
     skipDuplicates?: boolean
   }
 
@@ -18227,45 +18415,47 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Transactions"> | Date | string
   }
 
-  export type FollowsUpsertWithWhereUniqueWithoutFollowerInput = {
-    where: FollowsWhereUniqueInput
-    update: XOR<FollowsUpdateWithoutFollowerInput, FollowsUncheckedUpdateWithoutFollowerInput>
-    create: XOR<FollowsCreateWithoutFollowerInput, FollowsUncheckedCreateWithoutFollowerInput>
+  export type RelationUpsertWithWhereUniqueWithoutFromInput = {
+    where: RelationWhereUniqueInput
+    update: XOR<RelationUpdateWithoutFromInput, RelationUncheckedUpdateWithoutFromInput>
+    create: XOR<RelationCreateWithoutFromInput, RelationUncheckedCreateWithoutFromInput>
   }
 
-  export type FollowsUpdateWithWhereUniqueWithoutFollowerInput = {
-    where: FollowsWhereUniqueInput
-    data: XOR<FollowsUpdateWithoutFollowerInput, FollowsUncheckedUpdateWithoutFollowerInput>
+  export type RelationUpdateWithWhereUniqueWithoutFromInput = {
+    where: RelationWhereUniqueInput
+    data: XOR<RelationUpdateWithoutFromInput, RelationUncheckedUpdateWithoutFromInput>
   }
 
-  export type FollowsUpdateManyWithWhereWithoutFollowerInput = {
-    where: FollowsScalarWhereInput
-    data: XOR<FollowsUpdateManyMutationInput, FollowsUncheckedUpdateManyWithoutFollowerInput>
+  export type RelationUpdateManyWithWhereWithoutFromInput = {
+    where: RelationScalarWhereInput
+    data: XOR<RelationUpdateManyMutationInput, RelationUncheckedUpdateManyWithoutFromInput>
   }
 
-  export type FollowsScalarWhereInput = {
-    AND?: FollowsScalarWhereInput | FollowsScalarWhereInput[]
-    OR?: FollowsScalarWhereInput[]
-    NOT?: FollowsScalarWhereInput | FollowsScalarWhereInput[]
-    followerId?: IntFilter<"Follows"> | number
-    followingId?: IntFilter<"Follows"> | number
-    createdAt?: DateTimeFilter<"Follows"> | Date | string
+  export type RelationScalarWhereInput = {
+    AND?: RelationScalarWhereInput | RelationScalarWhereInput[]
+    OR?: RelationScalarWhereInput[]
+    NOT?: RelationScalarWhereInput | RelationScalarWhereInput[]
+    fromUserId?: IntFilter<"Relation"> | number
+    toUserId?: IntFilter<"Relation"> | number
+    state?: EnumRelationStateFilter<"Relation"> | $Enums.RelationState
+    createdAt?: DateTimeFilter<"Relation"> | Date | string
+    updatedAt?: DateTimeFilter<"Relation"> | Date | string
   }
 
-  export type FollowsUpsertWithWhereUniqueWithoutFollowingInput = {
-    where: FollowsWhereUniqueInput
-    update: XOR<FollowsUpdateWithoutFollowingInput, FollowsUncheckedUpdateWithoutFollowingInput>
-    create: XOR<FollowsCreateWithoutFollowingInput, FollowsUncheckedCreateWithoutFollowingInput>
+  export type RelationUpsertWithWhereUniqueWithoutToInput = {
+    where: RelationWhereUniqueInput
+    update: XOR<RelationUpdateWithoutToInput, RelationUncheckedUpdateWithoutToInput>
+    create: XOR<RelationCreateWithoutToInput, RelationUncheckedCreateWithoutToInput>
   }
 
-  export type FollowsUpdateWithWhereUniqueWithoutFollowingInput = {
-    where: FollowsWhereUniqueInput
-    data: XOR<FollowsUpdateWithoutFollowingInput, FollowsUncheckedUpdateWithoutFollowingInput>
+  export type RelationUpdateWithWhereUniqueWithoutToInput = {
+    where: RelationWhereUniqueInput
+    data: XOR<RelationUpdateWithoutToInput, RelationUncheckedUpdateWithoutToInput>
   }
 
-  export type FollowsUpdateManyWithWhereWithoutFollowingInput = {
-    where: FollowsScalarWhereInput
-    data: XOR<FollowsUpdateManyMutationInput, FollowsUncheckedUpdateManyWithoutFollowingInput>
+  export type RelationUpdateManyWithWhereWithoutToInput = {
+    where: RelationScalarWhereInput
+    data: XOR<RelationUpdateManyMutationInput, RelationUncheckedUpdateManyWithoutToInput>
   }
 
   export type CommentCreateManyParentCommentInput = {
@@ -18416,14 +18606,18 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type FollowsCreateManyFollowerInput = {
-    followingId: number
+  export type RelationCreateManyFromInput = {
+    toUserId: number
+    state: $Enums.RelationState
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type FollowsCreateManyFollowingInput = {
-    followerId: number
+  export type RelationCreateManyToInput = {
+    fromUserId: number
+    state: $Enums.RelationState
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SocialsUpdateWithoutUserInput = {
@@ -18524,34 +18718,46 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FollowsUpdateWithoutFollowerInput = {
+  export type RelationUpdateWithoutFromInput = {
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    following?: UserUpdateOneRequiredWithoutFollowingNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    to?: UserUpdateOneRequiredWithoutToNestedInput
   }
 
-  export type FollowsUncheckedUpdateWithoutFollowerInput = {
-    followingId?: IntFieldUpdateOperationsInput | number
+  export type RelationUncheckedUpdateWithoutFromInput = {
+    toUserId?: IntFieldUpdateOperationsInput | number
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FollowsUncheckedUpdateManyWithoutFollowerInput = {
-    followingId?: IntFieldUpdateOperationsInput | number
+  export type RelationUncheckedUpdateManyWithoutFromInput = {
+    toUserId?: IntFieldUpdateOperationsInput | number
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FollowsUpdateWithoutFollowingInput = {
+  export type RelationUpdateWithoutToInput = {
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    follower?: UserUpdateOneRequiredWithoutFollowerNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    from?: UserUpdateOneRequiredWithoutFromNestedInput
   }
 
-  export type FollowsUncheckedUpdateWithoutFollowingInput = {
-    followerId?: IntFieldUpdateOperationsInput | number
+  export type RelationUncheckedUpdateWithoutToInput = {
+    fromUserId?: IntFieldUpdateOperationsInput | number
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FollowsUncheckedUpdateManyWithoutFollowingInput = {
-    followerId?: IntFieldUpdateOperationsInput | number
+  export type RelationUncheckedUpdateManyWithoutToInput = {
+    fromUserId?: IntFieldUpdateOperationsInput | number
+    state?: EnumRelationStateFieldUpdateOperationsInput | $Enums.RelationState
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

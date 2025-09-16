@@ -1,7 +1,3 @@
-import type { QueryResolvers } from './../../../../schema/types';
 
-export const getPosts: NonNullable<QueryResolvers['getPosts']> = (
-  _parent,
-  { query, limit },
-  { services },
-) => services.Posts.getPosts(query, limit);
+        import type   { QueryResolvers } from './../../../../schema/types';
+        export const getPosts: NonNullable<QueryResolvers['getPosts']> = async (_parent, _arg, _ctx) => { /* Implement Query.getPosts resolver logic here */ };

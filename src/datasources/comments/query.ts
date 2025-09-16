@@ -1,4 +1,5 @@
 import { CommentContent, Repo } from '../../externals/prisma';
+import { PaginationInput } from '../../schema/types';
 import { DataSourceManager } from '../manager';
 
 export class CommentsQuery extends DataSourceManager {
@@ -9,15 +10,20 @@ export class CommentsQuery extends DataSourceManager {
     });
   }
 
-  async getComments(where: Repo.CommentWhereInput): Promise<CommentContent[]> {
-    return this.pa.comment.findMany({
+  async getCommentOrThrow(where: Repo.CommentWhereUniqueInput): Promise<CommentContent> {
+    return this.pa.comment.findUniqueOrThrow({
       include: { base: true },
       where,
     });
   }
 
-  async getCommentOrThrow(where: Repo.CommentWhereUniqueInput): Promise<CommentContent> {
-    return this.pa.comment.findUniqueOrThrow({
+  async getComments(
+    where: Repo.CommentWhereInput,
+    page?: PaginationInput,
+  ): Promise<CommentContent[]> {
+    return this.pa.comment.findMany({
+      skip: page?.offset ?? undefined,
+      take: page?.limit ?? undefined,
       include: { base: true },
       where,
     });

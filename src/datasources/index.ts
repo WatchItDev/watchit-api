@@ -1,19 +1,20 @@
-import CommentsDs from './comments';
-import PostsDs from './posts';
-import SocialDs from './social';
 import type { Store } from './types';
-import UsersDs from './users';
+import CommentsDataSource from './comments';
+import RelationDataSource from './relations';
+import PostsDataSource from './posts';
+import SocialDataSource from './social';
+import UsersDataSource from './users';
 
 export const DataSources = (store: Store) => ({
-  Users: new UsersDs(store),
-  Posts: new PostsDs(store),
-  Comments: new CommentsDs(store),
+  Users: new UsersDataSource(store),
+  Posts: new PostsDataSource(store),
+  Comments: new CommentsDataSource(store),
   // =Bookmarks: new BookmarksDs(store),
-  // Follows: new FollowsDs(store),
+  Relation: new RelationDataSource(store),
   // Likes: new LikesDs(store),
   // Web3: new Web3Ds(store),
   // Logs: new LogsDs(store),
-  Social: new SocialDs(store),
+  Social: new SocialDataSource(store),
 });
 
 export type DataSourcesType = ReturnType<typeof DataSources>;

@@ -5,5 +5,5 @@ import { UsersQuery } from './query';
 /**
  * Combine query + commands in a single DataSource
  */
-export default class UsersDs extends Mixin(UsersQuery, UsersCommands) {}
-export type UsersDsType = InstanceType<typeof UsersDs>;
+export default class UsersDataSource extends Mixin(UsersQuery, UsersCommands) {}
+export type UsersDsType = InstanceType<typeof UsersDataSource>;

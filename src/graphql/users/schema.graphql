@@ -50,7 +50,7 @@ input UpdateUserInput {
 input UserByIdentifierInput @oneOf {
   id: Int
   email: String @constraint(format: "email")
-  address: String @constraint(minLength: 1)
+  address: String @constraint(minLength: 42)
 }
 
 input UsersFilterInput {

@@ -28,7 +28,7 @@ type Comment {
   id: String!
   parent: Comment
   post: Post!
-  replies: [Comment!]
+  replies(page: PaginationInput): [Comment!]
 }
 
 input CommentByIdentifierInput @oneOf {
@@ -89,10 +89,6 @@ type EventLog {
   type: String!
 }
 
-input FollowInput {
-  targetAddress: String!
-}
-
 input HidePostInput {
   postId: Int!
 }
@@ -135,7 +131,7 @@ type Mutation {
   humanMessage(input: AgentInput!): Message
   logAnonymousEvent(input: LogEventInput!): Boolean!
   logEvent(input: LogEventInput!): Boolean!
-  toggleFollow(input: FollowInput!): Boolean!
+  setRelationStatus(input: SetRelationStatusInput!): Relation!
   toggleLike(input: LikeInput!): Boolean!
   updateComment(input: UpdateCommentInput!): Comment!
   updatePost(input: UpdatePostInput!): Post!
@@ -150,7 +146,7 @@ input PaginationInput {
 type Post {
   base: BaseContent!
   body: String!
-  comments: [Comment!]
+  comments(page: PaginationInput): [Comment!]
   id: Int!
   title: String!
 }
@@ -160,7 +156,6 @@ input PostByIdentifierInput @oneOf {
 }
 
 input PostFilterInput {
-  id: Int
   userId: Int
 }
 
@@ -173,20 +168,42 @@ type Profile {
 
 type Query {
   getComment(input: CommentByIdentifierInput!): Comment
-  getComments(input: CommentsFilterInput!, pagination: PaginationInput): [Comment!]
+  getComments(input: CommentsFilterInput!, page: PaginationInput): [Comment!]
   getCreatorTips(address: String!, limit: Int): [Tip!]!
-  getIsFollowing(targetAddress: String!): Boolean!
   getIsLiked(targetId: String!): Boolean!
   getPost(input: PostByIdentifierInput!): Post
   getPostViews(postId: String!): Int!
-  getPosts(input: PostFilterInput!, pagination: PaginationInput): [Post!]!
+  getPosts(input: PostFilterInput!, page: PaginationInput): [Post!]!
   getProfileViews(address: String!): Int!
+  getRelationStatus(input: RelationByIdentifierInput!): Relation
   getTargetEvents(limit: Int = 50, offset: Int = 0, targetId: String!, targetType: String, type: String): [EventLog!]!
   getTipsByBakerForPost(limit: Int, postId: String!): [TipByBaker!]!
   getTipsForPost(limit: Int, postId: String!): [Tip!]!
   getUser(input: UserByIdentifierInput!): User
   getUserEvents(address: String!, limit: Int = 50, offset: Int = 0, type: String): [EventLog!]!
   getUserTipsHistory(address: String!, limit: Int): [Tip!]!
+}
+
+type Relation {
+  followedAt: Date
+  isBlocked: Boolean!
+  isFollowing: Boolean!
+  user: User!
+}
+
+input RelationByIdentifierInput {
+  toUserId: Int!
+}
+
+enum RelationState {
+  BLOCK
+  FOLLOW
+  NONE
+}
+
+input SetRelationStatusInput {
+  status: RelationState!
+  toUserId: Int!
 }
 
 type SocialLink {

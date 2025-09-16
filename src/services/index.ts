@@ -5,7 +5,7 @@ import { UsersService } from './users';
 import { LikesService } from './likes';
 import { BookmarkService } from './lists';
 import { LogService } from './logs';
-import { FollowService } from './reactions';
+import { RelationsService } from './relations';
 import { TipsService } from './tips';
 
 export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
@@ -14,7 +14,7 @@ export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
   Comments: new CommentService({ ds, ext }),
   Likes: new LikesService({ ds, ext }),
   Bookmarks: new BookmarkService({ ds, ext }),
-  Follows: new FollowService({ ds, ext }),
+  Relations: new RelationsService({ ds, ext }),
   Logs: new LogService({ ds, ext }),
   Tips: new TipsService({ ds, ext }),
 });

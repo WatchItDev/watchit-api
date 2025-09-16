@@ -1,11 +1,11 @@
-import { requireAuth } from '@/graphql/_base/hof/auth';
+import { withRequireAuth } from '@/graphql/_base/hof/auth';
 import type { MutationResolvers } from './../../../../schema/types';
 
-export const createPost: NonNullable<MutationResolvers['createPost']> = requireAuth(
-  async (_parent, { input }, { services, user }) => {
+export const createPost: NonNullable<MutationResolvers['createPost']> = withRequireAuth(
+  async (_parent, { input }, { services, user: { id: userId } }) => {
     return services.Posts.createPost({
-      userId: user.id,
       ...input,
+      userId,
     });
   },
 );

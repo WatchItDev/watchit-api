@@ -4,9 +4,7 @@ export const Post: PostResolvers = {
     /* Post.base resolver is required because Post.base and PostMapper.base are not compatible */
     return base;
   },
-  comments: (c, _args, { dataSources }) => {
-    return dataSources.Comments.getComments({
-      postId: c.id,
-    });
+  comments: (c, { page }, { dataSources }) => {
+    return dataSources.Comments.getComments({ postId: c.id }, page ?? undefined);
   },
 };

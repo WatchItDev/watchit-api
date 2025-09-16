@@ -18,7 +18,7 @@ export async function parseToken(ctx: GQL.ContextType): Promise<JWTVerifyResult<
   }
 }
 
-export function requireAuth<T extends (...a: any[]) => any>(resolver: T): T {
+export function withRequireAuth<T extends (...a: any[]) => any>(resolver: T): T {
   return (async (parent, args, ctx: GQL.ContextType, info) => {
     const {
       payload: { email },

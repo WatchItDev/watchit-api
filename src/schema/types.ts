@@ -2,6 +2,7 @@ import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from '
 import { BaseContentMapper } from './../graphql/content/schema.mappers';
 import { CommentMapper } from './../graphql/comments/schema.mappers';
 import { PostMapper } from './../graphql/posts/schema.mappers';
+import { RelationMapper } from './../graphql/relations/schema.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -60,6 +61,11 @@ export type Comment = {
   replies?: Maybe<Array<Comment>>;
 };
 
+
+export type CommentrepliesArgs = {
+  page?: InputMaybe<PaginationInput>;
+};
+
 export type CommentByIdentifierInput =
   { id: Scalars['Int']['input']; };
 
@@ -113,10 +119,6 @@ export type EventLog = {
   type: Scalars['String']['output'];
 };
 
-export type FollowInput = {
-  targetAddress: Scalars['String']['input'];
-};
-
 export type HidePostInput = {
   postId: Scalars['Int']['input'];
 };
@@ -160,7 +162,7 @@ export type Mutation = {
   humanMessage?: Maybe<Message>;
   logAnonymousEvent: Scalars['Boolean']['output'];
   logEvent: Scalars['Boolean']['output'];
-  toggleFollow: Scalars['Boolean']['output'];
+  setRelationStatus: Relation;
   toggleLike: Scalars['Boolean']['output'];
   updateComment: Comment;
   updatePost: Post;
@@ -208,8 +210,8 @@ export type MutationlogEventArgs = {
 };
 
 
-export type MutationtoggleFollowArgs = {
-  input: FollowInput;
+export type MutationsetRelationStatusArgs = {
+  input: SetRelationStatusInput;
 };
 
 
@@ -246,11 +248,15 @@ export type Post = {
   title: Scalars['String']['output'];
 };
 
+
+export type PostcommentsArgs = {
+  page?: InputMaybe<PaginationInput>;
+};
+
 export type PostByIdentifierInput =
   { id: Scalars['Int']['input']; };
 
 export type PostFilterInput = {
-  id?: InputMaybe<Scalars['Int']['input']>;
   userId?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -267,12 +273,12 @@ export type Query = {
   getComment?: Maybe<Comment>;
   getComments?: Maybe<Array<Comment>>;
   getCreatorTips: Array<Tip>;
-  getIsFollowing: Scalars['Boolean']['output'];
   getIsLiked: Scalars['Boolean']['output'];
   getPost?: Maybe<Post>;
   getPostViews: Scalars['Int']['output'];
   getPosts: Array<Post>;
   getProfileViews: Scalars['Int']['output'];
+  getRelationStatus?: Maybe<Relation>;
   getTargetEvents: Array<EventLog>;
   getTipsByBakerForPost: Array<TipByBaker>;
   getTipsForPost: Array<Tip>;
@@ -289,18 +295,13 @@ export type QuerygetCommentArgs = {
 
 export type QuerygetCommentsArgs = {
   input: CommentsFilterInput;
-  pagination?: InputMaybe<PaginationInput>;
+  page?: InputMaybe<PaginationInput>;
 };
 
 
 export type QuerygetCreatorTipsArgs = {
   address: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QuerygetIsFollowingArgs = {
-  targetAddress: Scalars['String']['input'];
 };
 
 
@@ -321,12 +322,17 @@ export type QuerygetPostViewsArgs = {
 
 export type QuerygetPostsArgs = {
   input: PostFilterInput;
-  pagination?: InputMaybe<PaginationInput>;
+  page?: InputMaybe<PaginationInput>;
 };
 
 
 export type QuerygetProfileViewsArgs = {
   address: Scalars['String']['input'];
+};
+
+
+export type QuerygetRelationStatusArgs = {
+  input: RelationByIdentifierInput;
 };
 
 
@@ -367,6 +373,28 @@ export type QuerygetUserEventsArgs = {
 export type QuerygetUserTipsHistoryArgs = {
   address: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type Relation = {
+  __typename?: 'Relation';
+  followedAt?: Maybe<Scalars['Date']['output']>;
+  isBlocked: Scalars['Boolean']['output'];
+  isFollowing: Scalars['Boolean']['output'];
+  user: User;
+};
+
+export type RelationByIdentifierInput = {
+  toUserId: Scalars['Int']['input'];
+};
+
+export type RelationState =
+  | 'BLOCK'
+  | 'FOLLOW'
+  | 'NONE';
+
+export type SetRelationStatusInput = {
+  status: RelationState;
+  toUserId: Scalars['Int']['input'];
 };
 
 export type SocialLink = {
@@ -551,7 +579,6 @@ export type ResolversTypes = {
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   EventLog: ResolverTypeWrapper<EventLog>;
-  FollowInput: FollowInput;
   HidePostInput: HidePostInput;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   LikeInput: LikeInput;
@@ -565,6 +592,10 @@ export type ResolversTypes = {
   PostFilterInput: PostFilterInput;
   Profile: ResolverTypeWrapper<Profile>;
   Query: ResolverTypeWrapper<{}>;
+  Relation: ResolverTypeWrapper<RelationMapper>;
+  RelationByIdentifierInput: RelationByIdentifierInput;
+  RelationState: ResolverTypeWrapper<'NONE' | 'FOLLOW' | 'BLOCK'>;
+  SetRelationStatusInput: SetRelationStatusInput;
   SocialLink: ResolverTypeWrapper<SocialLink>;
   SocialLinkInput: SocialLinkInput;
   SocialsFilterInput: SocialsFilterInput;
@@ -602,7 +633,6 @@ export type ResolversParentTypes = {
   Date: Scalars['Date']['output'];
   DateTime: Scalars['DateTime']['output'];
   EventLog: EventLog;
-  FollowInput: FollowInput;
   HidePostInput: HidePostInput;
   JSON: Scalars['JSON']['output'];
   LikeInput: LikeInput;
@@ -616,6 +646,9 @@ export type ResolversParentTypes = {
   PostFilterInput: PostFilterInput;
   Profile: Profile;
   Query: {};
+  Relation: RelationMapper;
+  RelationByIdentifierInput: RelationByIdentifierInput;
+  SetRelationStatusInput: SetRelationStatusInput;
   SocialLink: SocialLink;
   SocialLinkInput: SocialLinkInput;
   SocialsFilterInput: SocialsFilterInput;
@@ -663,7 +696,7 @@ export type CommentResolvers<ContextType = GQL.ContextType, ParentType extends R
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   parent?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType>;
   post?: Resolver<ResolversTypes['Post'], ParentType, ContextType>;
-  replies?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>;
+  replies?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType, Partial<CommentrepliesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -716,7 +749,7 @@ export type MutationResolvers<ContextType = GQL.ContextType, ParentType extends 
   humanMessage?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationhumanMessageArgs, 'input'>>;
   logAnonymousEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogAnonymousEventArgs, 'input'>>;
   logEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogEventArgs, 'input'>>;
-  toggleFollow?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleFollowArgs, 'input'>>;
+  setRelationStatus?: Resolver<ResolversTypes['Relation'], ParentType, ContextType, RequireFields<MutationsetRelationStatusArgs, 'input'>>;
   toggleLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleLikeArgs, 'input'>>;
   updateComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationupdateCommentArgs, 'input'>>;
   updatePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationupdatePostArgs, 'input'>>;
@@ -726,7 +759,7 @@ export type MutationResolvers<ContextType = GQL.ContextType, ParentType extends 
 export type PostResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
   base?: Resolver<ResolversTypes['BaseContent'], ParentType, ContextType>;
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType, Partial<PostcommentsArgs>>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -744,12 +777,12 @@ export type QueryResolvers<ContextType = GQL.ContextType, ParentType extends Res
   getComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetCommentArgs, 'input'>>;
   getComments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType, RequireFields<QuerygetCommentsArgs, 'input'>>;
   getCreatorTips?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerygetCreatorTipsArgs, 'address'>>;
-  getIsFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsFollowingArgs, 'targetAddress'>>;
   getIsLiked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsLikedArgs, 'targetId'>>;
   getPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostArgs, 'input'>>;
   getPostViews?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<QuerygetPostViewsArgs, 'postId'>>;
   getPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostsArgs, 'input'>>;
   getProfileViews?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<QuerygetProfileViewsArgs, 'address'>>;
+  getRelationStatus?: Resolver<Maybe<ResolversTypes['Relation']>, ParentType, ContextType, RequireFields<QuerygetRelationStatusArgs, 'input'>>;
   getTargetEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetTargetEventsArgs, 'limit' | 'offset' | 'targetId'>>;
   getTipsByBakerForPost?: Resolver<Array<ResolversTypes['TipByBaker']>, ParentType, ContextType, RequireFields<QuerygetTipsByBakerForPostArgs, 'postId'>>;
   getTipsForPost?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerygetTipsForPostArgs, 'postId'>>;
@@ -757,6 +790,16 @@ export type QueryResolvers<ContextType = GQL.ContextType, ParentType extends Res
   getUserEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetUserEventsArgs, 'address' | 'limit' | 'offset'>>;
   getUserTipsHistory?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerygetUserTipsHistoryArgs, 'address'>>;
 };
+
+export type RelationResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Relation'] = ResolversParentTypes['Relation']> = {
+  followedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  isBlocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RelationStateResolvers = EnumResolverSignature<{ BLOCK?: any, FOLLOW?: any, NONE?: any }, ResolversTypes['RelationState']>;
 
 export type SocialLinkResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['SocialLink'] = ResolversParentTypes['SocialLink']> = {
   platform?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -827,6 +870,8 @@ export type Resolvers<ContextType = GQL.ContextType> = {
   Post?: PostResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Relation?: RelationResolvers<ContextType>;
+  RelationState?: RelationStateResolvers;
   SocialLink?: SocialLinkResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   TargetType?: TargetTypeResolvers;
