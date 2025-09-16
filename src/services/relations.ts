@@ -1,4 +1,4 @@
-import type { UserId, Relation } from '../externals/prisma';
+import type { Relation, UserId } from '../externals/prisma';
 import type { RelationByIdentifierInput, SetRelationStatusInput } from '../schema/types';
 import { ServiceManager } from './manager';
 
@@ -6,7 +6,6 @@ export type SetRelationStatusDTO = SetRelationStatusInput & UserId;
 export type GetRelationStatusDTO = RelationByIdentifierInput & UserId;
 
 export class RelationsService extends ServiceManager {
-
   async setFollowStatus(input: SetRelationStatusDTO): Promise<Relation> {
     const data = {
       toUserId: input.toUserId,
@@ -14,22 +13,24 @@ export class RelationsService extends ServiceManager {
       state: input.status,
     };
 
-    return this.ds.Relation.upsert({
-      fromUserId_toUserId: {
-        toUserId: input.toUserId,
-        fromUserId: input.userId,
+    return this.ds.Relations.upsert(
+      {
+        fromUserId_toUserId: {
+          toUserId: input.toUserId,
+          fromUserId: input.userId,
+        },
       },
-    }, data);
+      data,
+    );
   }
 
   async getFollowStatus(input: GetRelationStatusDTO): Promise<Relation | null> {
     // get the existing relation to return the expected status
-    return this.ds.Relation.getRelation({
+    return this.ds.Relations.getRelation({
       fromUserId_toUserId: {
         toUserId: input.toUserId,
         fromUserId: input.userId,
       },
     });
-
   }
 }

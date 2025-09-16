@@ -1,5 +1,5 @@
-import type { CreatePostInput, PostByIdentifierInput, UpdatePostInput } from '@/schema/types';
 import { ContentKind, PostContent, PostId, UserId } from '@/externals/prisma';
+import type { CreatePostInput, PostByIdentifierInput, UpdatePostInput } from '@/schema/types';
 import { ServiceManager } from './manager';
 
 export type CreatePostDTO = CreatePostInput & UserId;

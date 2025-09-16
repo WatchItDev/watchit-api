@@ -1,4 +1,4 @@
-import type { ResolversTypes, RelationState, Scalars } from '../../schema/types';
+import type { RelationState, ResolversTypes, Scalars } from '../../schema/types';
 
 export type RelationMapper = {
   state: RelationState;

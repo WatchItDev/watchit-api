@@ -1,4 +1,8 @@
-directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
+directive @cacheControl(
+  inheritMaxAge: Boolean
+  maxAge: Int
+  scope: CacheControlScope
+) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
 input AgentInput {
   message: String!
@@ -73,7 +77,9 @@ input CreateUserInput {
 
 scalar Date
 
-"""ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
+"""
+ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)
+"""
 scalar DateTime
 
 type EventLog {
@@ -176,7 +182,13 @@ type Query {
   getPosts(input: PostFilterInput!, page: PaginationInput): [Post!]!
   getProfileViews(address: String!): Int!
   getRelationStatus(input: RelationByIdentifierInput!): Relation
-  getTargetEvents(limit: Int = 50, offset: Int = 0, targetId: String!, targetType: String, type: String): [EventLog!]!
+  getTargetEvents(
+    limit: Int = 50
+    offset: Int = 0
+    targetId: String!
+    targetType: String
+    type: String
+  ): [EventLog!]!
   getTipsByBakerForPost(limit: Int, postId: String!): [TipByBaker!]!
   getTipsForPost(limit: Int, postId: String!): [Tip!]!
   getUser(input: UserByIdentifierInput!): User
@@ -230,7 +242,9 @@ enum TargetType {
   POST
 }
 
-"""Unix epoch in milliseconds (number)."""
+"""
+Unix epoch in milliseconds (number).
+"""
 scalar Timestamp
 
 type Tip {

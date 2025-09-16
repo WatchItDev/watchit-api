@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { BaseContentMapper } from './../graphql/content/schema.mappers';
 import { CommentMapper } from './../graphql/comments/schema.mappers';
+import { BaseContentMapper } from './../graphql/content/schema.mappers';
 import { PostMapper } from './../graphql/posts/schema.mappers';
 import { RelationMapper } from './../graphql/relations/schema.mappers';
 export type Maybe<T> = T | null | undefined;
@@ -8,24 +8,28 @@ export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never;
+};
+export type Incremental<T> =
+  | T
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?: AllowedValues };
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  Date: { input: Date | string; output: Date | string; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  Date: { input: Date | string; output: Date | string };
   /** ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z) */
-  DateTime: { input: Date | string; output: Date | string; }
-  JSON: { input: any; output: any; }
+  DateTime: { input: Date | string; output: Date | string };
+  JSON: { input: any; output: any };
   /** Unix epoch in milliseconds (number). */
-  Timestamp: { input: Date | string | number; output: Date | string | number; }
-  Upload: { input: any; output: any; }
+  Timestamp: { input: Date | string | number; output: Date | string | number };
+  Upload: { input: any; output: any };
 };
 
 export type AgentInput = {
@@ -47,9 +51,7 @@ export type BaseContent = {
   visibility: VisibilitySetting;
 };
 
-export type CacheControlScope =
-  | 'PRIVATE'
-  | 'PUBLIC';
+export type CacheControlScope = 'PRIVATE' | 'PUBLIC';
 
 export type Comment = {
   __typename?: 'Comment';
@@ -61,13 +63,11 @@ export type Comment = {
   replies?: Maybe<Array<Comment>>;
 };
 
-
 export type CommentrepliesArgs = {
   page?: InputMaybe<PaginationInput>;
 };
 
-export type CommentByIdentifierInput =
-  { id: Scalars['Int']['input']; };
+export type CommentByIdentifierInput = { id: Scalars['Int']['input'] };
 
 export type CommentsFilterInput = {
   parentId?: InputMaybe<Scalars['Int']['input']>;
@@ -169,66 +169,53 @@ export type Mutation = {
   updateUser: User;
 };
 
-
 export type MutationcreateCommentArgs = {
   input: CreateCommentInput;
 };
-
 
 export type MutationcreatePostArgs = {
   input: CreatePostInput;
 };
 
-
 export type MutationcreateTipArgs = {
   input: CreateTipInput;
 };
-
 
 export type MutationcreateUserArgs = {
   input: CreateUserInput;
 };
 
-
 export type MutationhidePostArgs = {
   input: HidePostInput;
 };
-
 
 export type MutationhumanMessageArgs = {
   input: AgentInput;
 };
 
-
 export type MutationlogAnonymousEventArgs = {
   input: LogEventInput;
 };
-
 
 export type MutationlogEventArgs = {
   input: LogEventInput;
 };
 
-
 export type MutationsetRelationStatusArgs = {
   input: SetRelationStatusInput;
 };
-
 
 export type MutationtoggleLikeArgs = {
   input: LikeInput;
 };
 
-
 export type MutationupdateCommentArgs = {
   input: UpdateCommentInput;
 };
 
-
 export type MutationupdatePostArgs = {
   input: UpdatePostInput;
 };
-
 
 export type MutationupdateUserArgs = {
   input: UpdateUserInput;
@@ -248,13 +235,11 @@ export type Post = {
   title: Scalars['String']['output'];
 };
 
-
 export type PostcommentsArgs = {
   page?: InputMaybe<PaginationInput>;
 };
 
-export type PostByIdentifierInput =
-  { id: Scalars['Int']['input']; };
+export type PostByIdentifierInput = { id: Scalars['Int']['input'] };
 
 export type PostFilterInput = {
   userId?: InputMaybe<Scalars['Int']['input']>;
@@ -287,54 +272,44 @@ export type Query = {
   getUserTipsHistory: Array<Tip>;
 };
 
-
 export type QuerygetCommentArgs = {
   input: CommentByIdentifierInput;
 };
-
 
 export type QuerygetCommentsArgs = {
   input: CommentsFilterInput;
   page?: InputMaybe<PaginationInput>;
 };
 
-
 export type QuerygetCreatorTipsArgs = {
   address: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
-
 export type QuerygetIsLikedArgs = {
   targetId: Scalars['String']['input'];
 };
-
 
 export type QuerygetPostArgs = {
   input: PostByIdentifierInput;
 };
 
-
 export type QuerygetPostViewsArgs = {
   postId: Scalars['String']['input'];
 };
-
 
 export type QuerygetPostsArgs = {
   input: PostFilterInput;
   page?: InputMaybe<PaginationInput>;
 };
 
-
 export type QuerygetProfileViewsArgs = {
   address: Scalars['String']['input'];
 };
 
-
 export type QuerygetRelationStatusArgs = {
   input: RelationByIdentifierInput;
 };
-
 
 export type QuerygetTargetEventsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -344,23 +319,19 @@ export type QuerygetTargetEventsArgs = {
   type?: InputMaybe<Scalars['String']['input']>;
 };
 
-
 export type QuerygetTipsByBakerForPostArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   postId: Scalars['String']['input'];
 };
-
 
 export type QuerygetTipsForPostArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   postId: Scalars['String']['input'];
 };
 
-
 export type QuerygetUserArgs = {
   input: UserByIdentifierInput;
 };
-
 
 export type QuerygetUserEventsArgs = {
   address: Scalars['String']['input'];
@@ -368,7 +339,6 @@ export type QuerygetUserEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
 };
-
 
 export type QuerygetUserTipsHistoryArgs = {
   address: Scalars['String']['input'];
@@ -387,10 +357,7 @@ export type RelationByIdentifierInput = {
   toUserId: Scalars['Int']['input'];
 };
 
-export type RelationState =
-  | 'BLOCK'
-  | 'FOLLOW'
-  | 'NONE';
+export type RelationState = 'BLOCK' | 'FOLLOW' | 'NONE';
 
 export type SetRelationStatusInput = {
   status: RelationState;
@@ -418,9 +385,7 @@ export type Subscription = {
   onAiMessage?: Maybe<AgentOutput>;
 };
 
-export type TargetType =
-  | 'COMMENT'
-  | 'POST';
+export type TargetType = 'COMMENT' | 'POST';
 
 export type Tip = {
   __typename?: 'Tip';
@@ -476,52 +441,54 @@ export type User = {
 };
 
 export type UserByIdentifierInput =
-  { address: Scalars['String']['input']; email?: never; id?: never; }
-  |  { address?: never; email: Scalars['String']['input']; id?: never; }
-  |  { address?: never; email?: never; id: Scalars['Int']['input']; };
+  | { address: Scalars['String']['input']; email?: never; id?: never }
+  | { address?: never; email: Scalars['String']['input']; id?: never }
+  | { address?: never; email?: never; id: Scalars['Int']['input'] };
 
 export type UsersFilterInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   verified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type VisibilitySetting =
-  | 'FOLLOWERS_ONLY'
-  | 'PRIVATE'
-  | 'PUBLIC';
-
-
+export type VisibilitySetting = 'FOLLOWERS_ONLY' | 'PRIVATE' | 'PUBLIC';
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
-
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+  | ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => Promise<TResult> | TResult;
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
-export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+export interface SubscriptionSubscriberObject<
+  TResult,
+  TKey extends string,
+  TParent,
+  TContext,
+  TArgs,
+> {
   subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
   resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
 }
@@ -535,17 +502,27 @@ export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, 
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+export type SubscriptionResolver<
+  TResult,
+  TKey extends string,
+  TParent = {},
+  TContext = {},
+  TArgs = {},
+> =
   | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+  obj: T,
+  context: TContext,
+  info: GraphQLResolveInfo,
+) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -554,10 +531,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
-
-
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
@@ -671,15 +646,26 @@ export type cacheControlDirectiveArgs = {
   scope?: Maybe<CacheControlScope>;
 };
 
-export type cacheControlDirectiveResolver<Result, Parent, ContextType = GQL.ContextType, Args = cacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+export type cacheControlDirectiveResolver<
+  Result,
+  Parent,
+  ContextType = GQL.ContextType,
+  Args = cacheControlDirectiveArgs,
+> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AgentOutputResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['AgentOutput'] = ResolversParentTypes['AgentOutput']> = {
+export type AgentOutputResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['AgentOutput'] = ResolversParentTypes['AgentOutput'],
+> = {
   done?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type BaseContentResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['BaseContent'] = ResolversParentTypes['BaseContent']> = {
+export type BaseContentResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['BaseContent'] = ResolversParentTypes['BaseContent'],
+> = {
   active?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -688,15 +674,26 @@ export type BaseContentResolvers<ContextType = GQL.ContextType, ParentType exten
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CacheControlScopeResolvers = EnumResolverSignature<{ PRIVATE?: any, PUBLIC?: any }, ResolversTypes['CacheControlScope']>;
+export type CacheControlScopeResolvers = EnumResolverSignature<
+  { PRIVATE?: any; PUBLIC?: any },
+  ResolversTypes['CacheControlScope']
+>;
 
-export type CommentResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
+export type CommentResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment'],
+> = {
   base?: Resolver<ResolversTypes['BaseContent'], ParentType, ContextType>;
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   parent?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType>;
   post?: Resolver<ResolversTypes['Post'], ParentType, ContextType>;
-  replies?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType, Partial<CommentrepliesArgs>>;
+  replies?: Resolver<
+    Maybe<Array<ResolversTypes['Comment']>>,
+    ParentType,
+    ContextType,
+    Partial<CommentrepliesArgs>
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -704,11 +701,15 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'Date';
 }
 
-export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+export interface DateTimeScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
 
-export type EventLogResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['EventLog'] = ResolversParentTypes['EventLog']> = {
+export type EventLogResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['EventLog'] = ResolversParentTypes['EventLog'],
+> = {
   amount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   author?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
@@ -726,7 +727,11 @@ export interface JSONScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
-export type MediaAttachmentResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['MediaAttachment'] = ResolversParentTypes['MediaAttachment']> = {
+export type MediaAttachmentResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends
+    ResolversParentTypes['MediaAttachment'] = ResolversParentTypes['MediaAttachment'],
+> = {
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -735,37 +740,119 @@ export type MediaAttachmentResolvers<ContextType = GQL.ContextType, ParentType e
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MessageResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
+export type MessageResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message'],
+> = {
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MutationResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationcreateCommentArgs, 'input'>>;
-  createPost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationcreatePostArgs, 'input'>>;
-  createTip?: Resolver<ResolversTypes['Tip'], ParentType, ContextType, RequireFields<MutationcreateTipArgs, 'input'>>;
-  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationcreateUserArgs, 'input'>>;
-  hidePost?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationhidePostArgs, 'input'>>;
-  humanMessage?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationhumanMessageArgs, 'input'>>;
-  logAnonymousEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogAnonymousEventArgs, 'input'>>;
-  logEvent?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationlogEventArgs, 'input'>>;
-  setRelationStatus?: Resolver<ResolversTypes['Relation'], ParentType, ContextType, RequireFields<MutationsetRelationStatusArgs, 'input'>>;
-  toggleLike?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationtoggleLikeArgs, 'input'>>;
-  updateComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationupdateCommentArgs, 'input'>>;
-  updatePost?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<MutationupdatePostArgs, 'input'>>;
-  updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationupdateUserArgs, 'input'>>;
+export type MutationResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
+> = {
+  createComment?: Resolver<
+    ResolversTypes['Comment'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationcreateCommentArgs, 'input'>
+  >;
+  createPost?: Resolver<
+    ResolversTypes['Post'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationcreatePostArgs, 'input'>
+  >;
+  createTip?: Resolver<
+    ResolversTypes['Tip'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationcreateTipArgs, 'input'>
+  >;
+  createUser?: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationcreateUserArgs, 'input'>
+  >;
+  hidePost?: Resolver<
+    Maybe<ResolversTypes['Boolean']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationhidePostArgs, 'input'>
+  >;
+  humanMessage?: Resolver<
+    Maybe<ResolversTypes['Message']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationhumanMessageArgs, 'input'>
+  >;
+  logAnonymousEvent?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationlogAnonymousEventArgs, 'input'>
+  >;
+  logEvent?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationlogEventArgs, 'input'>
+  >;
+  setRelationStatus?: Resolver<
+    ResolversTypes['Relation'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationsetRelationStatusArgs, 'input'>
+  >;
+  toggleLike?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationtoggleLikeArgs, 'input'>
+  >;
+  updateComment?: Resolver<
+    ResolversTypes['Comment'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateCommentArgs, 'input'>
+  >;
+  updatePost?: Resolver<
+    ResolversTypes['Post'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdatePostArgs, 'input'>
+  >;
+  updateUser?: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateUserArgs, 'input'>
+  >;
 };
 
-export type PostResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
+export type PostResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post'],
+> = {
   base?: Resolver<ResolversTypes['BaseContent'], ParentType, ContextType>;
   body?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType, Partial<PostcommentsArgs>>;
+  comments?: Resolver<
+    Maybe<Array<ResolversTypes['Comment']>>,
+    ParentType,
+    ContextType,
+    Partial<PostcommentsArgs>
+  >;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ProfileResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile']> = {
+export type ProfileResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['Profile'] = ResolversParentTypes['Profile'],
+> = {
   bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cover?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   picture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -773,25 +860,106 @@ export type ProfileResolvers<ContextType = GQL.ContextType, ParentType extends R
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QueryResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getComment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QuerygetCommentArgs, 'input'>>;
-  getComments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType, RequireFields<QuerygetCommentsArgs, 'input'>>;
-  getCreatorTips?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerygetCreatorTipsArgs, 'address'>>;
-  getIsLiked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<QuerygetIsLikedArgs, 'targetId'>>;
-  getPost?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostArgs, 'input'>>;
-  getPostViews?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<QuerygetPostViewsArgs, 'postId'>>;
-  getPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QuerygetPostsArgs, 'input'>>;
-  getProfileViews?: Resolver<ResolversTypes['Int'], ParentType, ContextType, RequireFields<QuerygetProfileViewsArgs, 'address'>>;
-  getRelationStatus?: Resolver<Maybe<ResolversTypes['Relation']>, ParentType, ContextType, RequireFields<QuerygetRelationStatusArgs, 'input'>>;
-  getTargetEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetTargetEventsArgs, 'limit' | 'offset' | 'targetId'>>;
-  getTipsByBakerForPost?: Resolver<Array<ResolversTypes['TipByBaker']>, ParentType, ContextType, RequireFields<QuerygetTipsByBakerForPostArgs, 'postId'>>;
-  getTipsForPost?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerygetTipsForPostArgs, 'postId'>>;
-  getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerygetUserArgs, 'input'>>;
-  getUserEvents?: Resolver<Array<ResolversTypes['EventLog']>, ParentType, ContextType, RequireFields<QuerygetUserEventsArgs, 'address' | 'limit' | 'offset'>>;
-  getUserTipsHistory?: Resolver<Array<ResolversTypes['Tip']>, ParentType, ContextType, RequireFields<QuerygetUserTipsHistoryArgs, 'address'>>;
+export type QueryResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
+> = {
+  getComment?: Resolver<
+    Maybe<ResolversTypes['Comment']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetCommentArgs, 'input'>
+  >;
+  getComments?: Resolver<
+    Maybe<Array<ResolversTypes['Comment']>>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetCommentsArgs, 'input'>
+  >;
+  getCreatorTips?: Resolver<
+    Array<ResolversTypes['Tip']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetCreatorTipsArgs, 'address'>
+  >;
+  getIsLiked?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetIsLikedArgs, 'targetId'>
+  >;
+  getPost?: Resolver<
+    Maybe<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetPostArgs, 'input'>
+  >;
+  getPostViews?: Resolver<
+    ResolversTypes['Int'],
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetPostViewsArgs, 'postId'>
+  >;
+  getPosts?: Resolver<
+    Array<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetPostsArgs, 'input'>
+  >;
+  getProfileViews?: Resolver<
+    ResolversTypes['Int'],
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetProfileViewsArgs, 'address'>
+  >;
+  getRelationStatus?: Resolver<
+    Maybe<ResolversTypes['Relation']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetRelationStatusArgs, 'input'>
+  >;
+  getTargetEvents?: Resolver<
+    Array<ResolversTypes['EventLog']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetTargetEventsArgs, 'limit' | 'offset' | 'targetId'>
+  >;
+  getTipsByBakerForPost?: Resolver<
+    Array<ResolversTypes['TipByBaker']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetTipsByBakerForPostArgs, 'postId'>
+  >;
+  getTipsForPost?: Resolver<
+    Array<ResolversTypes['Tip']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetTipsForPostArgs, 'postId'>
+  >;
+  getUser?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetUserArgs, 'input'>
+  >;
+  getUserEvents?: Resolver<
+    Array<ResolversTypes['EventLog']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetUserEventsArgs, 'address' | 'limit' | 'offset'>
+  >;
+  getUserTipsHistory?: Resolver<
+    Array<ResolversTypes['Tip']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerygetUserTipsHistoryArgs, 'address'>
+  >;
 };
 
-export type RelationResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Relation'] = ResolversParentTypes['Relation']> = {
+export type RelationResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['Relation'] = ResolversParentTypes['Relation'],
+> = {
   followedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   isBlocked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   isFollowing?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -799,25 +967,46 @@ export type RelationResolvers<ContextType = GQL.ContextType, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type RelationStateResolvers = EnumResolverSignature<{ BLOCK?: any, FOLLOW?: any, NONE?: any }, ResolversTypes['RelationState']>;
+export type RelationStateResolvers = EnumResolverSignature<
+  { BLOCK?: any; FOLLOW?: any; NONE?: any },
+  ResolversTypes['RelationState']
+>;
 
-export type SocialLinkResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['SocialLink'] = ResolversParentTypes['SocialLink']> = {
+export type SocialLinkResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['SocialLink'] = ResolversParentTypes['SocialLink'],
+> = {
   platform?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SubscriptionResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-  onAiMessage?: SubscriptionResolver<Maybe<ResolversTypes['AgentOutput']>, "onAiMessage", ParentType, ContextType>;
+export type SubscriptionResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription'],
+> = {
+  onAiMessage?: SubscriptionResolver<
+    Maybe<ResolversTypes['AgentOutput']>,
+    'onAiMessage',
+    ParentType,
+    ContextType
+  >;
 };
 
-export type TargetTypeResolvers = EnumResolverSignature<{ COMMENT?: any, POST?: any }, ResolversTypes['TargetType']>;
+export type TargetTypeResolvers = EnumResolverSignature<
+  { COMMENT?: any; POST?: any },
+  ResolversTypes['TargetType']
+>;
 
-export interface TimestampScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Timestamp'], any> {
+export interface TimestampScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['Timestamp'], any> {
   name: 'Timestamp';
 }
 
-export type TipResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['Tip'] = ResolversParentTypes['Tip']> = {
+export type TipResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['Tip'] = ResolversParentTypes['Tip'],
+> = {
   amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   baker?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
@@ -829,7 +1018,10 @@ export type TipResolvers<ContextType = GQL.ContextType, ParentType extends Resol
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TipByBakerResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['TipByBaker'] = ResolversParentTypes['TipByBaker']> = {
+export type TipByBakerResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['TipByBaker'] = ResolversParentTypes['TipByBaker'],
+> = {
   baker?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   count?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   lastTipAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
@@ -841,7 +1033,10 @@ export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
   name: 'Upload';
 }
 
-export type UserResolvers<ContextType = GQL.ContextType, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+export type UserResolvers<
+  ContextType = GQL.ContextType,
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
+> = {
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Timestamp'], ParentType, ContextType>;
   displayName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -853,7 +1048,10 @@ export type UserResolvers<ContextType = GQL.ContextType, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type VisibilitySettingResolvers = EnumResolverSignature<{ FOLLOWERS_ONLY?: any, PRIVATE?: any, PUBLIC?: any }, ResolversTypes['VisibilitySetting']>;
+export type VisibilitySettingResolvers = EnumResolverSignature<
+  { FOLLOWERS_ONLY?: any; PRIVATE?: any; PUBLIC?: any },
+  ResolversTypes['VisibilitySetting']
+>;
 
 export type Resolvers<ContextType = GQL.ContextType> = {
   AgentOutput?: AgentOutputResolvers<ContextType>;
