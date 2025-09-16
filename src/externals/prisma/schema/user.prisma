@@ -40,5 +40,6 @@ model User {
     from         Relation[]     @relation("UserFrom")
     to           Relation[]     @relation("UserTo")
 
+    @@index([email])
     @@index([address, email])
 }

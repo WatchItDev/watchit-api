@@ -2,7 +2,7 @@ import { CommentService } from './comments';
 import { PostService } from './posts';
 import { UsersService } from './users';
 
-import { LikesService } from './likes';
+import { LikesService } from './reactions';
 import { BookmarkService } from './lists';
 import { LogService } from './logs';
 import { RelationsService } from './relations';

@@ -11,7 +11,7 @@ model Reactions {
     contentId Int
     createdAt DateTime     @default(now())
 
-    user    User        @relation(fields: [userId], references: [id])
+    user    User    @relation(fields: [userId], references: [id])
     content Content @relation(fields: [contentId], references: [id])
 
     @@unique([userId, contentId])
