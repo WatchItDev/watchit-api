@@ -29,9 +29,9 @@ import { resolvers } from '@/graphql/resolvers.generated';
 import { typeDefs } from '@/graphql/typeDefs.generated';
 import { User } from '@/graphql/types';
 
-import Externals from './externals';
-import { DataSources } from './datasources';
-import { Services } from './services';
+import { Externals } from './externals';
+import { Infra } from './infra';
+import { DataSources, Services } from './modules';
 
 // import SentryPlugin from '@/sentry'
 
@@ -65,15 +65,13 @@ const buildWSServer = (httpServer: http.Server, inject: Record<string, any>): Di
 };
 
 const startServer = async (): Promise<{ url: string; server: http.Server }> => {
+  const infra = Infra();
   const externals = Externals();
-  const dataSources = DataSources({
-    fs: externals.FireStore(),
-    pa: externals.Prisma(),
-  });
-
   const pubsub = new PubSub();
-  const services = Services({ ds: dataSources, ext: externals });
+
   // inject tools to context and make them available to all the API
+  const dataSources = DataSources({ fs: externals.FireStore(), pa: infra.DB() });
+  const services = Services({ ds: dataSources, ext: externals });
   const injectToContext = { pubsub, services, dataSources, externals, user: {} as User };
 
   const host = process.env.API_HOST ?? '0.0.0.0';
@@ -140,7 +138,6 @@ const startServer = async (): Promise<{ url: string; server: http.Server }> => {
 
   return { url: `http://${host}:${port}/`, server: httpServer };
 };
-
 
 // The `listen` method launches a web server
 const { url } = await startServer();

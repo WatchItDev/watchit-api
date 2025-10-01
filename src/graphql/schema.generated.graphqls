@@ -1,4 +1,8 @@
-directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
+directive @cacheControl(
+  inheritMaxAge: Boolean
+  maxAge: Int
+  scope: CacheControlScope
+) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
 
 input AgentInput {
   message: String!
@@ -65,7 +69,9 @@ input CreateUserInput {
 
 scalar Date
 
-"""ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
+"""
+ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)
+"""
 scalar DateTime
 
 type Edge {
@@ -172,7 +178,9 @@ type Subscription {
   onAgentMessage: AgentOutput
 }
 
-"""Unix epoch in milliseconds (number)."""
+"""
+Unix epoch in milliseconds (number).
+"""
 scalar Timestamp
 
 input UpdateCommentInput {

@@ -1,4 +1,4 @@
-import type   { SocialResolvers } from './../../../schema/types';
-    export const Social: SocialResolvers = {
-    /* Implement Social resolver logic here */
-  };
+import type { SocialResolvers } from '@/graphql/types';
+export const Social: SocialResolvers = {
+  /* Implement Social resolver logic here */
+};

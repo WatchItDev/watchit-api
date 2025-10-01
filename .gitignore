@@ -6,5 +6,5 @@ build/
 scripts/
 
 **/*/generated/prisma
-src/migrations
+src/infra/migrations
 server

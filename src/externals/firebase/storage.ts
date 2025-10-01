@@ -1,43 +1,34 @@
-import { Bucket } from '@google-cloud/storage';
-import { getStorage, Storage } from "firebase-admin/storage";
+import type { Bucket } from '@google-cloud/storage';
+import type { Storage } from 'firebase-admin/storage';
+import { getStorage } from 'firebase-admin/storage';
 import { App } from './app';
 
+export function createFirebaseStorage(path: string) {
+  const admin = App().getAdmin();
+  const storage: Storage = getStorage(admin);
+  const bucket: Bucket = storage.bucket();
 
-export class FirebaseStorage {
-    protected admin: Storage;
-    protected bucket: Bucket;
-    protected path: string;
+  async function upload(file: Buffer): Promise<void> {
+    const bucketFile = bucket.file(path);
+    await bucketFile.save(file);
+  }
 
-    constructor(path: string) {
-        const admin = App().getAdmin();
-        this.admin = getStorage(admin);
-        this.bucket = this.admin.bucket()
-        this.path = path;
-    }
+  async function url(): Promise<string> {
+    const bucketFile = bucket.file(path);
+    const [signedUrl] = await bucketFile.getSignedUrl({
+      action: 'read',
+      expires: '03-09-2100',
+    });
+    return signedUrl;
+  }
 
-    async upload(file: Buffer): Promise<void> {
-        // 'file' comes from the Blob or File API
-        const bucketFile = this.bucket.file(this.path)
-        return bucketFile.save(file)
-
-    }
-
-    async url(): Promise<string> {
-        const bucketFile = this.bucket.file(this.path)
-        const [url] = await bucketFile.getSignedUrl({
-            action: 'read',
-            expires: '03-09-2100' 
-        });
-        return url;
-
-    }
+  return { upload, url };
 }
 
-
-/** factory for your datasources */
 export function FireStorage() {
-    const ref = (ref: string): FirebaseStorage => new FirebaseStorage(ref);
-    return { ref };
+  return {
+    ref: (path: string) => createFirebaseStorage(path),
+  };
 }
 
 export type FireStorage = ReturnType<typeof FireStorage>;

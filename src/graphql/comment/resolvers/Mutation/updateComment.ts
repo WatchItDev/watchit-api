@@ -1,8 +1,8 @@
 import { withRequireAuth } from '@/graphql/_base/hof/auth';
-import type { MutationResolvers } from './../../../../schema/types';
+import type { MutationResolvers } from '@/graphql/types';
 
 export const updateComment: NonNullable<MutationResolvers['updateComment']> = withRequireAuth(
   async (_parent, { input }, { services }) => {
-    return services.Comments.updateComment(input);
+    return services.Comment.updateComment(input);
   },
 );

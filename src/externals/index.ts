@@ -1,6 +1,6 @@
-import { HarvestingGraph, RootAgent } from './ai/graphs';
-import { App, FireStore, FireStorage } from './firebase';
-import { Prisma } from './prisma';
+import { Prisma } from '../infra/database';
+import { App, FireStorage, FireStore } from './firebase';
+import { HarvestingGraph, RootAgent } from './langchain/graphs';
 
 export const Externals = () => ({
   App,
@@ -10,6 +10,3 @@ export const Externals = () => ({
   RootAgent,
   HarvestingGraph,
 });
-
-export default Externals;
-export type ExternalsType = ReturnType<typeof Externals>;

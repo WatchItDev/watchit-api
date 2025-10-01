@@ -1,4 +1,4 @@
-import type { EdgeResolvers } from './../../../schema/types';
+import type { EdgeResolvers } from '@/graphql/types';
 export const Edge: EdgeResolvers = {
   /* Implement Follow resolver logic here */
   followedAt: ({ updatedAt }, _arg, _ctx) => {

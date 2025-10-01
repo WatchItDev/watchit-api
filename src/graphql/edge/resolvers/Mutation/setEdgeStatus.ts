@@ -1,3 +1,11 @@
+import { withRequireAuth } from '@/graphql/_base/hof/auth';
+import type { MutationResolvers } from '@/graphql/types';
 
-        import type   { MutationResolvers } from './../../../../schema/types';
-        export const setEdgeStatus: NonNullable<MutationResolvers['setEdgeStatus']> = async (_parent, _arg, _ctx) => { /* Implement Mutation.setEdgeStatus resolver logic here */ };
+export const setEdgeStatus: NonNullable<MutationResolvers['setEdgeStatus']> = withRequireAuth(
+  async (_parent, { input }, { services, user: { id: userId } }) => {
+    return services.Edge.setEdgeStatus({
+      ...input,
+      userId,
+    });
+  },
+);

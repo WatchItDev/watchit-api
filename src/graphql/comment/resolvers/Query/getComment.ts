@@ -1,4 +1,4 @@
-import type { QueryResolvers } from './../../../../schema/types';
+import type { QueryResolvers } from '@/graphql/types';
 export const getComment: NonNullable<QueryResolvers['getComment']> = async (
   _parent,
   { input },

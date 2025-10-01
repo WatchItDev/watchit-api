@@ -60,14 +60,12 @@
     "dev": "tsx watch src/index.ts",
     "start": "node build/index.js",
     "format": "prettier --write .",
-    "gql:generate": "graphql-codegen --config codegen.ts",
     "db:dev": "prisma dev",
-    "db:migrate": "prisma migrate dev --schema src/externals/prisma",
-    "db:generate": "prisma generate --schema src/externals/prisma",
-    "db:reset": "prisma migrate reset --schema src/externals/prisma",
-    "db:studio": "prisma studio --schema src/externals/prisma",
-    "functions:deploy": "npm run --prefix ./src/functions deploy",
-    "functions:emulate": "npm run --prefix ./src/functions emulate",
+    "db:migrate": "prisma migrate dev --schema src/infra/database",
+    "db:generate": "prisma generate --schema src/infra/database",
+    "db:reset": "prisma migrate reset --schema src/infra/database",
+    "db:studio": "prisma studio --schema src/infra/database",
+    "gql:generate": "graphql-codegen --config codegen.ts",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org velatrix --project node-express ./dist && sentry-cli sourcemaps upload --org velatrix --project node-express ./dist"
   }
 }

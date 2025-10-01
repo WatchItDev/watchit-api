@@ -1,4 +1,4 @@
-import type { MutationResolvers } from './../../../../schema/types';
+import type { MutationResolvers } from '@/graphql/types';
 export const humanMessage: NonNullable<MutationResolvers['humanMessage']> = async (
   _parent,
   _arg,

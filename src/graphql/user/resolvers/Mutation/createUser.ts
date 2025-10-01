@@ -1,5 +1,5 @@
 import { withEmail } from '@/graphql/_base/hof/inject';
-import type { MutationResolvers } from './../../../../schema/types';
+import type { MutationResolvers } from '@/graphql/types';
 
 export const createUser: NonNullable<MutationResolvers['createUser']> = withEmail(
   async (_parent, { input }, ctx) => {
