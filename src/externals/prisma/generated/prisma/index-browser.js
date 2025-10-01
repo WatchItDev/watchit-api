@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.15.0
- * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+ * Prisma Client JS version: 6.16.3
+ * Query Engine version: bb420e667c1820a8c05a38023385f6cc7ef8e83a
  */
 Prisma.prismaVersion = {
-  client: "6.15.0",
-  engine: "85179d7826409ee107a6ba334b5e305ae3fba9fb"
+  client: "6.16.3",
+  engine: "bb420e667c1820a8c05a38023385f6cc7ef8e83a"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -138,7 +138,16 @@ exports.Prisma.ContentScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.MediaAttachmentsScalarFieldEnum = {
+exports.Prisma.EdgeScalarFieldEnum = {
+  fromUserId: 'fromUserId',
+  toUserId: 'toUserId',
+  state: 'state',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  preferences: 'preferences'
+};
+
+exports.Prisma.AttachmentScalarFieldEnum = {
   id: 'id',
   postId: 'postId',
   url: 'url',
@@ -154,7 +163,7 @@ exports.Prisma.PostScalarFieldEnum = {
   contentId: 'contentId'
 };
 
-exports.Prisma.ReactionsScalarFieldEnum = {
+exports.Prisma.ReactionScalarFieldEnum = {
   id: 'id',
   kind: 'kind',
   userId: 'userId',
@@ -162,15 +171,7 @@ exports.Prisma.ReactionsScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.RelationScalarFieldEnum = {
-  fromUserId: 'fromUserId',
-  toUserId: 'toUserId',
-  state: 'state',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.TransactionsScalarFieldEnum = {
+exports.Prisma.TransactionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   type: 'type',
@@ -181,7 +182,7 @@ exports.Prisma.TransactionsScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.SocialsScalarFieldEnum = {
+exports.Prisma.SocialScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   platform: 'platform',
@@ -237,7 +238,7 @@ exports.Prisma.JsonNullValueFilter = {
   AnyNull: Prisma.AnyNull
 };
 
-exports.Prisma.MediaAttachmentsOrderByRelevanceFieldEnum = {
+exports.Prisma.AttachmentOrderByRelevanceFieldEnum = {
   url: 'url',
   cid: 'cid',
   title: 'title',
@@ -249,12 +250,12 @@ exports.Prisma.PostOrderByRelevanceFieldEnum = {
   body: 'body'
 };
 
-exports.Prisma.TransactionsOrderByRelevanceFieldEnum = {
+exports.Prisma.TransactionOrderByRelevanceFieldEnum = {
   currency: 'currency',
   description: 'description'
 };
 
-exports.Prisma.SocialsOrderByRelevanceFieldEnum = {
+exports.Prisma.SocialOrderByRelevanceFieldEnum = {
   platform: 'platform',
   url: 'url'
 };
@@ -282,16 +283,16 @@ exports.Visibility = exports.$Enums.Visibility = {
   PRIVATE: 'PRIVATE'
 };
 
+exports.EdgeState = exports.$Enums.EdgeState = {
+  NONE: 'NONE',
+  FOLLOW: 'FOLLOW',
+  BLOCK: 'BLOCK'
+};
+
 exports.ReactionType = exports.$Enums.ReactionType = {
   HATE: 'HATE',
   LIKE: 'LIKE',
   LOVE: 'LOVE'
-};
-
-exports.RelationState = exports.$Enums.RelationState = {
-  NONE: 'NONE',
-  FOLLOW: 'FOLLOW',
-  BLOCK: 'BLOCK'
 };
 
 exports.TxType = exports.$Enums.TxType = {
@@ -304,12 +305,12 @@ exports.TxType = exports.$Enums.TxType = {
 exports.Prisma.ModelName = {
   Comment: 'Comment',
   Content: 'Content',
-  MediaAttachments: 'MediaAttachments',
+  Edge: 'Edge',
+  Attachment: 'Attachment',
   Post: 'Post',
-  Reactions: 'Reactions',
-  Relation: 'Relation',
-  Transactions: 'Transactions',
-  Socials: 'Socials',
+  Reaction: 'Reaction',
+  Transaction: 'Transaction',
+  Social: 'Social',
   Profile: 'Profile',
   User: 'User'
 };

@@ -1,24 +1,24 @@
 import type { Repo, UserId } from '../../externals/prisma';
-import type { SocialLink } from '../../schema/types';
+import type { Social } from '../../schema/types';
 import { DataSourceManager } from '../manager';
 
-type SocialWithoutUserId = Omit<Repo.SocialsCreateManyInput, 'userId'>;
-export type RepoCreateBatchSocials = { platforms: SocialWithoutUserId[] } & UserId;
-export type RepoDeleteBatchSocials = UserId; // delete many by user id
+type SocialWithoutUserId = Omit<Repo.SocialCreateManyInput, 'userId'>;
+export type RepoCreateBatchSocial = { platforms: SocialWithoutUserId[] } & UserId;
+export type RepoDeleteBatchSocial = UserId; // delete many by user id
 
 export class SocialCommands extends DataSourceManager {
-  async batchCreate({ platforms, userId }: RepoCreateBatchSocials): Promise<Repo.BatchPayload> {
-    return this.pa.socials.createMany({
+  async batchCreate({ platforms, userId }: RepoCreateBatchSocial): Promise<Repo.BatchPayload> {
+    return this.pa.social.createMany({
       skipDuplicates: true,
-      data: platforms.map((social: SocialLink) => ({
+      data: platforms.map((social: Social) => ({
         userId,
         ...social,
       })),
     });
   }
 
-  async batchDelete({ userId }: RepoDeleteBatchSocials): Promise<Repo.BatchPayload> {
-    return this.pa.socials.deleteMany({ where: { userId } });
+  async batchDelete({ userId }: RepoDeleteBatchSocial): Promise<Repo.BatchPayload> {
+    return this.pa.social.deleteMany({ where: { userId } });
   }
 
   // async updateCounterField(

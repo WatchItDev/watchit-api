@@ -1,0 +1,24 @@
+enum EdgeState {
+    NONE
+    FOLLOW
+    BLOCK
+}
+
+model Edge {
+    fromUserId  Int
+    toUserId    Int
+    state       EdgeState @default(NONE)
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    preferences Json? // { "mute": true, "notifications": false }
+
+    from User @relation("UserFrom", fields: [fromUserId], references: [id])
+    to   User @relation("UserTo", fields: [toUserId], references: [id])
+
+    @@id([fromUserId, toUserId])
+    @@index([state])
+    @@index([toUserId, state])
+    @@index([fromUserId, state])
+
+    @@map("edges")
+}

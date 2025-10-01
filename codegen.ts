@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   schema: '**/schema.graphql',
   emitLegacyCommonJSImports: false,
   generates: {
-    'src/schema': defineConfig({
+    'src/graphql': defineConfig({
       resolverTypesPath: './types.ts',
       mode: 'modules',
       typesPluginsConfig: {

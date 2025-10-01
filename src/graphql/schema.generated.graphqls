@@ -1,0 +1,227 @@
+directive @cacheControl(inheritMaxAge: Boolean, maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | INTERFACE | OBJECT | UNION
+
+input AgentInput {
+  message: String!
+}
+
+type AgentOutput {
+  done: Boolean
+  message: Message
+}
+
+type BaseContent {
+  active: Boolean!
+  createdAt: Date!
+  id: Int!
+  user: User!
+  visibility: VisibilitySetting!
+}
+
+enum CacheControlScope {
+  PRIVATE
+  PUBLIC
+}
+
+type Comment {
+  base: BaseContent!
+  body: String!
+  id: String!
+  parent: Comment
+  post: Post!
+  replies(page: PaginationInput): [Comment!]
+}
+
+input CommentByIdentifierInput @oneOf {
+  id: Int
+}
+
+input CommentsFilterInput {
+  parentId: Int
+  postId: Int
+  userId: Int
+}
+
+input CreateCommentInput {
+  body: String!
+  parentId: Int
+  postId: Int!
+}
+
+input CreatePostInput {
+  body: String!
+  title: String!
+  visibility: VisibilitySetting!
+}
+
+input CreateUserInput {
+  address: String!
+  bio: String!
+  cover: String
+  displayName: String!
+  picture: String
+  socials: [SocialInput!]
+  username: String!
+}
+
+scalar Date
+
+"""ISO-8601 Date-Time string (e.g. 2024-04-17T15:22:00.000Z)"""
+scalar DateTime
+
+type Edge {
+  followedAt: Date
+  isBlocked: Boolean!
+  isFollowing: Boolean!
+  user: User!
+}
+
+input EdgeByIdentifierInput {
+  toUserId: Int!
+}
+
+enum EdgeState {
+  BLOCK
+  FOLLOW
+  NONE
+}
+
+input HidePostInput {
+  postId: Int!
+}
+
+scalar JSON
+
+type MediaAttachment {
+  cid: String!
+  id: Int!
+  title: String
+  type: String!
+  url: String
+}
+
+type Message {
+  content: String!
+}
+
+type Mutation {
+  createComment(input: CreateCommentInput!): Comment!
+  createPost(input: CreatePostInput!): Post!
+  createUser(input: CreateUserInput!): User!
+  hidePost(input: HidePostInput!): Boolean
+  sendHumanMessage(input: AgentInput!): Message
+  setEdgeStatus(input: SetEdgeStatusInput!): Edge!
+  updateComment(input: UpdateCommentInput!): Comment!
+  updatePost(input: UpdatePostInput!): Post!
+  updateUser(input: UpdateUserInput!): User!
+}
+
+input PaginationInput {
+  limit: Int
+  offset: Int
+}
+
+type Post {
+  base: BaseContent!
+  body: String!
+  comments(page: PaginationInput): [Comment!]
+  id: Int!
+  title: String!
+}
+
+input PostByIdentifierInput @oneOf {
+  id: Int
+}
+
+input PostFilterInput {
+  userId: Int
+}
+
+type Profile {
+  bio: String!
+  cover: String
+  picture: String
+  username: String!
+}
+
+type Query {
+  getComment(input: CommentByIdentifierInput!): Comment
+  getComments(input: CommentsFilterInput!, page: PaginationInput): [Comment!]
+  getEdgeStatus(input: EdgeByIdentifierInput!): Edge
+  getPost(input: PostByIdentifierInput!): Post
+  getPosts(input: PostFilterInput!, page: PaginationInput): [Post!]!
+  getUser(input: UserByIdentifierInput!): User
+}
+
+input SetEdgeStatusInput {
+  status: EdgeState!
+  toUserId: Int!
+}
+
+type Social {
+  platform: String!
+  url: String!
+}
+
+input SocialInput {
+  platform: String!
+  url: String!
+  userId: Int
+}
+
+type Subscription {
+  onAgentMessage: AgentOutput
+}
+
+"""Unix epoch in milliseconds (number)."""
+scalar Timestamp
+
+input UpdateCommentInput {
+  body: String!
+  id: Int!
+}
+
+input UpdatePostInput {
+  body: String
+  id: Int!
+  title: String
+  visibility: VisibilitySetting
+}
+
+input UpdateUserInput {
+  bio: String
+  cover: String
+  displayName: String
+  picture: String
+  socials: [SocialInput!]
+  username: String
+}
+
+scalar Upload
+
+type User {
+  address: String!
+  createdAt: Timestamp!
+  displayName: String!
+  email: String!
+  id: Int!
+  profile: Profile
+  socials: [Social!]
+  verified: Boolean!
+}
+
+input UserByIdentifierInput @oneOf {
+  address: String
+  email: String
+  id: Int
+}
+
+input UsersFilterInput {
+  name: String
+  verified: Boolean
+}
+
+enum VisibilitySetting {
+  FOLLOWERS_ONLY
+  PRIVATE
+  PUBLIC
+}

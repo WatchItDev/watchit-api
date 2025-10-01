@@ -1,13 +1,13 @@
-import { Repo, Socials } from '../../externals/prisma';
+import { Repo, Social } from '../../externals/prisma';
 import type { PaginationInput } from '../../schema/types';
 import { DataSourceManager } from '../manager';
 
-export class SocialQuery extends DataSourceManager {
-  async getSocials(
-    input: Repo.SocialsWhereInput,
+export class SocialQueries extends DataSourceManager {
+  async getSocial(
+    input: Repo.SocialWhereInput,
     pagination?: PaginationInput,
-  ): Promise<Socials[]> {
-    return this.pa.socials.findMany({
+  ): Promise<Social[]> {
+    return this.pa.social.findMany({
       ...(pagination?.limit && { take: pagination.limit }),
       ...(pagination?.offset && { skip: pagination.offset }),
       where: input,

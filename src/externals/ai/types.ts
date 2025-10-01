@@ -1,5 +1,5 @@
 import type { BaseChatModel } from '@langchain/core/language_models/chat_models';
-import type { BaseMessage } from '@langchain/core/messages';
+import { HumanMessage, type BaseMessage, } from '@langchain/core/messages';
 import {
   ChatPromptTemplate,
   MessagesPlaceholder,
@@ -21,17 +21,19 @@ export abstract class StructuredAgent<S extends ZodTypeAny> {
     this.schema = schema;
     this.prompt = ChatPromptTemplate.fromMessages([
       SystemMessagePromptTemplate.fromTemplate(this.system()),
-      new MessagesPlaceholder('input'),
+      new MessagesPlaceholder('messages')
     ]);
   }
 
   abstract system(): string;
 
-  async call(input: Array<BaseMessage>): Promise<S> {
+  async call(messages: Array<BaseMessage>): Promise<S> {
     const structuredLLM = this.model.withStructuredOutput(this.schema, {
       strict: true,
     });
-    const prompt = await this.prompt.invoke({ input: input });
+
+    const prompt = await this.prompt.invoke({ messages });
     return structuredLLM.invoke(prompt.messages) as z.infer<S>;
   }
 }
+

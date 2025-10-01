@@ -1,9 +1,9 @@
 import { Mixin } from 'ts-mixer';
 import { SocialCommands } from './commands';
-import { SocialQuery } from './query';
+import { SocialQueries } from './query';
 
 /**
  * Combine query + commands in a single DataSource
  */
-export default class SocialDs extends Mixin(SocialCommands, SocialQuery) {}
-export type SocialDsType = InstanceType<typeof SocialDs>;
+export default class SocialDataSource extends Mixin(SocialCommands, SocialQueries) {}
+export type SocialDsType = InstanceType<typeof SocialDataSource>;

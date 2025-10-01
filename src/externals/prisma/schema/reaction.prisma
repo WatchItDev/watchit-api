@@ -1,0 +1,23 @@
+enum ReactionType {
+    HATE
+    LIKE
+    LOVE
+}
+
+model Reaction {
+    id        Int          @id @default(autoincrement())
+    kind      ReactionType @default(LIKE)
+    userId    Int
+    contentId Int
+    createdAt DateTime     @default(now())
+
+    user    User    @relation(fields: [userId], references: [id])
+    content Content @relation(fields: [contentId], references: [id])
+
+    @@unique([userId, contentId])
+    @@index([contentId])
+    @@index([userId])
+    @@index([kind])
+
+    @@map("reactions")
+}

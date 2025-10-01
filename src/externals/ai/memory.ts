@@ -1,5 +1,6 @@
-import { PostgresSaver } from '@langchain/langgraph-checkpoint-postgres';
 import { Pool } from 'pg';
+import { PostgresSaver } from '@langchain/langgraph-checkpoint-postgres';
+export { MemorySaver } from "@langchain/langgraph"
 
 export const PostgresCheckpoint = async () => {
   const pool = new Pool({

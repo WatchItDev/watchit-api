@@ -8,8 +8,13 @@ import {
 
 import { adminKey, clientKey } from './credentials';
 
-const { API_FIREBASE_PROJECT_ID, API_FIREBASE_DATABASE, API_EMULATOR_HOST, API_EMULATOR_PORT } =
-  process.env;
+const {
+  API_FIREBASE_PROJECT_ID,
+  API_FIREBASE_DATABASE,
+  API_EMULATOR_HOST,
+  API_EMULATOR_PORT,
+  API_FIRESTORE_BUCKET_URL
+} = process.env;
 
 // This is for the Firebase Emulator Suite
 if (process.env.NODE_ENV !== 'production') {
@@ -17,6 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 let admin: ReturnType<typeof getApp>;
+
 try {
   admin = getApp();
 } catch {
@@ -24,10 +30,13 @@ try {
     credential: cert(adminKey as ServiceAccount),
     projectId: API_FIREBASE_PROJECT_ID,
     databaseURL: API_FIREBASE_DATABASE,
+    storageBucket: API_FIRESTORE_BUCKET_URL
   });
 }
 
-const client = !clientApps().length ? clientInitialize(clientKey) : clientApp();
+const client = !clientApps().length
+  ? clientInitialize(clientKey)
+  : clientApp();
 
 export const App = () => ({
   getAdmin: () => admin,

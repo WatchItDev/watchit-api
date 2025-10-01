@@ -12,8 +12,9 @@ export async function parseToken(ctx: GQL.ContextType): Promise<JWTVerifyResult<
   if (!token) throw new GraphQLError('UNAUTHENTICATED');
 
   try {
-    return jwtVerify(token, JWKS, { audience: AUD });
-  } catch {
+    // need await here if we want to capture the error
+    return await jwtVerify(token, JWKS, { audience: AUD });
+  } catch (e) {
     throw new GraphQLError('INVALID_TOKEN');
   }
 }
@@ -24,7 +25,7 @@ export function withRequireAuth<T extends (...a: any[]) => any>(resolver: T): T 
       payload: { email },
     } = await parseToken(ctx);
 
-    const user = await ctx.dataSources.Users.getUser({
+    const user = await ctx.dataSources.User.getUser({
       email: email as string,
     });
 

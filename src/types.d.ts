@@ -1,6 +1,6 @@
 import type { DataSourcesType } from '@/datasources';
 import type { ExternalsType } from '@/externals';
-import { User } from '@/schema/types';
+import { User } from '@/graphql/types';
 import type { ServicesType } from '@/services';
 import { Request } from 'express';
 import { PubSub } from 'graphql-subscriptions';

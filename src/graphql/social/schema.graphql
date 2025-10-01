@@ -1,0 +1,26 @@
+###########################
+#      USERS SCHEMA       #
+###########################
+
+####################
+#      TYPES       #
+####################
+
+type Social {
+  platform: String!
+  url: String!
+}
+
+####################
+#     INPUTS       #
+####################
+
+input SocialInput {
+  platform: String! @constraint(minLength: 1)
+  url: String! @constraint(format: "uri")
+}
+
+input SocialInput {
+  userId: Int
+  platform: String! @constraint(minLength: 1)
+}

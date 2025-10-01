@@ -25,12 +25,12 @@ import { PubSub } from 'graphql-subscriptions';
 import { useServer } from 'graphql-ws/use/ws';
 import { WebSocketServer } from 'ws';
 
-import { resolvers } from '@/schema/resolvers.generated';
-import { typeDefs } from '@/schema/typeDefs.generated';
-import { User } from '@/schema/types';
+import { resolvers } from '@/graphql/resolvers.generated';
+import { typeDefs } from '@/graphql/typeDefs.generated';
+import { User } from '@/graphql/types';
 
-import { DataSources } from './datasources';
 import Externals from './externals';
+import { DataSources } from './datasources';
 import { Services } from './services';
 import type { Disposable } from './types';
 
@@ -70,12 +70,14 @@ const startServer = async (): Promise<{ url: string; server: http.Server }> => {
     pa: externals.Prisma(),
   });
 
-  const services = Services({ ds: dataSources, ext: externals });
   const pubsub = new PubSub();
+  const services = Services({ ds: dataSources, ext: externals });
+  // inject tools to context and make them available to all the API
+  const injectToContext = { pubsub, services, dataSources, externals, user: {} as User };
 
   const host = process.env.API_HOST || '0.0.0.0';
   const port = (process.env.API_PORT || 4000) as number;
-  const app: express.Express = express();
+  const app: express.Express = express(); // request handler
   const httpServer: http.Server = http.createServer(app);
   const wsServer: Disposable = buildWSServer(httpServer, { pubsub });
 
@@ -126,14 +128,7 @@ const startServer = async (): Promise<{ url: string; server: http.Server }> => {
   app.use(
     expressMiddleware<GQL.ContextType>(server, {
       context: async ({ req }: ExpressContextFunctionArgument): Promise<GQL.ContextType> => {
-        return {
-          req,
-          services,
-          dataSources,
-          pubsub,
-          externals,
-          user: {} as User,
-        };
+        return { req, ...injectToContext };
       },
     }),
   );

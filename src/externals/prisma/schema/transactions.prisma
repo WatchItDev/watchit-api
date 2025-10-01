@@ -5,7 +5,7 @@ enum TxType {
     TIP
 }
 
-model Transactions {
+model Transaction {
     id          Int      @id @default(autoincrement())
     userId      Int
     type        TxType
@@ -16,4 +16,10 @@ model Transactions {
     createdAt   DateTime @default(now())
 
     user User @relation(fields: [userId], references: [id])
+
+    @@index([userId])
+    @@index([currency])
+    @@index([type])
+
+    @@map("transactions")
 }

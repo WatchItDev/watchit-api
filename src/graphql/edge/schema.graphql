@@ -1,0 +1,29 @@
+enum EdgeState {
+  NONE
+  FOLLOW
+  BLOCK
+}
+
+type Edge {
+  user: User!
+  isFollowing: Boolean!
+  isBlocked: Boolean!
+  followedAt: Date
+}
+
+input SetEdgeStatusInput {
+  toUserId: Int!
+  status: EdgeState!
+}
+
+input EdgeByIdentifierInput {
+  toUserId: Int!
+}
+
+extend type Mutation {
+  setEdgeStatus(input: SetEdgeStatusInput!): Edge!
+}
+
+extend type Query {
+  getEdgeStatus(input: EdgeByIdentifierInput!): Edge
+}

@@ -1,22 +1,16 @@
-import { CommentService } from './comments';
-import { PostService } from './posts';
-import { UsersService } from './users';
+import { CommentService } from './comment';
+import { PostService } from './post';
+import { UsersService } from './user';
 
-import { LikesService } from './reactions';
-import { BookmarkService } from './lists';
 import { LogService } from './logs';
-import { RelationsService } from './relations';
-import { TipsService } from './tips';
+import { EdgeService } from './edge';
 
 export const Services = ({ ds, ext }: { ds: any; ext: any }) => ({
-  Users: new UsersService({ ds, ext }),
-  Posts: new PostService({ ds, ext }),
-  Comments: new CommentService({ ds, ext }),
-  Likes: new LikesService({ ds, ext }),
-  Bookmarks: new BookmarkService({ ds, ext }),
-  Relations: new RelationsService({ ds, ext }),
+  User: new UsersService({ ds, ext }),
+  Post: new PostService({ ds, ext }),
+  Comment: new CommentService({ ds, ext }),
+  Edge: new EdgeService({ ds, ext }),
   Logs: new LogService({ ds, ext }),
-  Tips: new TipsService({ ds, ext }),
 });
 
 export type ServicesType = ReturnType<typeof Services>;

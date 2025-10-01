@@ -3,10 +3,16 @@ model Comment {
     body      String
     postId    Int
     contentId Int    @unique
-    parentId  Int?   
+    parentId  Int?
 
     post          Post      @relation(fields: [postId], references: [id])
     base          Content   @relation(fields: [contentId], references: [id])
     parent        Comment[] @relation("CommentReply")
     parentComment Comment?  @relation("CommentReply", fields: [parentId], references: [id])
+
+    @@index([postId])
+    @@index([contentId])
+    @@index([parentId])
+    
+    @@map("comments")
 }

@@ -20,9 +20,11 @@ model Content {
 
     post      Post?
     comment   Comment?
-    reactions Reactions[]
-    user      User        @relation(fields: [userId], references: [id])
+    reactions Reaction[]
+    user      User       @relation(fields: [userId], references: [id])
 
     @@index([kind])
-    @@map("Content")
+    @@index([userId])
+    
+    @@map("content")
 }

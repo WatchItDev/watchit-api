@@ -1,4 +1,4 @@
-model MediaAttachments {
+model Attachment {
     id     Int    @id @default(autoincrement())
     postId Int
     url    String
@@ -9,6 +9,8 @@ model MediaAttachments {
     post Post @relation(fields: [postId], references: [id])
 
     @@index([cid])
+    @@index([postId])
+    @@map("attachments")
 }
 
 model Post {
@@ -18,7 +20,11 @@ model Post {
     contentId Int    @unique
 
     comments    Comment[]
-    attachments MediaAttachments[]
+    attachments Attachment[]
     base        Content        @relation(fields: [contentId], references: [id])
+
+     @@index([contentId])
+
+     @@map("posts")
 }
 

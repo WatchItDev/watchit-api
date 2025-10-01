@@ -1,4 +1,4 @@
-model Socials {
+model Social {
     id       Int    @id @default(autoincrement())
     userId   Int
     platform String
@@ -7,6 +7,8 @@ model Socials {
     user User @relation(fields: [userId], references: [id])
 
     @@index([platform(sort: Asc)])
+
+    @@map("socials")
 }
 
 model Profile {
@@ -20,6 +22,8 @@ model Profile {
     user User @relation(fields: [userId], references: [id])
 
     @@index([username(sort: Asc)])
+
+    @@map("profile")
 }
 
 model User {
@@ -32,14 +36,16 @@ model User {
     updatedAt   DateTime @updatedAt
 
     profile      Profile?
-    socials      Socials[]
+    socials      Social[]
     contents     Content[]
-    reactions    Reactions[]
+    reactions    Reaction[]
     // bookmarks    Bookmarks[]
-    transactions Transactions[]
-    from         Relation[]     @relation("UserFrom")
-    to           Relation[]     @relation("UserTo")
+    transactions Transaction[]
+    from         Edge[]     @relation("UserFrom")
+    to           Edge[]     @relation("UserTo")
 
     @@index([email])
     @@index([address, email])
+
+    @@map("users")
 }

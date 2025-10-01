@@ -5,13 +5,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 
 const {
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+  PrismaClientRustPanicError,
+  PrismaClientInitializationError,
+  PrismaClientValidationError,
+  getPrismaClient,
+  sqltag,
+  empty,
+  join,
+  raw,
+  skip,
   Decimal,
+  Debug,
   objectEnumValues,
   makeStrictEnum,
+  Extensions,
+  warnOnce,
+  defineDmmfProperty,
   Public,
   getRuntime,
-  skip
-} = require('./runtime/index-browser.js')
+  createParam,
+} = require('./runtime/wasm-engine-edge.js')
 
 
 const Prisma = {}
@@ -20,79 +35,35 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.15.0
- * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+ * Prisma Client JS version: 6.16.3
+ * Query Engine version: bb420e667c1820a8c05a38023385f6cc7ef8e83a
  */
 Prisma.prismaVersion = {
-  client: "6.15.0",
-  engine: "85179d7826409ee107a6ba334b5e305ae3fba9fb"
+  client: "6.16.3",
+  engine: "bb420e667c1820a8c05a38023385f6cc7ef8e83a"
 }
 
-Prisma.PrismaClientKnownRequestError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientKnownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)};
-Prisma.PrismaClientUnknownRequestError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientUnknownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientRustPanicError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientRustPanicError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientInitializationError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientInitializationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientValidationError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientValidationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
+Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError
+Prisma.PrismaClientRustPanicError = PrismaClientRustPanicError
+Prisma.PrismaClientInitializationError = PrismaClientInitializationError
+Prisma.PrismaClientValidationError = PrismaClientValidationError
 Prisma.Decimal = Decimal
 
 /**
  * Re-export of sql-template-tag
  */
-Prisma.sql = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`sqltag is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.empty = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`empty is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.join = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`join is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.raw = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`raw is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.sql = sqltag
+Prisma.empty = empty
+Prisma.join = join
+Prisma.raw = raw
 Prisma.validator = Public.validator
 
 /**
 * Extensions
 */
-Prisma.getExtensionContext = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`Extensions.getExtensionContext is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.defineExtension = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`Extensions.defineExtension is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.getExtensionContext = Extensions.getExtensionContext
+Prisma.defineExtension = Extensions.defineExtension
 
 /**
  * Shorthand utilities for JSON filtering
@@ -109,10 +80,11 @@ Prisma.NullTypes = {
 
 
 
+
+
 /**
  * Enums
  */
-
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   ReadUncommitted: 'ReadUncommitted',
   ReadCommitted: 'ReadCommitted',
@@ -138,7 +110,16 @@ exports.Prisma.ContentScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.MediaAttachmentsScalarFieldEnum = {
+exports.Prisma.EdgeScalarFieldEnum = {
+  fromUserId: 'fromUserId',
+  toUserId: 'toUserId',
+  state: 'state',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  preferences: 'preferences'
+};
+
+exports.Prisma.AttachmentScalarFieldEnum = {
   id: 'id',
   postId: 'postId',
   url: 'url',
@@ -154,7 +135,7 @@ exports.Prisma.PostScalarFieldEnum = {
   contentId: 'contentId'
 };
 
-exports.Prisma.ReactionsScalarFieldEnum = {
+exports.Prisma.ReactionScalarFieldEnum = {
   id: 'id',
   kind: 'kind',
   userId: 'userId',
@@ -162,15 +143,7 @@ exports.Prisma.ReactionsScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.RelationScalarFieldEnum = {
-  fromUserId: 'fromUserId',
-  toUserId: 'toUserId',
-  state: 'state',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.TransactionsScalarFieldEnum = {
+exports.Prisma.TransactionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   type: 'type',
@@ -181,7 +154,7 @@ exports.Prisma.TransactionsScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.SocialsScalarFieldEnum = {
+exports.Prisma.SocialScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   platform: 'platform',
@@ -237,7 +210,7 @@ exports.Prisma.JsonNullValueFilter = {
   AnyNull: Prisma.AnyNull
 };
 
-exports.Prisma.MediaAttachmentsOrderByRelevanceFieldEnum = {
+exports.Prisma.AttachmentOrderByRelevanceFieldEnum = {
   url: 'url',
   cid: 'cid',
   title: 'title',
@@ -249,12 +222,12 @@ exports.Prisma.PostOrderByRelevanceFieldEnum = {
   body: 'body'
 };
 
-exports.Prisma.TransactionsOrderByRelevanceFieldEnum = {
+exports.Prisma.TransactionOrderByRelevanceFieldEnum = {
   currency: 'currency',
   description: 'description'
 };
 
-exports.Prisma.SocialsOrderByRelevanceFieldEnum = {
+exports.Prisma.SocialOrderByRelevanceFieldEnum = {
   platform: 'platform',
   url: 'url'
 };
@@ -271,27 +244,27 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   address: 'address',
   displayName: 'displayName'
 };
-exports.ContentKind = exports.$Enums.ContentKind = {
-  POST: 'POST',
-  COMMENT: 'COMMENT'
-};
-
 exports.Visibility = exports.$Enums.Visibility = {
   PUBLIC: 'PUBLIC',
   FOLLOWERS_ONLY: 'FOLLOWERS_ONLY',
   PRIVATE: 'PRIVATE'
 };
 
+exports.ContentKind = exports.$Enums.ContentKind = {
+  POST: 'POST',
+  COMMENT: 'COMMENT'
+};
+
+exports.EdgeState = exports.$Enums.EdgeState = {
+  NONE: 'NONE',
+  FOLLOW: 'FOLLOW',
+  BLOCK: 'BLOCK'
+};
+
 exports.ReactionType = exports.$Enums.ReactionType = {
   HATE: 'HATE',
   LIKE: 'LIKE',
   LOVE: 'LOVE'
-};
-
-exports.RelationState = exports.$Enums.RelationState = {
-  NONE: 'NONE',
-  FOLLOW: 'FOLLOW',
-  BLOCK: 'BLOCK'
 };
 
 exports.TxType = exports.$Enums.TxType = {
@@ -304,43 +277,87 @@ exports.TxType = exports.$Enums.TxType = {
 exports.Prisma.ModelName = {
   Comment: 'Comment',
   Content: 'Content',
-  MediaAttachments: 'MediaAttachments',
+  Edge: 'Edge',
+  Attachment: 'Attachment',
   Post: 'Post',
-  Reactions: 'Reactions',
-  Relation: 'Relation',
-  Transactions: 'Transactions',
-  Socials: 'Socials',
+  Reaction: 'Reaction',
+  Transaction: 'Transaction',
+  Social: 'Social',
   Profile: 'Profile',
   User: 'User'
 };
-
 /**
- * This is a stub Prisma Client that will error at runtime if called.
+ * Create the Client
  */
-class PrismaClient {
-  constructor() {
-    return new Proxy(this, {
-      get(target, prop) {
-        let message
-        const runtime = getRuntime()
-        if (runtime.isEdge) {
-          message = `PrismaClient is not configured to run in ${runtime.prettyName}. In order to run Prisma Client on edge runtime, either:
-- Use Prisma Accelerate: https://pris.ly/d/accelerate
-- Use Driver Adapters: https://pris.ly/d/driver-adapters
-`;
-        } else {
-          message = 'PrismaClient is unable to run in this browser environment, or has been bundled for the browser (running in `' + runtime.prettyName + '`).'
-        }
-
-        message += `
-If this is unexpected, please open an issue: https://pris.ly/prisma-prisma-bug-report`
-
-        throw new Error(message)
+const config = {
+  "generator": {
+    "name": "client",
+    "provider": {
+      "fromEnvVar": null,
+      "value": "prisma-client-js"
+    },
+    "output": {
+      "value": "/home/gmena/WebstormProjects/watchit-api/src/externals/prisma/generated/prisma",
+      "fromEnvVar": null
+    },
+    "config": {
+      "engineType": "library"
+    },
+    "binaryTargets": [
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-3.0.x",
+        "native": true
       }
-    })
+    ],
+    "previewFeatures": [
+      "fullTextSearchPostgres",
+      "postgresqlExtensions"
+    ],
+    "sourceFilePath": "/home/gmena/WebstormProjects/watchit-api/src/externals/prisma/schema/main.prisma",
+    "isCustomOutput": true
+  },
+  "relativeEnvPaths": {
+    "rootEnvPath": "../../../../../.env",
+    "schemaEnvPath": "../../../../../.env"
+  },
+  "relativePath": "../../schema",
+  "clientVersion": "6.16.3",
+  "engineVersion": "bb420e667c1820a8c05a38023385f6cc7ef8e83a",
+  "datasourceNames": [
+    "db"
+  ],
+  "activeProvider": "postgresql",
+  "inlineDatasources": {
+    "db": {
+      "url": {
+        "fromEnvVar": "API_DATABASE_URL",
+        "value": null
+      }
+    }
+  },
+  "inlineSchema": "model Comment {\n  id        Int    @id @default(autoincrement())\n  body      String\n  postId    Int\n  contentId Int    @unique\n  parentId  Int?\n\n  post          Post      @relation(fields: [postId], references: [id])\n  base          Content   @relation(fields: [contentId], references: [id])\n  parent        Comment[] @relation(\"CommentReply\")\n  parentComment Comment?  @relation(\"CommentReply\", fields: [parentId], references: [id])\n\n  @@index([postId])\n  @@index([contentId])\n  @@index([parentId])\n  @@map(\"comments\")\n}\n\nenum Visibility {\n  PUBLIC\n  FOLLOWERS_ONLY\n  PRIVATE\n}\n\nenum ContentKind {\n  POST\n  COMMENT\n}\n\nmodel Content {\n  id         Int         @id @default(autoincrement())\n  userId     Int\n  tags       Json?\n  active     Boolean     @default(true)\n  kind       ContentKind @default(POST)\n  visibility Visibility  @default(PUBLIC)\n  createdAt  DateTime    @default(now())\n\n  post      Post?\n  comment   Comment?\n  reactions Reaction[]\n  user      User       @relation(fields: [userId], references: [id])\n\n  @@index([kind])\n  @@index([userId])\n  @@map(\"content\")\n}\n\nenum EdgeState {\n  NONE\n  FOLLOW\n  BLOCK\n}\n\nmodel Edge {\n  fromUserId  Int\n  toUserId    Int\n  state       EdgeState @default(NONE)\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @updatedAt\n  preferences Json? // { \"mute\": true, \"notifications\": false }\n\n  from User @relation(\"UserFrom\", fields: [fromUserId], references: [id])\n  to   User @relation(\"UserTo\", fields: [toUserId], references: [id])\n\n  @@id([fromUserId, toUserId])\n  @@index([state])\n  @@index([toUserId, state])\n  @@index([fromUserId, state])\n  @@map(\"edges\")\n}\n\n// model Bookmarks {\n//     id        Int      @id @default(autoincrement())\n//     createdAt DateTime @default(now())\n//     postId    Int\n//     userId    Int\n\n//     user User @relation(fields: [userId], references: [id])\n//     post Post @relation(fields: [postId], references: [id])\n\n//     @@unique([userId, postId])\n// }\n\n// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider        = \"prisma-client-js\"\n  output          = \"../generated/prisma\"\n  previewFeatures = [\"postgresqlExtensions\", \"fullTextSearchPostgres\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"API_DATABASE_URL\")\n}\n\nmodel Attachment {\n  id     Int    @id @default(autoincrement())\n  postId Int\n  url    String\n  cid    String @unique\n  title  String\n  type   String\n\n  post Post @relation(fields: [postId], references: [id])\n\n  @@index([cid])\n  @@index([postId])\n  @@map(\"attachments\")\n}\n\nmodel Post {\n  id        Int    @id @default(autoincrement())\n  title     String\n  body      String\n  contentId Int    @unique\n\n  comments    Comment[]\n  attachments Attachment[]\n  base        Content      @relation(fields: [contentId], references: [id])\n\n  @@index([contentId])\n  @@map(\"posts\")\n}\n\nenum ReactionType {\n  HATE\n  LIKE\n  LOVE\n}\n\nmodel Reaction {\n  id        Int          @id @default(autoincrement())\n  kind      ReactionType @default(LIKE)\n  userId    Int\n  contentId Int\n  createdAt DateTime     @default(now())\n\n  user    User    @relation(fields: [userId], references: [id])\n  content Content @relation(fields: [contentId], references: [id])\n\n  @@unique([userId, contentId])\n  @@index([contentId])\n  @@index([userId])\n  @@index([kind])\n  @@map(\"reactions\")\n}\n\nenum TxType {\n  DEPOSIT\n  WITHDRAW\n  TRADE\n  TIP\n}\n\nmodel Transaction {\n  id          Int      @id @default(autoincrement())\n  userId      Int\n  type        TxType\n  amount      Float\n  balance     Float\n  currency    String\n  description String\n  createdAt   DateTime @default(now())\n\n  user User @relation(fields: [userId], references: [id])\n\n  @@index([userId])\n  @@index([currency])\n  @@index([type])\n  @@map(\"transactions\")\n}\n\nmodel Social {\n  id       Int    @id @default(autoincrement())\n  userId   Int\n  platform String\n  url      String\n\n  user User @relation(fields: [userId], references: [id])\n\n  @@index([platform(sort: Asc)])\n  @@map(\"socials\")\n}\n\nmodel Profile {\n  id       Int     @id @default(autoincrement())\n  userId   Int     @unique\n  username String  @unique\n  bio      String\n  picture  String?\n  cover    String?\n\n  user User @relation(fields: [userId], references: [id])\n\n  @@index([username(sort: Asc)])\n  @@map(\"profile\")\n}\n\nmodel User {\n  id          Int      @id @default(autoincrement())\n  email       String   @unique\n  address     String   @unique\n  displayName String\n  verified    Boolean  @default(false)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n\n  profile      Profile?\n  socials      Social[]\n  contents     Content[]\n  reactions    Reaction[]\n  // bookmarks    Bookmarks[]\n  transactions Transaction[]\n  from         Edge[]        @relation(\"UserFrom\")\n  to           Edge[]        @relation(\"UserTo\")\n\n  @@index([email])\n  @@index([address, email])\n  @@map(\"users\")\n}\n",
+  "inlineSchemaHash": "397f1a19a32357dcbe50aecdbe299890304967e182254bbeb0c26766c122d8e8",
+  "copyEngine": false
+}
+config.dirname = '/'
+
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Comment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"postId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"contentId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"parentId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"post\",\"kind\":\"object\",\"type\":\"Post\",\"relationName\":\"CommentToPost\"},{\"name\":\"base\",\"kind\":\"object\",\"type\":\"Content\",\"relationName\":\"CommentToContent\"},{\"name\":\"parent\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentReply\"},{\"name\":\"parentComment\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentReply\"}],\"dbName\":\"comments\"},\"Content\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tags\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"kind\",\"kind\":\"enum\",\"type\":\"ContentKind\"},{\"name\":\"visibility\",\"kind\":\"enum\",\"type\":\"Visibility\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"post\",\"kind\":\"object\",\"type\":\"Post\",\"relationName\":\"ContentToPost\"},{\"name\":\"comment\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentToContent\"},{\"name\":\"reactions\",\"kind\":\"object\",\"type\":\"Reaction\",\"relationName\":\"ContentToReaction\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ContentToUser\"}],\"dbName\":\"content\"},\"Edge\":{\"fields\":[{\"name\":\"fromUserId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"toUserId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"state\",\"kind\":\"enum\",\"type\":\"EdgeState\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"preferences\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"from\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserFrom\"},{\"name\":\"to\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserTo\"}],\"dbName\":\"edges\"},\"Attachment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"postId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cid\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post\",\"kind\":\"object\",\"type\":\"Post\",\"relationName\":\"AttachmentToPost\"}],\"dbName\":\"attachments\"},\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contentId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"comments\",\"kind\":\"object\",\"type\":\"Comment\",\"relationName\":\"CommentToPost\"},{\"name\":\"attachments\",\"kind\":\"object\",\"type\":\"Attachment\",\"relationName\":\"AttachmentToPost\"},{\"name\":\"base\",\"kind\":\"object\",\"type\":\"Content\",\"relationName\":\"ContentToPost\"}],\"dbName\":\"posts\"},\"Reaction\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"kind\",\"kind\":\"enum\",\"type\":\"ReactionType\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"contentId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ReactionToUser\"},{\"name\":\"content\",\"kind\":\"object\",\"type\":\"Content\",\"relationName\":\"ContentToReaction\"}],\"dbName\":\"reactions\"},\"Transaction\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"TxType\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"balance\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"TransactionToUser\"}],\"dbName\":\"transactions\"},\"Social\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"platform\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SocialToUser\"}],\"dbName\":\"socials\"},\"Profile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"picture\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cover\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ProfileToUser\"}],\"dbName\":\"profile\"},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"displayName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"verified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"profile\",\"kind\":\"object\",\"type\":\"Profile\",\"relationName\":\"ProfileToUser\"},{\"name\":\"socials\",\"kind\":\"object\",\"type\":\"Social\",\"relationName\":\"SocialToUser\"},{\"name\":\"contents\",\"kind\":\"object\",\"type\":\"Content\",\"relationName\":\"ContentToUser\"},{\"name\":\"reactions\",\"kind\":\"object\",\"type\":\"Reaction\",\"relationName\":\"ReactionToUser\"},{\"name\":\"transactions\",\"kind\":\"object\",\"type\":\"Transaction\",\"relationName\":\"TransactionToUser\"},{\"name\":\"from\",\"kind\":\"object\",\"type\":\"Edge\",\"relationName\":\"UserFrom\"},{\"name\":\"to\",\"kind\":\"object\",\"type\":\"Edge\",\"relationName\":\"UserTo\"}],\"dbName\":\"users\"}},\"enums\":{},\"types\":{}}")
+defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
+config.engineWasm = undefined
+config.compilerWasm = undefined
+
+config.injectableEdgeEnv = () => ({
+  parsed: {
+    API_DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['API_DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.API_DATABASE_URL || undefined
   }
+})
+
+if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
+  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
 }
 
+const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
-
 Object.assign(exports, Prisma)
+

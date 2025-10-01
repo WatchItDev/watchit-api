@@ -12,9 +12,9 @@ type AgentOutput {
 }
 
 extend type Subscription {
-  onAiMessage: AgentOutput
+  onAgentMessage: AgentOutput
 }
 
 extend type Mutation {
-  humanMessage(input: AgentInput!): Message
+  sendHumanMessage(input: AgentInput!): Message
 }

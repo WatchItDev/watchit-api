@@ -9,7 +9,7 @@ import type {
   UpdateUserInput,
   User,
   UserInput,
-} from '@/schema/types';
+} from '@/graphql/types';
 import { IdentifiedByAddress } from '@/types';
 import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
 import { App } from './app';

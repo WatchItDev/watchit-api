@@ -1,16 +1,16 @@
-import CommentsDataSource from './comments';
-import PostsDataSource from './posts';
-import RelationsDataSource from './relations';
+import CommentDataSource from './comment';
+import PostDataSource from './post';
+import EdgeDataSource from './edge';
 import SocialDataSource from './social';
 import type { Store } from './types';
-import UsersDataSource from './users';
+import UserDataSource from './user';
 
 export const DataSources = (store: Store) => ({
-  Users: new UsersDataSource(store),
-  Posts: new PostsDataSource(store),
-  Comments: new CommentsDataSource(store),
+  User: new UserDataSource(store),
+  Post: new PostDataSource(store),
+  Comment: new CommentDataSource(store),
   // =Bookmarks: new BookmarksDs(store),
-  Relations: new RelationsDataSource(store),
+  Edge: new EdgeDataSource(store),
   // Likes: new LikesDs(store),
   // Web3: new Web3Ds(store),
   // Logs: new LogsDs(store),

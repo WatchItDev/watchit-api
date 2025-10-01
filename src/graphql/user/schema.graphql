@@ -1,0 +1,89 @@
+###########################
+#      USERS SCHEMA       #
+###########################
+
+####################
+#      TYPES       #
+####################
+
+type Profile {
+  bio: String!
+  username: String!
+  picture: String
+  cover: String
+}
+
+type User {
+  id: Int!
+  address: String!
+  email: String!
+  displayName: String!
+  profile: Profile
+  verified: Boolean!
+  createdAt: Timestamp!
+  socials: [Social!]
+}
+
+####################
+#     INPUTS       #
+####################
+
+input CreateUserInput {
+  address: String! @constraint(minLength: 1)
+  username: String! @constraint(minLength: 3, maxLength: 15)
+  displayName: String! @constraint(minLength: 1, maxLength: 30)
+  bio: String! @constraint(minLength: 10, maxLength: 200)
+  picture: String @constraint(minLength: 1)
+  cover: String @constraint(minLength: 1)
+  socials: [SocialInput!]
+}
+
+input UpdateUserInput {
+  username: String @constraint(minLength: 3, maxLength: 15)
+  displayName: String @constraint(minLength: 1, maxLength: 30)
+  bio: String @constraint(minLength: 10, maxLength: 200)
+  picture: String @constraint(minLength: 1)
+  cover: String @constraint(minLength: 1)
+  socials: [SocialInput!]
+}
+
+input UserByIdentifierInput @oneOf {
+  id: Int
+  email: String @constraint(format: "email")
+  address: String @constraint(minLength: 42)
+}
+
+input UsersFilterInput {
+  name: String
+  verified: Boolean
+}
+
+####################
+#      QUERIES     #
+####################
+
+extend type Query {
+  getUser(input: UserByIdentifierInput!): User
+  # getUsers(input: UsersFilterInput!, pagination: PaginationInput): [User!]
+  # getUserFollowers(
+  #   address: String! @constraint(minLength: 1)
+  #   limit: Int @constraint(min: 1, max: 100)
+  # ): [User!]!
+  # getUserFollowing(
+  #   address: String! @constraint(minLength: 1)
+  #   limit: Int @constraint(min: 1, max: 100)
+  # ): [User!]!
+  # getUserBookmarks(
+  #   address: String! @constraint(minLength: 1)
+  #   limit: Int @constraint(min: 1, max: 100)
+  # ): [Post!]!
+}
+
+####################
+#     MUTATIONS    #
+####################
+
+extend type Mutation {
+  createUser(input: CreateUserInput!): User!
+  updateUser(input: UpdateUserInput!): User!
+}

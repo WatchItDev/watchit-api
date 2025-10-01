@@ -9,6 +9,11 @@ model Comment {
   base          Content   @relation(fields: [contentId], references: [id])
   parent        Comment[] @relation("CommentReply")
   parentComment Comment?  @relation("CommentReply", fields: [parentId], references: [id])
+
+  @@index([postId])
+  @@index([contentId])
+  @@index([parentId])
+  @@map("comments")
 }
 
 enum Visibility {
@@ -33,11 +38,36 @@ model Content {
 
   post      Post?
   comment   Comment?
-  reactions Reactions[]
-  user      User        @relation(fields: [userId], references: [id])
+  reactions Reaction[]
+  user      User       @relation(fields: [userId], references: [id])
 
   @@index([kind])
-  @@map("Content")
+  @@index([userId])
+  @@map("content")
+}
+
+enum EdgeState {
+  NONE
+  FOLLOW
+  BLOCK
+}
+
+model Edge {
+  fromUserId  Int
+  toUserId    Int
+  state       EdgeState @default(NONE)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  preferences Json? // { "mute": true, "notifications": false }
+
+  from User @relation("UserFrom", fields: [fromUserId], references: [id])
+  to   User @relation("UserTo", fields: [toUserId], references: [id])
+
+  @@id([fromUserId, toUserId])
+  @@index([state])
+  @@index([toUserId, state])
+  @@index([fromUserId, state])
+  @@map("edges")
 }
 
 // model Bookmarks {
@@ -69,7 +99,7 @@ datasource db {
   url      = env("API_DATABASE_URL")
 }
 
-model MediaAttachments {
+model Attachment {
   id     Int    @id @default(autoincrement())
   postId Int
   url    String
@@ -80,6 +110,8 @@ model MediaAttachments {
   post Post @relation(fields: [postId], references: [id])
 
   @@index([cid])
+  @@index([postId])
+  @@map("attachments")
 }
 
 model Post {
@@ -89,8 +121,11 @@ model Post {
   contentId Int    @unique
 
   comments    Comment[]
-  attachments MediaAttachments[]
-  base        Content            @relation(fields: [contentId], references: [id])
+  attachments Attachment[]
+  base        Content      @relation(fields: [contentId], references: [id])
+
+  @@index([contentId])
+  @@map("posts")
 }
 
 enum ReactionType {
@@ -99,7 +134,7 @@ enum ReactionType {
   LOVE
 }
 
-model Reactions {
+model Reaction {
   id        Int          @id @default(autoincrement())
   kind      ReactionType @default(LIKE)
   userId    Int
@@ -110,28 +145,10 @@ model Reactions {
   content Content @relation(fields: [contentId], references: [id])
 
   @@unique([userId, contentId])
+  @@index([contentId])
+  @@index([userId])
   @@index([kind])
-}
-
-enum RelationState {
-  NONE
-  FOLLOW
-  BLOCK
-}
-
-model Relation {
-  fromUserId Int
-  toUserId   Int
-  state      RelationState
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-
-  from User @relation("UserFrom", fields: [fromUserId], references: [id])
-  to   User @relation("UserTo", fields: [toUserId], references: [id])
-
-  @@id([fromUserId, toUserId])
-  @@index([toUserId, state])
-  @@index([fromUserId, state])
+  @@map("reactions")
 }
 
 enum TxType {
@@ -141,7 +158,7 @@ enum TxType {
   TIP
 }
 
-model Transactions {
+model Transaction {
   id          Int      @id @default(autoincrement())
   userId      Int
   type        TxType
@@ -152,9 +169,14 @@ model Transactions {
   createdAt   DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([currency])
+  @@index([type])
+  @@map("transactions")
 }
 
-model Socials {
+model Social {
   id       Int    @id @default(autoincrement())
   userId   Int
   platform String
@@ -163,6 +185,7 @@ model Socials {
   user User @relation(fields: [userId], references: [id])
 
   @@index([platform(sort: Asc)])
+  @@map("socials")
 }
 
 model Profile {
@@ -176,6 +199,7 @@ model Profile {
   user User @relation(fields: [userId], references: [id])
 
   @@index([username(sort: Asc)])
+  @@map("profile")
 }
 
 model User {
@@ -188,13 +212,15 @@ model User {
   updatedAt   DateTime @updatedAt
 
   profile      Profile?
-  socials      Socials[]
+  socials      Social[]
   contents     Content[]
-  reactions    Reactions[]
+  reactions    Reaction[]
   // bookmarks    Bookmarks[]
-  transactions Transactions[]
-  from         Relation[]     @relation("UserFrom")
-  to           Relation[]     @relation("UserTo")
+  transactions Transaction[]
+  from         Edge[]        @relation("UserFrom")
+  to           Edge[]        @relation("UserTo")
 
+  @@index([email])
   @@index([address, email])
+  @@map("users")
 }

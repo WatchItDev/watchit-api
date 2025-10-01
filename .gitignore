@@ -5,6 +5,6 @@ node_modules
 build/
 scripts/
 
-/generated/prisma
-
-/generated/prisma
+**/*/generated/prisma
+src/migrations
+server
