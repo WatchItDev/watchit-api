@@ -1,4 +1,5 @@
-import { CommentContent, Id, Repo } from '../../externals/prisma';
+import { Id } from '@/types';
+import { CommentContent, Repo } from '@/externals/prisma';
 import { DataSourceManager } from '../manager';
 
 type PostConnect = Repo.CommentCreateInput['post'];

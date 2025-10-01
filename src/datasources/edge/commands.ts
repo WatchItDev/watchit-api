@@ -1,4 +1,4 @@
-import { Edge, Repo } from '../../externals/prisma';
+import { Edge, Repo } from '@/externals/prisma';
 import { DataSourceManager } from '../manager';
 
 type EdgeUpsert = Repo.EdgeUpsertArgs['create'];

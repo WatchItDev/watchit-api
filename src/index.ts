@@ -32,7 +32,6 @@ import { User } from '@/graphql/types';
 import Externals from './externals';
 import { DataSources } from './datasources';
 import { Services } from './services';
-import type { Disposable } from './types';
 
 // import SentryPlugin from '@/sentry'
 
@@ -40,14 +39,15 @@ if (!(globalThis as any).crypto) {
   (globalThis as any).crypto = webcrypto;
 }
 
-const buildWSServer = (httpServer: http.Server, inject: Record<string, any>): Disposable => {
-  // Hand in the schema we just created and have the
-  // WebSocketServer start listening.
-  const schema = makeExecutableSchema({
-    typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
-    resolvers,
-  });
+type Disposable = ReturnType<typeof useServer>;
+// Hand in the schema we just created and have the
+// WebSocketServer start listening.
+const schema = makeExecutableSchema({
+  typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
+  resolvers,
+});
 
+const buildWSServer = (httpServer: http.Server, inject: Record<string, any>): Disposable => {
   // Creating the WebSocket server
   const wsServer = new WebSocketServer({
     // This is the `httpServer` we created in a previous step.
@@ -57,6 +57,7 @@ const buildWSServer = (httpServer: http.Server, inject: Record<string, any>): Di
     path: '/subscriptions',
   });
 
+  // TODO buildSchema + security
   return useServer(
     { schema, context: (ctx, msg, args) => ({ ctx: { ...ctx, ...inject }, msg, args }) },
     wsServer,
@@ -75,15 +76,14 @@ const startServer = async (): Promise<{ url: string; server: http.Server }> => {
   // inject tools to context and make them available to all the API
   const injectToContext = { pubsub, services, dataSources, externals, user: {} as User };
 
-  const host = process.env.API_HOST || '0.0.0.0';
-  const port = (process.env.API_PORT || 4000) as number;
+  const host = process.env.API_HOST ?? '0.0.0.0';
+  const port = (process.env.API_PORT ?? 4000) as number;
   const app: express.Express = express(); // request handler
   const httpServer: http.Server = http.createServer(app);
   const wsServer: Disposable = buildWSServer(httpServer, { pubsub });
 
   const server = new ApolloServer<GQL.ContextType>({
-    resolvers,
-    typeDefs: [constraintDirectiveTypeDefsGql, typeDefs],
+    schema,
     csrfPrevention: true,
     includeStacktraceInErrorResponses: false,
     introspection: true,
@@ -140,6 +140,7 @@ const startServer = async (): Promise<{ url: string; server: http.Server }> => {
 
   return { url: `http://${host}:${port}/`, server: httpServer };
 };
+
 
 // The `listen` method launches a web server
 const { url } = await startServer();

@@ -1,5 +1,6 @@
-import { ContentKind, PostContent, PostId, UserId } from '@/externals/prisma';
 import type { CreatePostInput, PostByIdentifierInput, UpdatePostInput } from '@/graphql/types';
+import type { UserId, PostId } from '@/types';
+import { ContentKind, PostContent } from '@/externals/prisma';
 import { ServiceManager } from './manager';
 
 export type CreatePostDTO = CreatePostInput & UserId;

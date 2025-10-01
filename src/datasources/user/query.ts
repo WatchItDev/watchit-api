@@ -1,4 +1,4 @@
-import { Repo, UserProfile } from '../../externals/prisma';
+import { Repo, UserProfile } from '@/externals/prisma';
 import { DataSourceManager } from '../manager';
 
 export class UserQueries extends DataSourceManager {

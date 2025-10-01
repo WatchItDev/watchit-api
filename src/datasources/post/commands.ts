@@ -1,4 +1,5 @@
-import { Id, PostContent, Repo } from '../../externals/prisma';
+import type { Id } from '@/datasources/types';
+import { PostContent, Repo } from '@/externals/prisma';
 import { DataSourceManager } from '../manager';
 
 type ContentCreate = Repo.PostCreateInput['base'];

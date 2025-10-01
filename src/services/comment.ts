@@ -1,9 +1,10 @@
-import { CommentContent, ContentKind, Id, UserId } from '@/externals/prisma';
+import { CommentContent, ContentKind } from '@/externals/prisma';
 import type {
   CommentByIdentifierInput,
   CreateCommentInput,
   UpdateCommentInput,
 } from '@/graphql/types';
+import type { UserId, Id } from '@/types';
 import { ServiceManager } from './manager';
 
 export type CreateCommentDTO = CreateCommentInput & UserId;

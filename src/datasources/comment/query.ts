@@ -1,5 +1,5 @@
-import { CommentContent, Repo } from '../../externals/prisma';
-import { PaginationInput } from '../../schema/types';
+import type { PaginationInput } from '@/graphql/types';
+import { CommentContent, Repo } from '@/externals/prisma';
 import { DataSourceManager } from '../manager';
 
 export class CommentsQuery extends DataSourceManager {

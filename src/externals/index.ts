@@ -1,6 +1,5 @@
 import { HarvestingGraph, RootAgent } from './ai/graphs';
 import { App, FireStore, FireStorage } from './firebase';
-import { Functions } from './firebase/functions';
 import { Prisma } from './prisma';
 
 export const Externals = () => ({
@@ -8,7 +7,6 @@ export const Externals = () => ({
   Prisma,
   FireStore,
   FireStorage,
-  Functions,
   RootAgent,
   HarvestingGraph,
 });

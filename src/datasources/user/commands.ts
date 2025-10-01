@@ -1,4 +1,5 @@
-import { Repo, UserId, UserProfile } from '../../externals/prisma';
+import type { UserId } from '@/types';
+import { Repo, UserProfile } from '@/externals/prisma';
 import { DataSourceManager } from '../manager';
 
 type ProfileCreatePayload = Repo.ProfileCreateNestedOneWithoutUserInput;

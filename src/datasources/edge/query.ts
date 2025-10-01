@@ -1,5 +1,5 @@
-import { Edge, Repo } from '../../externals/prisma';
-import { PaginationInput } from '../../schema/types';
+import type { PaginationInput } from '@/graphql/types';
+import { Edge, Repo } from '@/externals/prisma';
 import { DataSourceManager } from '../manager';
 
 export class EdgeQueries extends DataSourceManager {

@@ -1,5 +1,6 @@
-import type {Edge, UserId } from '../externals/prisma';
+import type { Edge } from '../externals/prisma';
 import type { EdgeByIdentifierInput, SetEdgeStatusInput } from '../schema/types';
+import type { UserId } from '@/types';
 import { ServiceManager } from './manager';
 
 export type SetEdgeStatusDTO = SetEdgeStatusInput & UserId;

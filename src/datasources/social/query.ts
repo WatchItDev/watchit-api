@@ -1,5 +1,5 @@
-import { Repo, Social } from '../../externals/prisma';
-import type { PaginationInput } from '../../schema/types';
+import type { PaginationInput } from '@/graphql/types';
+import { Repo, Social } from '@/externals/prisma';
 import { DataSourceManager } from '../manager';
 
 export class SocialQueries extends DataSourceManager {

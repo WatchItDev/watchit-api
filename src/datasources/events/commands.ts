@@ -1,5 +1,5 @@
 import { makeNewLog } from '../../models/log';
-import { EventLog } from '../../schema/types';
+import { EventLog } from '@/graphql/types';
 import { DataSourceManager } from '../manager';
 
 export class LogsCommands extends DataSourceManager {

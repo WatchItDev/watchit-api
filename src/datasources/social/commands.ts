@@ -1,5 +1,6 @@
-import type { Repo, UserId } from '../../externals/prisma';
-import type { Social } from '../../schema/types';
+import type { UserId } from '@/types';
+import type { Repo } from '@/externals/prisma';
+import type { Social } from '@/graphql/types';
 import { DataSourceManager } from '../manager';
 
 type SocialWithoutUserId = Omit<Repo.SocialCreateManyInput, 'userId'>;
