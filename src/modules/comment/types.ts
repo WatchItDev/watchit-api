@@ -7,12 +7,12 @@ export type CommentsFilter = Tools.AtLeastOne<
   'id' | 'parentId' | 'postId' | 'userId'
 >;
 
-export type RepoUpdateComment = {
+export type RepoUpdateComment = Tools.AtLeastOne<{
   body?: string;
   tags?: object;
   active?: boolean;
   visibility?: Visibility;
-} & Id;
+}, 'body'> & Id;
 
 export type RepoCreateComment = {
   body: string;

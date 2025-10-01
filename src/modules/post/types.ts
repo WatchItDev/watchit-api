@@ -1,13 +1,13 @@
 import { Visibility, type Repo } from '@/infra/database';
 export type Post = Repo.PostGetPayload<{ include: { base: true } }>;
 
-export type RepoUpdatePost = {
+export type RepoUpdatePost = Tools.AtLeastOne<{
   title?: string;
   body?: string;
   tags?: object;
   active?: boolean;
   visibility?: Visibility;
-} & Id;
+}, "title" | "body"> & Id;
 
 export type RepoCreatePost = {
   title: string;

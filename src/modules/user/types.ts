@@ -31,12 +31,12 @@ export type RepoCreateUser = {
   cover?: string;
 };
 
-export type RepoUpdateUser = {
+export type RepoUpdateUser = Tools.AtLeastOne<{
   bio?: string;
   displayName?: string;
   picture?: string;
   cover?: string;
-} & UserId;
+}, 'displayName' | 'bio'> & UserId;
 
 export type UserByIdentifier = Tools.ExactlyOne<
   {
