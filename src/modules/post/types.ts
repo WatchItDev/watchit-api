@@ -1,5 +1,6 @@
 import { Visibility, type Repo } from '@/infra/database';
 export type Post = Repo.PostGetPayload<{ include: { base: true } }>;
+export type PostFilter = Partial<UserId>;
 
 export type RepoUpdatePost = Tools.AtLeastOne<{
   title?: string;

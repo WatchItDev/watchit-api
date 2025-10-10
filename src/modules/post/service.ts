@@ -1,4 +1,5 @@
-import type { CreatePostDTO, Post } from '@/modules/post/types';
+import type { Repo } from '@/infra/database';
+import type { CreatePostDTO, Post, PostFilter } from '@/modules/post/types';
 import type { Context } from '@/modules/types';
 
 export const PostService = (ctx: Context) => ({
@@ -27,6 +28,13 @@ export const PostService = (ctx: Context) => ({
   /** Read-only fetches */
   getPost(input: Id): Promise<Post | null> {
     return ctx.ds.Post.getPost(input);
+  },
+
+  async getPosts(input: PostFilter, page?: Pagination): Promise<Post[]> {
+    const where: Repo.PostWhereInput | undefined =
+      input.userId !== undefined ? { base: { userId: input.userId } } : undefined;
+
+    return ctx.ds.Post.getPosts(where, page);
   },
 
   // getPosts(query: string, limit?: number): Promise<Post[]> {
